@@ -16,8 +16,8 @@ class MazeBuilderRecursiveDivision implements MazeBuilderInterface
     protected $maze = null;
 
     /** Constants */
-    const HORIZONTAL = 0;
-    const VERTICAL = 1;
+    const HORIZONTAL = 1;
+    const VERTICAL = 2;
 
     /**
      * Creates a random maze
@@ -81,30 +81,32 @@ class MazeBuilderRecursiveDivision implements MazeBuilderInterface
      * @param int $y2
      * @return void
      */
-    protected function makeDivisions($x1, $y1, $x2, $y2)
+    protected function makeDivisions($x1, $y1, $x2, $y2, $orientation = null)
     {
         $width = $x2 - $x1 + 1;
         $height = $y2 - $y1 + 1;
-        if ($width <= 2 || $height <= 2) {
+        if ($width < 5|| $height < 5) {
             return;
         }
 
-        $px = rand($x1 + 1, $x2 - 1);
-        $py = rand($y1 + 1, $y2 - 1);
+        $px = rand($x1 + 2, $x2 - 2);
+        $py = rand($y1 + 2, $y2 - 2);
 
-        $orientation = $this->chooseOrientation($width, $height);
+        $orientation = $orientation ?: $this->chooseOrientation($width, $height);
         if (self::HORIZONTAL == $orientation) {
             $this->drawHorizontalWall($py, $x1, $x2);
             $this->maze[$py][$px]->setContent(MazeCell::EMPTY_CELL);
+            $orientation = self::VERTICAL;
         } else {
             $this->drawVerticalWall($px, $y1, $y2);
             $this->maze[$py][$px]->setContent(MazeCell::EMPTY_CELL);
+            $orientation = self::HORIZONTAL;
         }
 
-        $this->makeDivisions($x1, $y1, $px, $py);
-//        $this->makeDivisions($x1, $py, $px, $y2);P
-//        $this->makeDivisions($px, $y1, $x2, $py);
-        $this->makeDivisions($px, $py, $x2, $x2);
+        $this->makeDivisions($x1, $y1, $px, $py, $orientation);
+        $this->makeDivisions($x1, $py, $px, $y2, $orientation);
+        $this->makeDivisions($px, $y1, $x2, $py, $orientation);
+        $this->makeDivisions($px, $py, $x2, $y2, $orientation);
     }
 
     /**

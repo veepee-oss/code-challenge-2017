@@ -1,0 +1,44 @@
+<?php
+
+namespace AppBundle\Entity;
+
+/**
+ * Entity MazeCell
+ *
+ * @package AppBundle\Entity
+ */
+class MazeCell
+{
+    const EMPTY_CELL = 0x00;
+    const WALL = 0x80;
+    const GOAL = 0xFF;
+
+    /** @var int */
+    protected $content;
+
+    /**
+     * MazeCell constructor.
+     *
+     * @param int $content
+     */
+    public function __construct($content)
+    {
+        $this->content = $content;
+    }
+
+    /**
+     * @return int
+     */
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    /**
+     * @param int $content
+     */
+    public function setContent($content)
+    {
+        $this->content = $content;
+    }
+}

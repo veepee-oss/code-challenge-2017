@@ -1,6 +1,6 @@
 #!/bin/bash
 
-service="docker_code_challenge_service";
+service="docker_code_challenge_server";
 enabled=$( docker ps --format "{{.Names}}" | grep -i "$service" )
 if [ "$enabled" == "" ]
 then

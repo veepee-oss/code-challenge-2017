@@ -2,23 +2,17 @@ version: '2'
 services:
 
     # See: docker/Dockerfile
-    code_challenge_service:
+    code_challenge_server:
         build: .
 
-        container_name: docker_code_challenge_service
+        restart: always
 
-        environment:
-            # XDEBUG_CONFIG: remote_host={{ HOST_IP }}
-            APP_ENV: dev
+        container_name: docker_code_challenge_server
 
         ports:
             - "8080:80"
-            - "2222:22"
 
         volumes:
-            - ../.:/var/www
-
-        extra_hosts:
-            - "toran.privalia.pin:172.16.50.64"
+            - ../.:/var/www/html
 
         network_mode: "bridge"

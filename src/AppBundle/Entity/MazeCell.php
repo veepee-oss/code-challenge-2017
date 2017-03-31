@@ -9,9 +9,9 @@ namespace AppBundle\Entity;
  */
 class MazeCell
 {
-    const EMPTY_CELL = 0x00;
-    const WALL = 0x80;
-    const GOAL = 0xFF;
+    const CELL_EMPTY = 0x00;
+    const CELL_WALL = 0x80;
+    const CELL_GOAL = 0xFF;
 
     /** @var int */
     protected $content;

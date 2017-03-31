@@ -29,11 +29,11 @@ class MazeBuilderRecursiveDivision implements MazeBuilderInterface
      */
     public function buildRandomMaze($width, $height)
     {
-        $this->createMaze($width, $height);
-
-        $this->createBorders();
-
-        $this->makeDivisions(0, 0, $width - 1, $height - 1);
+        $this
+            ->createMaze($width, $height)
+            ->createBorders()
+            ->makeDivisions(0, 0, $width - 1, $height - 1)
+            ->createGoal();
 
         return $this->maze;
     }
@@ -43,17 +43,18 @@ class MazeBuilderRecursiveDivision implements MazeBuilderInterface
      *
      * @param int $width
      * @param int $height
-     * @return void
+     * @return $this
      */
     protected function createMaze($width, $height)
     {
         $this->maze = new Maze($width, $height);
+        return $this;
     }
 
     /**
      * Creates the borders of the maze
      *
-     * @return void
+     * @return $this
      */
     protected function createBorders()
     {
@@ -70,6 +71,8 @@ class MazeBuilderRecursiveDivision implements MazeBuilderInterface
 
         $this->drawHorizontalWall($y1, $x1, $x2);
         $this->drawHorizontalWall($y2, $x1, $x2);
+
+        return $this;
     }
 
     /**
@@ -79,7 +82,7 @@ class MazeBuilderRecursiveDivision implements MazeBuilderInterface
      * @param int $y1
      * @param int $x2
      * @param int $y2
-     * @return void
+     * @return $this
      */
     protected function makeDivisions($x1, $y1, $x2, $y2, $orientation = null)
     {
@@ -95,11 +98,11 @@ class MazeBuilderRecursiveDivision implements MazeBuilderInterface
         $orientation = $orientation ?: $this->chooseOrientation($width, $height);
         if (self::HORIZONTAL == $orientation) {
             $this->drawHorizontalWall($py, $x1, $x2);
-            $this->maze[$py][$px]->setContent(MazeCell::EMPTY_CELL);
+            $this->maze[$py][$px]->setContent(MazeCell::CELL_EMPTY);
             $orientation = self::VERTICAL;
         } else {
             $this->drawVerticalWall($px, $y1, $y2);
-            $this->maze[$py][$px]->setContent(MazeCell::EMPTY_CELL);
+            $this->maze[$py][$px]->setContent(MazeCell::CELL_EMPTY);
             $orientation = self::HORIZONTAL;
         }
 
@@ -107,6 +110,48 @@ class MazeBuilderRecursiveDivision implements MazeBuilderInterface
         $this->makeDivisions($x1, $py, $px, $y2, $orientation);
         $this->makeDivisions($px, $y1, $x2, $py, $orientation);
         $this->makeDivisions($px, $py, $x2, $y2, $orientation);
+
+        return $this;
+    }
+
+    /**
+     * Creates the goal in a random wall
+     *
+     * @return $this
+     */
+    protected function createGoal()
+    {
+        $width = $this->maze->getWidth();
+        $height = $this->maze->getHeight();
+
+        // Random bordar: 0=top, 1=bottom,2=left, 3=right
+        $wall = rand(0, 3);
+        switch ($wall) {
+            case 0:
+            case 1:
+                $x = rand(1, $width - 2);
+                if ($wall == 0) {
+                    $this->maze[0][$x]->setContent(MazeCell::CELL_GOAL);
+                    $this->maze[1][$x]->setContent(MazeCell::CELL_EMPTY);
+                } else {
+                    $this->maze[$height - 1][$x]->setContent(MazeCell::CELL_GOAL);
+                    $this->maze[$height - 2][$x]->setContent(MazeCell::CELL_EMPTY);
+                }
+                break;
+
+            case 2:
+            case 3:
+                $y = rand(1, $height - 2);
+                if ($wall == 2) {
+                    $this->maze[$y][0]->setContent(MazeCell::CELL_GOAL);
+                    $this->maze[$y][1]->setContent(MazeCell::CELL_EMPTY);
+                } else {
+                    $this->maze[$y][$width - 1]->setContent(MazeCell::CELL_GOAL);
+                    $this->maze[$y][$width - 2]->setContent(MazeCell::CELL_EMPTY);
+                }
+                break;
+        }
+        return $this;
     }
 
     /**
@@ -135,7 +180,7 @@ class MazeBuilderRecursiveDivision implements MazeBuilderInterface
      * @param int $y2
      * @param int $wall
      */
-    protected function drawVerticalWall($x, $y1, $y2, $wall = MazeCell::WALL)
+    protected function drawVerticalWall($x, $y1, $y2, $wall = MazeCell::CELL_WALL)
     {
         for ($i = $y1; $i <= $y2; $i++) {
             $this->maze[$i][$x]->setContent($wall);
@@ -150,7 +195,7 @@ class MazeBuilderRecursiveDivision implements MazeBuilderInterface
      * @param int $x2
      * @param int $wall
      */
-    protected function drawHorizontalWall($y, $x1, $x2, $wall = MazeCell::WALL)
+    protected function drawHorizontalWall($y, $x1, $x2, $wall = MazeCell::CELL_WALL)
     {
         for ($i = $x1; $i <= $x2; $i++) {
             $this->maze[$y][$i]->setContent($wall);

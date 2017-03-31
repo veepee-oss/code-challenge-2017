@@ -22,6 +22,7 @@ class MazeRow implements \ArrayAccess, \Countable, \Iterator
      * MazeRow constructor.
      *
      * @param int $count
+     * @throws \InvalidArgumentException
      */
     public function __construct($count)
     {
@@ -31,7 +32,7 @@ class MazeRow implements \ArrayAccess, \Countable, \Iterator
         $this->position = 0;
 
         for ($i = 0; $i < $this->count; ++$i) {
-            $this->cells[$i] = new MazeCell(MazeCell::EMPTY_CELL);
+            $this->cells[$i] = new MazeCell(MazeCell::CELL_EMPTY);
         }
     }
 
@@ -44,8 +45,13 @@ class MazeRow implements \ArrayAccess, \Countable, \Iterator
      */
     public function offsetExists($offset)
     {
-        $this->validateOffset($offset);
-        return $this->valid($offset);
+        try {
+            $this->validateOffset($offset);
+        } catch (\InvalidArgumentException $exc) {
+            return false;
+        }
+
+        return ($offset >= 0 && $offset < $this->count);
     }
 
     /**
@@ -54,6 +60,7 @@ class MazeRow implements \ArrayAccess, \Countable, \Iterator
      * @link http://php.net/manual/en/arrayaccess.offsetget.php
      * @param mixed $offset The offset to retrieve.
      * @return MazeCell
+     * @throws \InvalidArgumentException
      */
     public function offsetGet($offset)
     {
@@ -71,6 +78,7 @@ class MazeRow implements \ArrayAccess, \Countable, \Iterator
      * @param int $offset The offset to assign the value to.
      * @param MazeCell $value The value to set.
      * @return void
+     * @throws \InvalidArgumentException
      */
     public function offsetSet($offset, $value)
     {
@@ -87,13 +95,15 @@ class MazeRow implements \ArrayAccess, \Countable, \Iterator
      * @link http://php.net/manual/en/arrayaccess.offsetunset.php
      * @param int $offset The offset to unset.
      * @return void
+     * @throws \InvalidArgumentException
      */
     public function offsetUnset($offset)
     {
         if (!$this->offsetExists($offset)) {
             throw new \InvalidArgumentException('The offset ' . $offset . ' doen\'t exists.');
         }
-        $this->cells[$offset] = new MazeCell(MazeCell::EMPTY_CELL);
+
+        $this->cells[$offset] = new MazeCell(MazeCell::CELL_EMPTY);
     }
 
     /**
@@ -149,7 +159,7 @@ class MazeRow implements \ArrayAccess, \Countable, \Iterator
      */
     public function valid()
     {
-        return ($this->position >= 0 && $this->position < $this->count);
+        return $this->offsetExists($this->position);
     }
 
     /**

@@ -1,11 +1,11 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Domain\Entity;
 
 /**
- * Entity MazeCell
+ * Domain Entity MazeCell
  *
- * @package AppBundle\Entity
+ * @package AppBundle\Domain\Entity
  */
 class MazeCell
 {

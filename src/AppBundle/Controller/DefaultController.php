@@ -34,6 +34,10 @@ class DefaultController extends Controller
         $builder = new MazeBuilderRecursiveDivision();
         $maze = $builder->buildRandomMaze(40, 20);
 
+//        $entity = new Maze($maze);
+//        $this->getDoctrine()->getManager()->persist($entity);
+//        $this->getDoctrine()->getManager()->flush();
+
         return $this->render('default/maze-test.html.twig', [
             'maze' => $maze
         ]);

@@ -2,8 +2,8 @@
 
 namespace AppBundle\Service\MazeBuilder;
 
-use AppBundle\Entity\Maze;
-use AppBundle\Entity\MazeCell;
+use AppBundle\Domain\Entity\Maze;
+use AppBundle\Domain\Entity\MazeCell;
 
 /**
  * Maze builder using recursive division method

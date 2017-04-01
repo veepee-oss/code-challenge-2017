@@ -2,46 +2,121 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
- * EntityMaze
+ * Entity Maze
  *
- * @package AppBundle\Entity
+ * @ORM\Table(name="maze")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\MazeRepository")
  */
-class Maze implements \ArrayAccess, \Countable, \Iterator
+class Maze
 {
-    /** @var int */
-    protected $width;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
 
-    /** @var int */
-    protected $height;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="uniqid", type="string", length=13, unique=true)
+     */
+    private $uniqid;
 
-    /** @var MazeRow[] */
-    protected $rows;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="width", type="integer")
+     */
+    private $width;
 
-    /** @var int */
-    protected $position;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="height", type="integer")
+     */
+    private $height;
+
+    /**
+     * @var array
+     *
+     * @ORM\Column(name="cells", type="json_array")
+     */
+    private $cells;
 
     /**
      * Maze constructor.
      *
-     * @param int $width
-     * @param int $height
+     * @param \AppBundle\Domain\Entity\Maze $source
      */
-    public function __construct($width, $height)
+    public function __construct(\AppBundle\Domain\Entity\Maze $source = null)
     {
-        $this->validateHeight($height);
-        $this->validateWidth($width);
-        $this->height = $height;
-        $this->width = $width;
-        $this->rows = [];
-        $this->position = 0;
-
-        for ($i = 0; $i < $this->height; ++$i) {
-            $this->rows[$i] = new MazeRow($this->width);
+        $this->uniqid = uniqid();
+        if ($source !== null ) {
+            $this->width = $source->getWidth();
+            $this->height = $source->getHeight();
+            $this->cells = array();
+            for ($i = 0; $i < $this->height; $i++) {
+                $this->cells[$i] = array();
+                for ($j = 0; $j < $this->width; $j++) {
+                    $this->cells[$i][$j] = $source[$i][$j]->getContent();
+                }
+            }
+        } else {
+            $this->width = null;
+            $this->height = null;
+            $this->cells = array();
         }
     }
 
     /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param string $uniqid
+     */
+    public function setUniqid($uniqid)
+    {
+        $this->uniqid = $uniqid;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUniqid()
+    {
+        return $this->uniqid;
+    }
+
+    /**
+     * Set width
+     *
+     * @param integer $width
+     *
+     * @return Maze
+     */
+    public function setWidth($width)
+    {
+        $this->width = $width;
+
+        return $this;
+    }
+
+    /**
+     * Get width
+     *
      * @return int
      */
     public function getWidth()
@@ -50,6 +125,22 @@ class Maze implements \ArrayAccess, \Countable, \Iterator
     }
 
     /**
+     * Set height
+     *
+     * @param integer $height
+     *
+     * @return Maze
+     */
+    public function setHeight($height)
+    {
+        $this->height = $height;
+
+        return $this;
+    }
+
+    /**
+     * Get height
+     *
      * @return int
      */
     public function getHeight()
@@ -58,157 +149,27 @@ class Maze implements \ArrayAccess, \Countable, \Iterator
     }
 
     /**
-     * Whether a offset exists
+     * Set cells
      *
-     * @link http://php.net/manual/en/arrayaccess.offsetexists.php
-     * @param int $offset An offset to check for.
-     * @return boolean true on success or false on failure.
+     * @param array $cells
+     *
+     * @return Maze
      */
-    public function offsetExists($offset)
+    public function setCells($cells)
     {
-        $this->validateHeight($offset);
-        return $this->valid();
+        $this->cells = $cells;
+
+        return $this;
     }
 
     /**
-     * Offset to retrieve
+     * Get cells
      *
-     * @link http://php.net/manual/en/arrayaccess.offsetget.php
-     * @param int $offset The offset to retrieve.
-     * @return MazeRow
+     * @return array
      */
-    public function offsetGet($offset)
+    public function getCells()
     {
-        if (!$this->offsetExists($offset)) {
-            throw new \InvalidArgumentException('The height ' . $offset . ' doen\'t exists.');
-        }
-
-        return $this->rows[$offset];
-    }
-
-    /**
-     * Offset to set
-     *
-     * @link http://php.net/manual/en/arrayaccess.offsetset.php
-     * @param int $offset The offset to assign the value to.
-     * @param MazeRow $value The value to set.
-     * @return void
-     */
-    public function offsetSet($offset, $value)
-    {
-        if (!$this->offsetExists($offset)) {
-            throw new \InvalidArgumentException('The height ' . $offset . ' doen\'t exists.');
-        }
-
-        $this->rows[$offset] = $value;
-    }
-
-    /**
-     * Offset to unset
-     *
-     * @link http://php.net/manual/en/arrayaccess.offsetunset.php
-     * @param int $offset The offset to unset.
-     * @return void
-     */
-    public function offsetUnset($offset)
-    {
-        if (!$this->offsetExists($offset)) {
-            throw new \InvalidArgumentException('The height ' . $offset . ' doen\'t exists.');
-        }
-        $this->rows[$offset] = new MazeRow($this->width);
-    }
-
-    /**
-     * Count elements of an object
-     *
-     * @link http://php.net/manual/en/countable.count.php
-     * @return int The custom count as an integer.
-     */
-    public function count()
-    {
-        return $this->height;
-    }
-
-    /**
-     * Return the current element
-     *
-     * @link http://php.net/manual/en/iterator.current.php
-     * @return MazeRow
-     */
-    public function current()
-    {
-        return $this[$this->position];
-    }
-
-    /**
-     * Move forward to next element
-     *
-     * @link http://php.net/manual/en/iterator.next.php
-     * @return void Any returned value is ignored.
-     */
-    public function next()
-    {
-        ++$this->position;
-    }
-
-    /**
-     * Return the key of the current element
-     *
-     * @link http://php.net/manual/en/iterator.key.php
-     * @return int
-     */
-    public function key()
-    {
-        return $this->position;
-    }
-
-    /**
-     * Checks if current position is valid
-     *
-     * @link http://php.net/manual/en/iterator.valid.php
-     * @return boolean Returns true on success or false on failure.
-     */
-    public function valid()
-    {
-        return ($this->position >= 0 && $this->position < $this->height);
-    }
-
-    /**
-     * Rewind the Iterator to the first element
-     *
-     * @link http://php.net/manual/en/iterator.rewind.php
-     * @return void Any returned value is ignored.
-     */
-    public function rewind()
-    {
-        $this->position = 0;
-    }
-
-    /**
-     * Validates the width (integer or string containing an integer)
-     *
-     * @param int $width
-     * @return void
-     * @throws \InvalidArgumentException
-     */
-    protected function validateWidth($width)
-    {
-        if (!is_numeric($width) || $width != intval($width)) {
-            throw new \InvalidArgumentException('The width ' . $width . ' is not an integer.');
-        }
-    }
-
-    /**
-     * Validates the height (integer or string containing an integer)
-     *
-     * @param int $height
-     * @return void
-     * @throws \InvalidArgumentException
-     */
-    protected function validateHeight($height)
-    {
-        if (!is_numeric($height) || $height != intval($height)) {
-            throw new \InvalidArgumentException('The height ' . $height . ' is not an integer.');
-        }
+        return $this->cells;
     }
 }
+

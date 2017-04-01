@@ -2,7 +2,7 @@
 
 namespace AppBundle\Service\MazeBuilder;
 
-use AppBundle\Entity\Maze;
+use AppBundle\Domain\Entity\Maze;
 
 /**
  * Maze builder service interface

@@ -1,6 +1,5 @@
 #!/bin/bash
 
-user="david"
 service="docker_code_challenge_server";
 
 enabled=$( docker ps --format "{{.Names}}" | grep -i "$service" )
@@ -13,11 +12,4 @@ fi;
 dir=$(dirname $0)
 cd $dir
 
-args=""
-while [[ $# -ge 1 ]]
-do
-    args="$args $1"
-    shift
-done
-
-docker exec -it -u $user $service /usr/local/bin/php bin/console $args
+docker exec -it -u root $service bash

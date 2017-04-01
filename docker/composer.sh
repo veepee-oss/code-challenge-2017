@@ -1,6 +1,8 @@
 #!/bin/bash
 
-service="docker_code_challenge_service";
+user="david"
+service="docker_code_challenge_server";
+
 enabled=$( docker ps --format "{{.Names}}" | grep -i "$service" )
 if [ "$enabled" == "" ]
 then
@@ -18,4 +20,4 @@ do
     shift
 done
 
-docker exec -it $service /usr/local/bin/composer $args
+docker exec -it -u $user $service /usr/local/bin/composer $args

@@ -1,21 +1,11 @@
-# Start from apisilex image
-FROM spdc1k8sregistry11.privalia.pin/apisilex:latest
+# See https://hub.docker.com/_/php/
+FROM php:7.1-apache
 
-# Use nginx server config
-COPY docker-nginx-server.conf /etc/nginx/conf.d/sites-available/default.conf
+RUN useradd -M -u 1000 -U david
 
-# Prepare environment
-RUN mkdir -p /var/log/nginx/ && \
-    rm -rf /etc/nginx/conf.d/sites-enabled/*.conf && \
-    cd /etc/nginx/conf.d/sites-enabled/ && \
-    ln -s ../sites-available/default.conf
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+ && php -r "if (hash_file('SHA384', 'composer-setup.php') === '669656bab3166a7aff8a7506b8cb2d1c292f042046c5a994c43155c0be6190fa0355160742ab2e1c88d40d5be660b410') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
+ && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
+ && php -r "unlink('composer-setup.php');"
 
-RUN touch /etc/php.d/00-custom-php.ini && \
-    echo "[PHP]"                            >> /etc/php.d/00-custom-php.ini && \
-    echo "display_errors = On"              >> /etc/php.d/00-custom-php.ini && \
-    echo "error_reporting = E_ALL"          >> /etc/php.d/00-custom-php.ini && \
-    echo -e "\n[Date]"                      >> /etc/php.d/00-custom-php.ini && \
-    echo "date.timezone = Europe/Madrid"    >> /etc/php.d/00-custom-php.ini && \
-    echo -e "\n"                            >> /etc/php.d/00-custom-php.ini
-
-WORKDIR /var/www
+WORKDIR /var/www/html

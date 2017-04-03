@@ -20,10 +20,24 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-        // replace this example code with whatever you need
-        return $this->render('default/index.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..') . DIRECTORY_SEPARATOR,
-        ]);
+        return $this->render('default/index.html.twig');
+    }
+
+    /**
+     * @Route("/rules", name="rules")
+     */
+    public function rulesAction()
+    {
+        echo 'RULES page';
+        exit;
+    }
+
+    /**
+     * @Route("/credits", name="credits")
+     */
+    public function creditsAction()
+    {
+        return $this->render('default/credits.html.twig');
     }
 
     /**

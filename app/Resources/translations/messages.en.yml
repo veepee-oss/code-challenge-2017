@@ -1,0 +1,24 @@
+# messages.en.yml
+app:
+    title:
+        global:         "Privalia Code Challenge 2017"
+        maze-scape:     "Maze Scape"
+        index:          "Homepage"
+
+    description:
+        global:         "Maze Scape is the title of the Privalia Code Challenge 2017"
+
+    author:
+        global:         "david.amigo@privalia.com"
+
+    homepage:
+        upper-text:
+            1:              "The 2017 event of the <strong>Privalia Code Challenge 2017</strong> is called <strong>Maze Scape Code Challenge</strong>!"
+            2:              "The goal is easy: You have to create a bot to <strong>scape from a labyrinth</strong>."
+
+        lower-text:
+            1:              "Your bot will be trapped in a maze and is expected to find its way out competing with the other player bots in a real time challenge."
+            2:              "All the bots will start at the same random position and they won't be visible to each other."
+            3:              "The first bot to find its way out of the maze wins the game."
+
+        rules:          "See the rules"

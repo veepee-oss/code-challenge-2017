@@ -2,9 +2,16 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block twbs_stylesheets %}
-            {% block stylesheets %}
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>{% block title %}{{ 'app.title.maze-scape' | trans }} - {{ 'app.title.global' | trans }}{% endblock %}</title>
+        <meta name="description" content="{% block description %}{{ 'app.description.global' | trans }}{% endblock %}">
+        <meta name="author" content="{% block author %}{{ 'app.author.global' | trans }}{% endblock %}">
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+
+        {% block stylesheets %}
+            {% block twbs_stylesheets %}
                 <link
                     rel="stylesheet"
                     href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -15,15 +22,63 @@
                     href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
                     integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
                     crossorigin="anonymous">
-                {% block page_stylesheets %}{% endblock %}
-                {% block more_stylesheets %}{% endblock %}
             {% endblock %}
+
+            {% block page_stylesheets %}
+                <link rel="stylesheet" href="{{ asset('css/common.css') }}" />
+            {% endblock %}
+
+            {% block more_stylesheets %}{% endblock %}
         {% endblock %}
-        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>
         {% block body %}
+            {% block navbar %}
+                <nav class="navbar navbar-inverse navbar-fixed-top">
+                    <div class="container">
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                            <a class="navbar-brand" href="#">Project name</a>
+                        </div>
+                        <div id="navbar" class="navbar-collapse collapse">
+                            <form class="navbar-form navbar-right">
+                                <div class="form-group">
+                                    <input type="text" placeholder="Email" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" placeholder="Password" class="form-control">
+                                </div>
+                                <button type="submit" class="btn btn-success">Sign in</button>
+                            </form>
+                        </div>
+                    </div>
+                </nav>
+            {% endblock %}
+
+            {% block content %}
+            {% endblock %}
+
+            {% block footer %}
+            <hr>
+                <div class="container">
+                    <footer>
+                        <p>
+                            <img src="{{ asset('images/privalia.png') }}" alt="Privalia" title="Privalia">
+                            <br>
+                            Copyright &copy;
+                            <a href="http://www.privalia.com/">Privalia Venta Directa S.A.U.</a> 2006-2017
+                        </p>
+                    </footer>
+                </div>
+
+            {% endblock %}
         {% endblock %}
+
         {% block javascripts %}
             {% block twbs_javascripts %}
                 <script
@@ -35,7 +90,9 @@
                     integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
                     crossorigin="anonymous"></script>
             {% endblock %}
-            {% block twbs_javascripts %}{% endblock %}
+
+            {% block page_javascripts %}{% endblock %}
+
             {% block more_javascripts %}{% endblock %}
         {% endblock %}
     </body>

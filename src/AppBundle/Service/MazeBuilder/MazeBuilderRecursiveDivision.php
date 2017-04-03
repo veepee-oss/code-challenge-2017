@@ -58,8 +58,8 @@ class MazeBuilderRecursiveDivision implements MazeBuilderInterface
      */
     protected function createBorders()
     {
-        $width = $this->maze->getWidth();
-        $height = $this->maze->getHeight();
+        $width = $this->maze->width();
+        $height = $this->maze->height();
 
         $x1 = 0;
         $y1 = 0;
@@ -121,8 +121,8 @@ class MazeBuilderRecursiveDivision implements MazeBuilderInterface
      */
     protected function createGoal()
     {
-        $width = $this->maze->getWidth();
-        $height = $this->maze->getHeight();
+        $width = $this->maze->width();
+        $height = $this->maze->height();
 
         // Random bordar: 0=top, 1=bottom,2=left, 3=right
         $wall = rand(0, 3);

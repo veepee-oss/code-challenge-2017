@@ -58,8 +58,8 @@ class Maze
     {
         $this->uniqid = uniqid();
         if ($source !== null ) {
-            $this->width = $source->getWidth();
-            $this->height = $source->getHeight();
+            $this->width = $source->width();
+            $this->height = $source->height();
             $this->cells = array();
             for ($i = 0; $i < $this->height; $i++) {
                 $this->cells[$i] = array();
@@ -72,6 +72,21 @@ class Maze
             $this->height = null;
             $this->cells = array();
         }
+    }
+
+    /**
+     * Convert entity
+     *
+     * @return \AppBundle\Domain\Entity\Maze
+     */
+    public function toDomainEntity()
+    {
+        return new \AppBundle\Domain\Entity\Maze(
+            $this->width,
+            $this->height,
+            $this->uniqid,
+            $this->cells
+        );
     }
 
     /**
@@ -119,7 +134,7 @@ class Maze
      *
      * @return int
      */
-    public function getWidth()
+    public function width()
     {
         return $this->width;
     }
@@ -143,7 +158,7 @@ class Maze
      *
      * @return int
      */
-    public function getHeight()
+    public function height()
     {
         return $this->height;
     }

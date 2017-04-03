@@ -15,6 +15,9 @@ class Maze implements \ArrayAccess, \Countable, \Iterator
     /** @var int */
     protected $height;
 
+    /** @var  string */
+    protected $uniqid;
+
     /** @var MazeRow[] */
     protected $rows;
 
@@ -26,25 +29,31 @@ class Maze implements \ArrayAccess, \Countable, \Iterator
      *
      * @param int $width
      * @param int $height
+     * @param string $uniqid
+     * @param array $cells
      */
-    public function __construct($width, $height)
+    public function __construct($width, $height, $uniqid = null, array $cells = null)
     {
         $this->validateHeight($height);
         $this->validateWidth($width);
         $this->height = $height;
         $this->width = $width;
+        $this->uniqid = $uniqid ?: uniqid();
         $this->rows = [];
         $this->position = 0;
 
         for ($i = 0; $i < $this->height; ++$i) {
             $this->rows[$i] = new MazeRow($this->width);
+            for ($j = 0; $j < $this->width; $j++) {
+                $this[$i][$j]->setContent($cells[$i][$j]);
+            }
         }
     }
 
     /**
      * @return int
      */
-    public function getWidth()
+    public function width()
     {
         return $this->width;
     }
@@ -52,9 +61,17 @@ class Maze implements \ArrayAccess, \Countable, \Iterator
     /**
      * @return int
      */
-    public function getHeight()
+    public function height()
     {
         return $this->height;
+    }
+
+    /**
+     * @return string
+     */
+    public function uniqid()
+    {
+        return $this->uniqid;
     }
 
     /**

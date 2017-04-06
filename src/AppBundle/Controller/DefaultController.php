@@ -46,7 +46,7 @@ class DefaultController extends Controller
     public function mazeTestAction()
     {
         $builder = new MazeBuilderRecursiveDivision();
-        $maze = $builder->buildRandomMaze(40, 20);
+        $maze = $builder->buildRandomMaze(80, 20);
 
 //        $entity = new Maze($maze);
 //        $this->getDoctrine()->getManager()->persist($entity);

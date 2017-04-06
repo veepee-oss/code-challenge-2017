@@ -5,9 +5,9 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>{% block title %}{{ 'app.title.maze-scape' | trans }} - {{ 'app.title.global' | trans }}{% endblock %}</title>
-        <meta name="description" content="{% block description %}{{ 'app.description.global' | trans }}{% endblock %}">
-        <meta name="author" content="{% block author %}{{ 'app.author.global' | trans }}{% endblock %}">
+        <title>{% block title %}{{ 'app.global.name' | trans }} - {{ 'app.global.title' | trans }}{% endblock %}</title>
+        <meta name="description" content="{% block description %}{{ 'app.global.description' | trans }}{% endblock %}">
+        <meta name="author" content="{% block author %}{{ 'app.global.author' | trans }}{% endblock %}">
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
 
         {% block stylesheets %}
@@ -67,12 +67,20 @@
             <hr>
                 <div class="container">
                     <footer>
-                        <p>
-                            <img src="{{ asset('images/privalia.png') }}" alt="Privalia" title="Privalia">
-                            <br>
-                            Copyright &copy;
-                            <a href="http://www.privalia.com/">Privalia Venta Directa S.A.U.</a> 2006-2017
-                        </p>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <img src="{{ asset('images/privalia.png') }}" alt="Privalia" title="Privalia">
+                                <br>
+                                Copyright &copy;
+                                <a href="http://www.privalia.com/">Privalia Venta Directa S.A.U.</a> 2006-2017
+                            </div>
+                            <div class="col-md-6 text-right">
+                                <br>
+                                <a href="{{ url('rules') }}">{{ 'app.homepage.rules' | trans }}</a> |
+                                <a href="{{ url('credits') }}">{{ 'app.credits.title' | trans }}</a>
+                                <img src="{{ asset('images/creative-commons.png') }}" alt="Creative Cmmons" title="Creative Cmmons">
+                            </div>
+                        </div>
                     </footer>
                 </div>
 

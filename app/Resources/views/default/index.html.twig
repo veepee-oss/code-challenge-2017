@@ -1,14 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ 'app.title.index' | trans }} - {{ parent() }}{% endblock %}
+{% block title %}{{ 'app.homepage.title' | trans }} - {{ parent() }}{% endblock %}
 
 {% block content %}
     <div class="jumbotron">
         <div class="container">
             <h1>
-                {{ 'app.title.maze-scape' | trans }}
+                {{ 'app.global.name' | trans }}
                 <small>
-                    {{ 'app.title.global' | trans }}
+                    {{ 'app.global.title' | trans }}
                 </small>
             </h1>
 
@@ -16,8 +16,8 @@
                 <div class="col-md-3">
                     <img
                         src="{{ asset('images/labyrinth.png') }}"
-                        alt="{{ 'app.title.maze-scape' | trans }}"
-                        title="{{ 'app.title.maze-scape' | trans }}"
+                        alt="{{ 'app.global.name' | trans }}"
+                        title="{{ 'app.global.name' | trans }}"
                         class="img-responsive"
                     />
                 </div>
@@ -32,14 +32,11 @@
                         {{ 'app.homepage.lower-text.3' | trans | raw }}
                     </p>
                     <p><a class="btn btn-primary btn-lg" href="{{ url('rules') }}" role="button">
-                        {{ 'app.homepage.rules' | trans | raw }} &raquo;
+                        {{ 'app.homepage.rules' | trans }} &raquo;
                     </a></p>
                 </div>
             </div>
         </div>
     </div>
 
-{% endblock %}
-
-{% block page_stylesheets %}
 {% endblock %}

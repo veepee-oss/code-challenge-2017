@@ -1,17 +1,14 @@
 # messages.en.yml
 app:
-    title:
-        global:         "Privalia Code Challenge 2017"
-        maze-scape:     "Maze Scape"
-        index:          "Homepage"
-
-    description:
-        global:         "Maze Scape is the title of the Privalia Code Challenge 2017"
-
-    author:
-        global:         "david.amigo@privalia.com"
+    global:
+        name:           "Maze Scape"
+        title:          "Privalia Code Challenge 2017"
+        description:    "Maze Scape is the title of the Privalia Code Challenge 2017"
+        author:         "david.amigo@privalia.com"
 
     homepage:
+        title:          "Homepage"
+
         upper-text:
             1:              "The 2017 event of the <strong>Privalia Code Challenge 2017</strong> is called <strong>Maze Scape Code Challenge</strong>!"
             2:              "The goal is easy: You have to create a bot to <strong>scape from a labyrinth</strong>."
@@ -22,3 +19,6 @@ app:
             3:              "The first bot to find its way out of the maze wins the game."
 
         rules:          "See the rules"
+
+    credits:
+        title:          "Credits and Attributions"

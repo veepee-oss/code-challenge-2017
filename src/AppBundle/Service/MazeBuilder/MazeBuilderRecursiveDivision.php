@@ -33,7 +33,7 @@ class MazeBuilderRecursiveDivision implements MazeBuilderInterface
             ->createMaze($width, $height)
             ->createBorders()
             ->makeDivisions(0, 0, $width - 1, $height - 1)
-            ->createGoal();
+            ->createStartAndGoal();
 
         return $this->maze;
     }
@@ -119,23 +119,30 @@ class MazeBuilderRecursiveDivision implements MazeBuilderInterface
      *
      * @return $this
      */
-    protected function createGoal()
+    protected function createStartAndGoal()
     {
         $width = $this->maze->width();
         $height = $this->maze->height();
 
-        // Random bordar: 0=top, 1=bottom,2=left, 3=right
         $wall = rand(0, 3);
         switch ($wall) {
             case 0:
             case 1:
                 $x = rand(1, $width - 2);
                 if ($wall == 0) {
-                    $this->maze[0][$x]->setContent(MazeCell::CELL_GOAL);
-                    $this->maze[1][$x]->setContent(MazeCell::CELL_EMPTY);
-                } else {
+                    // Start on top wall
+                    $this->maze[1][$width - $x - 1]->setContent(MazeCell::CELL_START);
+
+                    // Goal on bottom wall
                     $this->maze[$height - 1][$x]->setContent(MazeCell::CELL_GOAL);
                     $this->maze[$height - 2][$x]->setContent(MazeCell::CELL_EMPTY);
+                } else {
+                    // Start on bottom wall
+                    $this->maze[$height - 2][$width - $x - 1]->setContent(MazeCell::CELL_START);
+
+                    // Goal on top wall
+                    $this->maze[0][$x]->setContent(MazeCell::CELL_GOAL);
+                    $this->maze[1][$x]->setContent(MazeCell::CELL_EMPTY);
                 }
                 break;
 
@@ -143,11 +150,19 @@ class MazeBuilderRecursiveDivision implements MazeBuilderInterface
             case 3:
                 $y = rand(1, $height - 2);
                 if ($wall == 2) {
-                    $this->maze[$y][0]->setContent(MazeCell::CELL_GOAL);
-                    $this->maze[$y][1]->setContent(MazeCell::CELL_EMPTY);
-                } else {
+                    // Start on left wall
+                    $this->maze[$height - $y - 1][1]->setContent(MazeCell::CELL_START);
+
+                    // Goal on right wall
                     $this->maze[$y][$width - 1]->setContent(MazeCell::CELL_GOAL);
                     $this->maze[$y][$width - 2]->setContent(MazeCell::CELL_EMPTY);
+                } else {
+                    // Start on right wall
+                    $this->maze[$height - $y -1][$width - 2]->setContent(MazeCell::CELL_START);
+
+                    // Goal on left wall
+                    $this->maze[$y][0]->setContent(MazeCell::CELL_GOAL);
+                    $this->maze[$y][1]->setContent(MazeCell::CELL_EMPTY);
                 }
                 break;
         }

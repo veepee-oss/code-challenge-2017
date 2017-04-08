@@ -1,11 +1,11 @@
 <?php
 
-namespace AppBundle\Domain\Entity;
+namespace AppBundle\Domain\Entity\Player;
 
 /**
  * Domain entity; ApiPlayer
  *
- * @package AppBundle\Domain\Entity
+ * @package AppBundle\Domain\Entity\Player
  */
 class ApiPlayer implements Player
 {

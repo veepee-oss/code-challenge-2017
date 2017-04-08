@@ -1,18 +1,18 @@
 <?php
 
-namespace AppBundle\Service\MazeBuilder;
+namespace AppBundle\Domain\Service\MazeBuilder;
 
-use AppBundle\Domain\Entity\Maze;
-use AppBundle\Domain\Entity\MazeCell;
+use AppBundle\Domain\Entity\Maze\Maze;
+use AppBundle\Domain\Entity\Maze\MazeCell;
 
 /**
  * Maze builder using recursive division method
  *
- * @package AppBundle\Service\MazeBuilder
+ * @package AppBundle\Domain\Service\MazeBuilder
  */
 class MazeBuilderRecursiveDivision implements MazeBuilderInterface
 {
-    /** @var Maze */
+    /** @var \AppBundle\Domain\Entity\Maze\Maze */
     protected $maze = null;
 
     /** Constants */

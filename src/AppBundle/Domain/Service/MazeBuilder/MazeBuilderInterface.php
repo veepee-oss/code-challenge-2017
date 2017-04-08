@@ -1,13 +1,13 @@
 <?php
 
-namespace AppBundle\Service\MazeBuilder;
+namespace AppBundle\Domain\Service\MazeBuilder;
 
-use AppBundle\Domain\Entity\Maze;
+use AppBundle\Domain\Entity\Maze\Maze;
 
 /**
  * Maze builder service interface
  *
- * @package AppBundle\Service\MazeBuilder
+ * @package AppBundle\Domain\Service\MazeBuilder
  */
 interface MazeBuilderInterface
 {

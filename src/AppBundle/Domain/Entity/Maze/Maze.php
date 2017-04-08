@@ -1,11 +1,11 @@
 <?php
 
-namespace AppBundle\Domain\Entity;
+namespace AppBundle\Domain\Entity\Maze;
 
 /**
  * Domain Entity Maze
  *
- * @package AppBundle\Domain\Entity
+ * @package AppBundle\Domain\Entity\Maze
  */
 class Maze implements \ArrayAccess, \Countable, \Iterator
 {
@@ -15,8 +15,6 @@ class Maze implements \ArrayAccess, \Countable, \Iterator
     /** @var int */
     protected $height;
 
-    /** @var  string */
-    protected $uniqid;
 
     /** @var MazeRow[] */
     protected $rows;
@@ -29,16 +27,14 @@ class Maze implements \ArrayAccess, \Countable, \Iterator
      *
      * @param int $width
      * @param int $height
-     * @param string $uniqid
      * @param array $cells
      */
-    public function __construct($width, $height, $uniqid = null, array $cells = null)
+    public function __construct($width, $height, array $cells = null)
     {
         $this->validateHeight($height);
         $this->validateWidth($width);
         $this->height = $height;
         $this->width = $width;
-        $this->uniqid = $uniqid ?: uniqid();
         $this->rows = [];
         $this->position = 0;
 
@@ -64,14 +60,6 @@ class Maze implements \ArrayAccess, \Countable, \Iterator
     public function height()
     {
         return $this->height;
-    }
-
-    /**
-     * @return string
-     */
-    public function uniqid()
-    {
-        return $this->uniqid;
     }
 
     /**

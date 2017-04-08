@@ -1,11 +1,11 @@
 <?php
 
-namespace AppBundle\Service\MazeBuilder;
+namespace AppBundle\Domain\Service\MazeBuilder;
 
 /**
  * Maze builder exception class
  *
- * @package AppBundle\Service\MazeBuilder
+ * @package AppBundle\Domain\Service\MazeBuilder
  */
 class MazeBuilderException extends \Exception
 {

@@ -1,11 +1,11 @@
 <?php
 
-namespace AppBundle\Domain\Entity;
+namespace AppBundle\Domain\Entity\Player;
 
 /**
  * Domain entity; BotPlayer
  *
- * @package AppBundle\Domain\Entity
+ * @package AppBundle\Domain\Entity\Player
  */
 class BotPlayer implements Player
 {

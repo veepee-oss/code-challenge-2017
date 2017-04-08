@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-xs-12 center-block">
             <table class="maze">
-                {% for row in maze %}
+                {% for row in game.maze %}
                     <tr>
                         {% for cell in row %}
                             {% if cell.content == constant('\\AppBundle\\Domain\\Entity\\Maze\\MazeCell::CELL_WALL') %}

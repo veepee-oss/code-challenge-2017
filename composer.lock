@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "ea56552f15912b6eedaf069b0da76755",
+    "content-hash": "a7f28ff2c0354c3d88eaefb1f521701e",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -884,6 +884,41 @@
                 "parameters management"
             ],
             "time": "2015-11-10T17:04:01+00:00"
+        },
+        {
+            "name": "j20/php-uuid",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/j20/php-uuid.git",
+                "reference": "0eea7a057b8a092798f2942e01a4d0d372b6c8a0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/j20/php-uuid/zipball/0eea7a057b8a092798f2942e01a4d0d372b6c8a0",
+                "reference": "0eea7a057b8a092798f2942e01a4d0d372b6c8a0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "J20\\Uuid": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Generate a UUID v4 with PHP.",
+            "keywords": [
+                "guid",
+                "token",
+                "uuid"
+            ],
+            "time": "2017-01-04T12:35:38+00:00"
         },
         {
             "name": "jdorn/sql-formatter",
@@ -3363,7 +3398,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "j20/php-uuid": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

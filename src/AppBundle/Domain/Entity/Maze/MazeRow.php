@@ -1,12 +1,11 @@
 <?php
 
-namespace AppBundle\Domain\Entity;
-
+namespace AppBundle\Domain\Entity\Maze;
 
 /**
  * Domain Entity MazeRow
  *
- * @package AppBundle\Domain\Entity
+ * @package AppBundle\Domain\Entity\Maze
  */
 class MazeRow implements \ArrayAccess, \Countable, \Iterator
 {

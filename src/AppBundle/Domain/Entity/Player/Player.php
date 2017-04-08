@@ -1,11 +1,11 @@
 <?php
 
-namespace AppBundle\Domain\Entity;
+namespace AppBundle\Domain\Entity\Player;
 
 /**
  * Domain Entity: Player
  *
- * @package AppBundle\Domain\Entity
+ * @package AppBundle\Domain\Entity\Player
  */
 interface Player
 {

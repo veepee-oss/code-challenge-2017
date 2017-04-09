@@ -5,22 +5,23 @@ namespace AppBundle\Controller;
 use AppBundle\Domain\Entity\Game\Game;
 use AppBundle\Domain\Entity\Player\ApiPlayer;
 use AppBundle\Domain\Service\MazeBuilder\MazeBuilderRecursiveDivision;
+use AppBundle\Domain\Service\MazeRender\MazeHtmlRender;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class MazeController
+ * Class GameController
  *
  * @package AppBundle\Controller
- * @Route("/maze")
+ * @Route("/game")
  */
-class MazeController extends Controller
+class GameController extends Controller
 {
     /**
      * Create random test game
      *
-     * @Route("/create/random", name="game_create_random")
+     * @Route("/create/test", name="game_create_random")
      * @return Response
      */
     public function createRandomAction()
@@ -53,20 +54,25 @@ class MazeController extends Controller
      */
     public function viewAction($uuid)
     {
-        /** @var \AppBundle\Entity\Game $game */
-        $game = $this->getDoctrine()->getRepository('AppBundle:Game')->findOneBy([
+        /** @var \AppBundle\Entity\Game $entity */
+        $entity = $this->getDoctrine()->getRepository('AppBundle:Game')->findOneBy([
             'uuid' => $uuid
         ]);
 
-        return $this->render(':maze:view.html.twig', [
-            'game' => $game->toDomainEntity()
+        $renderer = new MazeHtmlRender();
+        $game = $entity->toDomainEntity();
+        $maze = $renderer->render($game);
+
+        return $this->render(':game:view.html.twig', [
+            'game' => $game,
+            'maze' => $maze
         ]);
     }
 
     /**
      * View only maze
      *
-     * @Route("/view/maze/{uuid}",name="game_view_maze",
+     * @Route("/view/{uuid}/render",name="game_render",
      *     requirements={"uuid": "[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}"})
      *
      * @param string $uuid
@@ -74,13 +80,17 @@ class MazeController extends Controller
      */
     public function viewMazeAction($uuid)
     {
-        /** @var \AppBundle\Entity\Game $game */
-        $game = $this->getDoctrine()->getRepository('AppBundle:Game')->findOneBy([
+        /** @var \AppBundle\Entity\Game $entity */
+        $entity = $this->getDoctrine()->getRepository('AppBundle:Game')->findOneBy([
             'uuid' => $uuid
         ]);
 
-        return $this->render(':maze:maze.html.twig', [
-            'game' => $game->toDomainEntity()
+        $renderer = new MazeHtmlRender();
+        $game = $entity->toDomainEntity();
+        $maze = $renderer->render($game);
+
+        return $this->render(':game:maze.html.twig', [
+            'maze' => $maze
         ]);
     }
 }

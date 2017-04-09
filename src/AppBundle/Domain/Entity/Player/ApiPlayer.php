@@ -2,12 +2,14 @@
 
 namespace AppBundle\Domain\Entity\Player;
 
+use AppBundle\Domain\Entity\Position\Position;
+
 /**
  * Domain entity; ApiPlayer
  *
  * @package AppBundle\Domain\Entity\Player
  */
-class ApiPlayer implements Player
+class ApiPlayer extends Player
 {
     /** @var string */
     protected $url;
@@ -16,9 +18,11 @@ class ApiPlayer implements Player
      * ApiPlayer constructor.
      *
      * @param string $url
+     * @param Position $position
      */
-    public function __construct($url)
+    public function __construct($url, Position $position)
     {
+        parent::__construct(parent::TYPE_API, $position);
         $this->url = $url;
     }
 
@@ -33,22 +37,30 @@ class ApiPlayer implements Player
     }
 
     /**
-     * Get type
+     * Serialize the object into an array
      *
-     * @return int
+     * @return array
      */
-    public function type()
+    public function serialize()
     {
-        return static::TYPE_API;
+        return array(
+            'type' => $this->type(),
+            'position' => $this->position()->serialize(),
+            'url' => $this->url()
+        );
     }
 
     /**
-     * Get execution data (url, command, ...)
+     * Unserialize from an array and create the object
      *
-     * @return string
+     * @param array $data
+     * @return Position
      */
-    public function execData()
+    public static function unserialize(array $data)
     {
-        return $this->url();
+        return new static(
+            $data['url'],
+            Position::unserialize($data['position'])
+        );
     }
 }

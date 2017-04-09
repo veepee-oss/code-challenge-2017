@@ -28,7 +28,7 @@ class MazeController extends Controller
         $builder = new MazeBuilderRecursiveDivision();
         $maze = $builder->buildRandomMaze(80, 20);
 
-        $player = new ApiPlayer('http://localhost/api');
+        $player = new ApiPlayer('http://localhost/api', $maze->start());
 
         $game = new Game($maze, [$player]);
 

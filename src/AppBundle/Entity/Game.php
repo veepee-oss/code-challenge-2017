@@ -56,6 +56,34 @@ class Game
     private $height;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="start_y", type="integer")
+     */
+    private $startY;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="start_x", type="integer")
+     */
+    private $startX;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="goal_y", type="integer")
+     */
+    private $goalY;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="goal_x", type="integer")
+     */
+    private $goalX;
+
+    /**
      * @var array
      *
      * @ORM\Column(name="maze", type="json_array")
@@ -82,6 +110,10 @@ class Game
             $this->status = null;
             $this->width = null;
             $this->height = null;
+            $this->startY = null;
+            $this->startX = null;
+            $this->goalY = null;
+            $this->goalX = null;
             $this->maze = array();
             $this->players = array();
         } elseif ($source instanceof Game) {
@@ -90,6 +122,10 @@ class Game
             $this->status = $source->getStatus();
             $this->width = $source->getWidth();
             $this->height = $source->getHeight();
+            $this->startY = $source->getStartY();
+            $this->startX = $source->getStartX();
+            $this->goalY = $source->getGoalY();
+            $this->goalX = $source->getGoalX();
             $this->maze = $source->getMaze();
             $this->players = $source->getPlayers();
         } elseif ($source instanceof DomainGame\Game) {
@@ -101,6 +137,10 @@ class Game
             $this->status = $source->status();
             $this->width = $maze->width();
             $this->height = $maze->height();
+            $this->startY = $maze->start()->y();
+            $this->startX = $maze->start()->x();
+            $this->goalY = $maze->goal()->y();
+            $this->goalX = $maze->goal()->x();
             $this->maze = array();
             $this->players = array();
 
@@ -112,10 +152,7 @@ class Game
             }
 
             for ($i = 0; $i < count($players); $i++) {
-                $this->players[] = array(
-                    'type' => $players[$i]->type(),
-                    'data' => $players[$i]->execData()
-                );
+                $this->players[] = $players[$i]->serialize();
             }
         }
     }
@@ -133,11 +170,11 @@ class Game
         foreach ($this->players as $player) {
             switch ($player['type']) {
                 case DomainPlayer\Player::TYPE_API:
-                    $players[] = new DomainPlayer\ApiPlayer($player['data']);
+                    $players[] = DomainPlayer\ApiPlayer::unserialize($player);
                     break;
 
                 case DomainPlayer\Player::TYPE_BOT:
-                    $players[] = new DomainPlayer\BotPlayer($player['data']);
+                    $players[] = DomainPlayer\BotPlayer::unserialize($player);
                     break;
             }
         }
@@ -233,6 +270,86 @@ class Game
     public function getHeight()
     {
         return $this->height;
+    }
+
+    /**
+     * Get maze start Y coordinate
+     *
+     * @return int
+     */
+    public function getStartY()
+    {
+        return $this->startY;
+    }
+
+    /**
+     * Set maze start Y coordinate
+     *
+     * @param int $startY
+     */
+    public function setStartY($startY)
+    {
+        $this->startY = $startY;
+    }
+
+    /**
+     * Get maze start X coordinate
+     *
+     * @return int
+     */
+    public function getStartX()
+    {
+        return $this->startX;
+    }
+
+    /**
+     * Set maze start X coordinate
+     *
+     * @param int $startX
+     */
+    public function setStartX($startX)
+    {
+        $this->startX = $startX;
+    }
+
+    /**
+     * Get maze goal Y coordinate
+     *
+     * @return int
+     */
+    public function getGoalY()
+    {
+        return $this->goalY;
+    }
+
+    /**
+     * Set maze goal Y coordinate
+     *
+     * @param int $goalY
+     */
+    public function setGoalY($goalY)
+    {
+        $this->goalY = $goalY;
+    }
+
+    /**
+     * Get maze goal X coordinate
+     *
+     * @return int
+     */
+    public function getGoalX()
+    {
+        return $this->goalX;
+    }
+
+    /**
+     * Set maze goal X coordinate
+     *
+     * @param int $goalX
+     */
+    public function setGoalX($goalX)
+    {
+        $this->goalX = $goalX;
     }
 
     /**

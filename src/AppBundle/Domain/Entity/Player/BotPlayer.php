@@ -2,12 +2,14 @@
 
 namespace AppBundle\Domain\Entity\Player;
 
+use AppBundle\Domain\Entity\Position\Position;
+
 /**
  * Domain entity; BotPlayer
  *
  * @package AppBundle\Domain\Entity\Player
  */
-class BotPlayer implements Player
+class BotPlayer extends Player
 {
     /** @var string */
     protected $command;
@@ -16,9 +18,11 @@ class BotPlayer implements Player
      * BotPlayer constructor.
      *
      * @param string $command
+     * @param Position $position
      */
-    public function __construct($command)
+    public function __construct($command, Position $position)
     {
+        parent::__construct(parent::TYPE_BOT, $position);
         $this->command = $command;
     }
 
@@ -33,22 +37,30 @@ class BotPlayer implements Player
     }
 
     /**
-     * Get type
+     * Serialize the object into an array
      *
-     * @return int
+     * @return array
      */
-    public function type()
+    public function serialize()
     {
-        return self::TYPE_BOT;
+        return array(
+            'type' => $this->type(),
+            'position' => $this->position()->serialize(),
+            'command' => $this->command()
+        );
     }
 
     /**
-     * Get execution data (url, command, ...)
+     * Unserialize from an array and create the object
      *
-     * @return string
+     * @param array $data
+     * @return Position
      */
-    public function execData()
+    public static function unserialize(array $data)
     {
-        return $this->command();
+        return new static(
+            $data['command'],
+            Position::unserialize($data['position'])
+        );
     }
 }

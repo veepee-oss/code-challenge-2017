@@ -2,6 +2,8 @@
 
 namespace AppBundle\Domain\Entity\Maze;
 
+use AppBundle\Domain\Entity\Position\Position;
+
 /**
  * Domain Entity Maze
  *
@@ -15,12 +17,17 @@ class Maze implements \ArrayAccess, \Countable, \Iterator
     /** @var int */
     protected $height;
 
+    /** @var Position */
+    protected $start;
+
+    /** @var  Position */
+    protected $goal;
 
     /** @var MazeRow[] */
     protected $rows;
 
     /** @var int */
-    protected $position;
+    protected $index;
 
     /**
      * Maze constructor.
@@ -36,7 +43,7 @@ class Maze implements \ArrayAccess, \Countable, \Iterator
         $this->height = $height;
         $this->width = $width;
         $this->rows = [];
-        $this->position = 0;
+        $this->index = 0;
 
         for ($i = 0; $i < $this->height; ++$i) {
             $this->rows[$i] = new MazeRow($this->width);
@@ -47,6 +54,8 @@ class Maze implements \ArrayAccess, \Countable, \Iterator
     }
 
     /**
+     * Get width
+     *
      * @return int
      */
     public function width()
@@ -55,11 +64,53 @@ class Maze implements \ArrayAccess, \Countable, \Iterator
     }
 
     /**
+     * Get height
+     *
      * @return int
      */
     public function height()
     {
         return $this->height;
+    }
+
+    /**
+     * Get start position
+     *
+     * @return Position
+     */
+    public function start()
+    {
+        return $this->start;
+    }
+
+    /**
+     * Set start position
+     *
+     * @param Position $start
+     */
+    public function setStart(Position $start)
+    {
+        $this->start = $start;
+    }
+
+    /**
+     * Get goal position
+     *
+     * @return Position
+     */
+    public function goal()
+    {
+        return $this->goal;
+    }
+
+    /**
+     * Set goal position
+     *
+     * @param Position $goal
+     */
+    public function setGoal(Position $goal)
+    {
+        $this->goal = $goal;
     }
 
     /**
@@ -142,7 +193,7 @@ class Maze implements \ArrayAccess, \Countable, \Iterator
      */
     public function current()
     {
-        return $this[$this->position];
+        return $this[$this->index];
     }
 
     /**
@@ -153,7 +204,7 @@ class Maze implements \ArrayAccess, \Countable, \Iterator
      */
     public function next()
     {
-        ++$this->position;
+        ++$this->index;
     }
 
     /**
@@ -164,18 +215,18 @@ class Maze implements \ArrayAccess, \Countable, \Iterator
      */
     public function key()
     {
-        return $this->position;
+        return $this->index;
     }
 
     /**
-     * Checks if current position is valid
+     * Checks if current index is valid
      *
      * @link http://php.net/manual/en/iterator.valid.php
      * @return boolean Returns true on success or false on failure.
      */
     public function valid()
     {
-        return ($this->position >= 0 && $this->position < $this->height);
+        return ($this->index >= 0 && $this->index < $this->height);
     }
 
     /**
@@ -186,7 +237,7 @@ class Maze implements \ArrayAccess, \Countable, \Iterator
      */
     public function rewind()
     {
-        $this->position = 0;
+        $this->index = 0;
     }
 
     /**

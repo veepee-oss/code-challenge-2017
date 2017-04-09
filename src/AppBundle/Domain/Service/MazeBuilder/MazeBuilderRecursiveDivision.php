@@ -4,6 +4,7 @@ namespace AppBundle\Domain\Service\MazeBuilder;
 
 use AppBundle\Domain\Entity\Maze\Maze;
 use AppBundle\Domain\Entity\Maze\MazeCell;
+use AppBundle\Domain\Entity\Position\Position;
 
 /**
  * Maze builder using recursive division method
@@ -131,16 +132,20 @@ class MazeBuilderRecursiveDivision implements MazeBuilderInterface
                 $x = rand(1, $width - 2);
                 if ($wall == 0) {
                     // Start on top wall
+                    $this->maze->setStart(new Position(1, $width - $x - 1));
                     $this->maze[1][$width - $x - 1]->setContent(MazeCell::CELL_START);
 
                     // Goal on bottom wall
+                    $this->maze->setGoal(new Position($height - 1, $x));
                     $this->maze[$height - 1][$x]->setContent(MazeCell::CELL_GOAL);
                     $this->maze[$height - 2][$x]->setContent(MazeCell::CELL_EMPTY);
                 } else {
                     // Start on bottom wall
+                    $this->maze->setStart(new Position($height - 2, $width - $x - 1));
                     $this->maze[$height - 2][$width - $x - 1]->setContent(MazeCell::CELL_START);
 
                     // Goal on top wall
+                    $this->maze->setGoal(new Position(0, $x));
                     $this->maze[0][$x]->setContent(MazeCell::CELL_GOAL);
                     $this->maze[1][$x]->setContent(MazeCell::CELL_EMPTY);
                 }
@@ -151,16 +156,20 @@ class MazeBuilderRecursiveDivision implements MazeBuilderInterface
                 $y = rand(1, $height - 2);
                 if ($wall == 2) {
                     // Start on left wall
+                    $this->maze->setStart(new Position($height - $y - 1, 1));
                     $this->maze[$height - $y - 1][1]->setContent(MazeCell::CELL_START);
 
                     // Goal on right wall
+                    $this->maze->setGoal(new Position($y, $width - 1));
                     $this->maze[$y][$width - 1]->setContent(MazeCell::CELL_GOAL);
                     $this->maze[$y][$width - 2]->setContent(MazeCell::CELL_EMPTY);
                 } else {
                     // Start on right wall
+                    $this->maze->setStart(new Position($height - $y - 1, $width - 2));
                     $this->maze[$height - $y -1][$width - 2]->setContent(MazeCell::CELL_START);
 
                     // Goal on left wall
+                    $this->maze->setGoal(new Position($y, 0));
                     $this->maze[$y][0]->setContent(MazeCell::CELL_GOAL);
                     $this->maze[$y][1]->setContent(MazeCell::CELL_EMPTY);
                 }

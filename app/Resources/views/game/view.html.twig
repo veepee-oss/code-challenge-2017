@@ -2,8 +2,50 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-xs-12 .js-maze">
+        <div class="col-xs-12 js-maze" data-url="{{ url('game_render', { 'uuid': game.uuid }) }}">
             {% include ':game:maze.html.twig' with { 'maze': maze } %}
         </div>
     </div>
+{% endblock %}
+
+{% block more_javascripts %}
+    <script language="JavaScript">
+
+        (function (win, $) {
+
+            'use strict';
+
+
+            /**
+             * reloadMaze()
+             */
+            var reloadMaze = function () {
+
+                var url = $('.js-maze').data('url');
+                $.get(url)
+                    .done(function(data) {
+                        // TODO
+                    });
+            };
+
+
+            /**
+             * init()
+             */
+            var init = function() {
+                win.setTimeout(reloadMaze, 1000);
+            };
+
+
+            /**
+             * Main process
+             */
+            init();
+
+            return {
+                init: init
+            };
+
+        }(window, jQuery));
+    </script>
 {% endblock %}

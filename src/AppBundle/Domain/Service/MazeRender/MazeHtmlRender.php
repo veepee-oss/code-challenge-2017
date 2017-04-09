@@ -12,6 +12,7 @@ use AppBundle\Domain\Entity\Maze\MazeCell;
  */
 class MazeHtmlRender implements MazeRenderInterface
 {
+    // UTF-8 codes
     const CELL_EMPTY = '&nbsp;';
     const CELL_WALL = '&nbsp;';
     const CELL_START = '&#9678;';

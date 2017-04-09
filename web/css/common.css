@@ -4,9 +4,10 @@ body {
 
 .maze {
     font-family: monospace;
-    padding: 0;
-    margin: 0;
+    margin-left: auto;
+    margin-right: auto;
 }
+
 .maze .empty {
     background-color: #000000;
 }

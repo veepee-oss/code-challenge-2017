@@ -45,7 +45,9 @@ class MazeController extends Controller
     /**
      * View Game
      *
-     * @Route("/view/{uuid}", name="game_view")
+     * @Route("/view/{uuid}",name="game_view",
+     *     requirements={"uuid": "[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}"})
+     *
      * @param string $uuid
      * @return Response
      */
@@ -57,6 +59,27 @@ class MazeController extends Controller
         ]);
 
         return $this->render(':maze:view.html.twig', [
+            'game' => $game->toDomainEntity()
+        ]);
+    }
+
+    /**
+     * View only maze
+     *
+     * @Route("/view/maze/{uuid}",name="game_view_maze",
+     *     requirements={"uuid": "[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}"})
+     *
+     * @param string $uuid
+     * @return Response
+     */
+    public function viewMazeAction($uuid)
+    {
+        /** @var \AppBundle\Entity\Game $game */
+        $game = $this->getDoctrine()->getRepository('AppBundle:Game')->findOneBy([
+            'uuid' => $uuid
+        ]);
+
+        return $this->render(':maze:maze.html.twig', [
             'game' => $game->toDomainEntity()
         ]);
     }

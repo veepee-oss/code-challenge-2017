@@ -2,24 +2,8 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-xs-12 center-block">
-            <table class="maze">
-                {% for row in game.maze %}
-                    <tr>
-                        {% for cell in row %}
-                            {% if cell.content == constant('\\AppBundle\\Domain\\Entity\\Maze\\MazeCell::CELL_WALL') %}
-                                <td class="wall">&nbsp;</td>
-                            {% elseif cell.content == constant('\\AppBundle\\Domain\\Entity\\Maze\\MazeCell::CELL_START') %}
-                                <td class="start">&#9678;</td>
-                            {% elseif cell.content == constant('\\AppBundle\\Domain\\Entity\\Maze\\MazeCell::CELL_GOAL') %}
-                                <td class="goal">&#9673;</td>
-                            {% else %}
-                                <td class="empty">&nbsp;</td>
-                            {% endif %}
-                        {% endfor %}
-                    </tr>
-                {% endfor %}
-            </table>
+        <div class="col-xs-12 .js-maze">
+            {% include ':maze:maze.html.twig' %}
         </div>
     </div>
     {# Player &#128697; #}

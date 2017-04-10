@@ -78,7 +78,7 @@ class GameController extends Controller
      * @param string $uuid
      * @return Response
      */
-    public function viewMazeAction($uuid)
+    public function renderAction($uuid)
     {
         /** @var \AppBundle\Entity\Game $entity */
         $entity = $this->getDoctrine()->getRepository('AppBundle:Game')->findOneBy([

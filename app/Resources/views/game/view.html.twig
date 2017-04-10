@@ -15,27 +15,33 @@
 
             'use strict';
 
+            var $maze = $('.js-maze'),
+                url = $maze.data('url');
+
+            /**
+             * startTimer()
+             */
+            var startTimer = function () {
+                win.setTimeout(reloadMaze, 1000);
+            };
 
             /**
              * reloadMaze()
              */
             var reloadMaze = function () {
-
-                var url = $('.js-maze').data('url');
                 $.get(url)
-                    .done(function(data) {
-                        // TODO
+                    .done(function(html) {
+                        $maze.html(html);
+                        startTimer();
                     });
             };
-
 
             /**
              * init()
              */
             var init = function() {
-                win.setTimeout(reloadMaze, 1000);
+                startTimer();
             };
-
 
             /**
              * Main process

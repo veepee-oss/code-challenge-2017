@@ -14,6 +14,11 @@ class Player
     const TYPE_API = 1;
     const TYPE_BOT = 2;
 
+    const DIRECTION_UP = 'up';
+    const DIRECTION_DOWN = 'down';
+    const DIRECTION_LEFT = 'left';
+    const DIRECTION_RIGHT = 'right';
+
     /** @var int */
     protected $type;
 
@@ -53,6 +58,39 @@ class Player
     }
 
     /**
+     * Moves the player
+     *
+     * @param string $direction
+     * @return Position
+     */
+    public function move($direction)
+    {
+        $y = $this->position->y();
+        $x = $this->position->x();
+        switch ($direction) {
+            case static::DIRECTION_UP:
+                $y--;
+                break;
+
+            case static::DIRECTION_DOWN:
+                $y++;
+                break;
+
+            case static::DIRECTION_LEFT:
+                $x--;
+                break;
+
+            case static::DIRECTION_RIGHT:
+                $y--;
+                break;
+        }
+
+        $this->position = new Position($y, $x);
+
+        return $this->position();
+    }
+
+    /**
      * Serialize the object into an array
      *
      * @return array
@@ -69,7 +107,7 @@ class Player
      * Unserialize from an array and create the object
      *
      * @param array $data
-     * @return Position
+     * @return Player
      */
     public static function unserialize(array $data)
     {

@@ -6,8 +6,8 @@ use AppBundle\Domain\Entity\Game\Game;
 use AppBundle\Domain\Entity\Player\ApiPlayer;
 use AppBundle\Domain\Service\MazeBuilder\MazeBuilderRecursiveDivision;
 use AppBundle\Domain\Service\MazeRender\MazeHtmlRender;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -29,7 +29,7 @@ class GameController extends Controller
         $builder = new MazeBuilderRecursiveDivision();
         $maze = $builder->buildRandomMaze(80, 20);
 
-        $player = new ApiPlayer('http://localhost/api', $maze->start());
+        $player = new ApiPlayer('http://localhost/web/app_dev.php/api/move', $maze->start());
 
         $game = new Game($maze, [$player]);
 

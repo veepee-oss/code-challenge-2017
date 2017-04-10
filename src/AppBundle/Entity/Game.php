@@ -6,6 +6,7 @@ use AppBundle\Domain\Entity\Game as DomainGame;
 use AppBundle\Domain\Entity\Maze as DomainMaze;
 use AppBundle\Domain\Entity\Player as DomainPlayer;
 
+use AppBundle\Domain\Entity\Position\Position;
 use Doctrine\ORM\Mapping as ORM;
 use J20\Uuid\Uuid;
 
@@ -129,31 +130,11 @@ class Game
             $this->maze = $source->getMaze();
             $this->players = $source->getPlayers();
         } elseif ($source instanceof DomainGame\Game) {
-            $maze = $source->maze();
-            $players = $source->players();
-
             $this->id = null;
             $this->uuid = $source->uuid();
             $this->status = $source->status();
-            $this->width = $maze->width();
-            $this->height = $maze->height();
-            $this->startY = $maze->start()->y();
-            $this->startX = $maze->start()->x();
-            $this->goalY = $maze->goal()->y();
-            $this->goalX = $maze->goal()->x();
-            $this->maze = array();
-            $this->players = array();
-
-            for ($i = 0; $i < $this->height; $i++) {
-                $this->maze[$i] = array();
-                for ($j = 0; $j < $this->width; $j++) {
-                    $this->maze[$i][$j] = $maze[$i][$j]->getContent();
-                }
-            }
-
-            for ($i = 0; $i < count($players); $i++) {
-                $this->players[] = $players[$i]->serialize();
-            }
+            $this->setMaze($source->maze());
+            $this->setPlayers($source->players());
         }
     }
 
@@ -165,6 +146,8 @@ class Game
     public function toDomainEntity()
     {
         $maze = new DomainMaze\Maze($this->width, $this->height, $this->maze);
+        $maze->setStart(new Position($this->startY, $this->startX));
+        $maze->setGoal(new Position($this->goalY, $this->goalX));
 
         $players = array();
         foreach ($this->players as $player) {
@@ -196,10 +179,12 @@ class Game
      * Set game uuid
      *
      * @param string $uuid
+     * @return $this
      */
     public function setUuid($uuid)
     {
         $this->uuid = $uuid;
+        return $this;
     }
 
     /**
@@ -216,10 +201,12 @@ class Game
      * Set game status
      *
      * @param int $status
+     * @return $this
      */
     public function setStatus($status)
     {
         $this->status = $status;
+        return $this;
     }
 
     /**
@@ -236,10 +223,12 @@ class Game
      * Set maze width
      *
      * @param int $width
+     * @return $this
      */
     public function setWidth($width)
     {
         $this->width = $width;
+        return $this;
     }
 
     /**
@@ -256,10 +245,12 @@ class Game
      * Set maze height
      *
      * @param int $height
+     * @return $this
      */
     public function setHeight($height)
     {
         $this->height = $height;
+        return $this;
     }
 
     /**
@@ -286,10 +277,12 @@ class Game
      * Set maze start Y coordinate
      *
      * @param int $startY
+     * @return $this
      */
     public function setStartY($startY)
     {
         $this->startY = $startY;
+        return $this;
     }
 
     /**
@@ -306,10 +299,12 @@ class Game
      * Set maze start X coordinate
      *
      * @param int $startX
+     * @return $this
      */
     public function setStartX($startX)
     {
         $this->startX = $startX;
+        return $this;
     }
 
     /**
@@ -326,10 +321,12 @@ class Game
      * Set maze goal Y coordinate
      *
      * @param int $goalY
+     * @return $this
      */
     public function setGoalY($goalY)
     {
         $this->goalY = $goalY;
+        return $this;
     }
 
     /**
@@ -346,20 +343,42 @@ class Game
      * Set maze goal X coordinate
      *
      * @param int $goalX
+     * @return $this
      */
     public function setGoalX($goalX)
     {
         $this->goalX = $goalX;
+        return $this;
     }
 
     /**
      * Set maze cell contents
      *
-     * @param array $maze
+     * @param DomainMaze\Maze|array $maze
+     * @return $this
      */
     public function setMaze(array $maze)
     {
-        $this->maze = $maze;
+        if (!$maze instanceof DomainMaze\MazeCell) {
+            $this->maze = $maze;
+        } else {
+            $this->width = $maze->width();
+            $this->height = $maze->height();
+            $this->startY = $maze->start()->y();
+            $this->startX = $maze->start()->x();
+            $this->goalY = $maze->goal()->y();
+            $this->goalX = $maze->goal()->x();
+            $this->maze = array();
+            for ($i = 0; $i < $this->height; $i++) {
+                $this->maze[$i] = array();
+                for ($j = 0; $j < $this->width; $j++) {
+                    /** @var DomainMaze\MazeCell $cell */
+                    $cell = $maze[$i][$j];
+                    $this->maze[$i][$j] = $cell->getContent();
+                }
+            }
+        }
+        return $this;
     }
 
     /**
@@ -376,10 +395,21 @@ class Game
      * Get players
      *
      * @param array $players
+     * @return $this
      */
-    public function setPlayers($players)
+    public function setPlayers($players = null)
     {
-        $this->players = $players;
+        $this->players = array();
+        if (null !== $players && count($players) > 0) {
+            if (!$players[0] instanceof DomainPlayer\Player) {
+                $this->players = $players;
+            } else {
+                for ($i = 0; $i < count($players); $i++) {
+                    $this->players[] = $players[$i]->serialize();
+                }
+            }
+        }
+        return $this;
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Domain\Entity\Player\Player;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -39,10 +40,21 @@ class ApiController extends Controller
     {
         $move = rand(0, 3);
         switch ($move) {
-            case 0: $move = 'UP';    break;
-            case 1: $move = 'DOWN';  break;
-            case 2: $move = 'LEFT';  break;
-            case 3: $move = 'RIGHT'; break;
+            case 0:
+                $move = Player::DIRECTION_UP;
+                break;
+
+            case 1:
+                $move = Player::DIRECTION_DOWN;
+                break;
+
+            case 2:
+                $move = Player::DIRECTION_LEFT;
+                break;
+
+            case 3:
+                $move = Player::DIRECTION_RIGHT;
+                break;
         }
 
         $result = array(

@@ -19,10 +19,11 @@ class BotPlayer extends Player
      *
      * @param string $command
      * @param Position $position
+     * @param Position $previous
      */
-    public function __construct($command, Position $position)
+    public function __construct($command, Position $position, Position $previous = null)
     {
-        parent::__construct(parent::TYPE_BOT, $position);
+        parent::__construct(parent::TYPE_BOT, $position, $previous);
         $this->command = $command;
     }
 
@@ -43,9 +44,7 @@ class BotPlayer extends Player
      */
     public function serialize()
     {
-        return array(
-            'type' => $this->type(),
-            'position' => $this->position()->serialize(),
+        return parent::serialize() + array(
             'command' => $this->command()
         );
     }
@@ -54,13 +53,14 @@ class BotPlayer extends Player
      * Unserialize from an array and create the object
      *
      * @param array $data
-     * @return Position
+     * @return BotPlayer
      */
     public static function unserialize(array $data)
     {
         return new static(
             $data['command'],
-            Position::unserialize($data['position'])
+            Position::unserialize($data['position']),
+            Position::unserialize(isset($data['previuos']) ? $data['previuos'] : $data['position'])
         );
     }
 }

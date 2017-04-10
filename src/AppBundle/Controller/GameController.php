@@ -29,11 +29,13 @@ class GameController extends Controller
         $builder = new MazeBuilderRecursiveDivision();
         $maze = $builder->buildRandomMaze(80, 20);
 
-        $player = new ApiPlayer('http://localhost/web/app_dev.php/api/move', $maze->start());
+        $player1 = new ApiPlayer('http://localhost/web/app_dev.php/api/move', $maze->start());
+        $player2 = new ApiPlayer('http://localhost/web/app_dev.php/api/move', $maze->start());
 
-        $game = new Game($maze, [$player]);
+        $game = new Game($maze, [$player1, $player2]);
 
         $entity = new \AppBundle\Entity\Game($game);
+
         $em = $this->getDoctrine()->getManager();
         $em->persist($entity);
         $em->flush();

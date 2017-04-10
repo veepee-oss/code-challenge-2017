@@ -25,16 +25,21 @@ class Player
     /** @var Position */
     protected $position;
 
+    /** @var Position */
+    protected $previous;
+
     /**
      * Player constructor.
      *
      * @param int $type
      * @param Position $position
+     * @param Position $previous
      */
-    public function __construct($type, Position $position)
+    public function __construct($type, Position $position, Position $previous = null)
     {
         $this->type = $type;
         $this->position = $position;
+        $this->previous = $previous ?: $position;
     }
 
     /**
@@ -58,36 +63,26 @@ class Player
     }
 
     /**
-     * Moves the player
+     * Get previous position
      *
-     * @param string $direction
      * @return Position
      */
-    public function move($direction)
+    public function previous()
     {
-        $y = $this->position->y();
-        $x = $this->position->x();
-        switch ($direction) {
-            case static::DIRECTION_UP:
-                $y--;
-                break;
+        return $this->previous;
+    }
 
-            case static::DIRECTION_DOWN:
-                $y++;
-                break;
-
-            case static::DIRECTION_LEFT:
-                $x--;
-                break;
-
-            case static::DIRECTION_RIGHT:
-                $y--;
-                break;
-        }
-
-        $this->position = new Position($y, $x);
-
-        return $this->position();
+    /**
+     * Moves the player
+     *
+     * @param Position $position
+     * @return $this
+     */
+    public function move(Position $position)
+    {
+        $this->previous = clone $this->position;
+        $this->position = clone $position;
+        return $this;
     }
 
     /**
@@ -99,7 +94,8 @@ class Player
     {
         return array(
             'type' => $this->type(),
-            'position' => $this->position()->serialize()
+            'position' => $this->position()->serialize(),
+            'previous' => $this->previous()->serialize(),
         );
     }
 
@@ -113,7 +109,8 @@ class Player
     {
         return new static(
             $data['type'],
-            Position::unserialize($data['position'])
+            Position::unserialize($data['position']),
+            Position::unserialize(isset($data['previuos']) ? $data['previuos'] : $data['position'])
         );
     }
 }

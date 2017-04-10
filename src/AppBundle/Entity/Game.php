@@ -357,9 +357,9 @@ class Game
      * @param DomainMaze\Maze|array $maze
      * @return $this
      */
-    public function setMaze(array $maze)
+    public function setMaze($maze)
     {
-        if (!$maze instanceof DomainMaze\MazeCell) {
+        if (!$maze instanceof DomainMaze\Maze) {
             $this->maze = $maze;
         } else {
             $this->width = $maze->width();

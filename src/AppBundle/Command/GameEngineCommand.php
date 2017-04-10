@@ -5,9 +5,7 @@ namespace AppBundle\Command;
 use AppBundle\Domain\Entity\Game as DomainGame;
 use AppBundle\Domain\Entity\Maze as DomainMaze;
 use AppBundle\Domain\Entity\Player as DomainPlayer;
-use AppBundle\Domain\Entity\Position\Position;
 use AppBundle\Entity\Game;
-use Davamigo\HttpClient\Domain\HttpClient;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Exception\LogicException;
 use Symfony\Component\Console\Input\InputInterface;
@@ -45,9 +43,7 @@ class GameEngineCommand extends ContainerAwareCommand
         $container = $this->getContainer();
         $em = $container->get('doctrine')->getManager();
         $repo = $em->getRepository('AppBundle:Game');
-
-        /** @var HttpClient $httpClient */
-        $httpClient = $container->get('davamigo.http.client');
+        $engine = $container->get('app.game.engine');
 
         // Infinite loop
         while (1) {
@@ -62,23 +58,10 @@ class GameEngineCommand extends ContainerAwareCommand
 
                 echo $entity->getUuid() . PHP_EOL;
 
-                /** @var DomainPlayer\Player[] $players */
-                $players = $game->players();
-                foreach ($players as $player) {
-                    if ($player->type() == DomainPlayer\Player::TYPE_API) {
-                        /** @var DomainPlayer\ApiPlayer $player*/
-                        $url = $player->url();
-                        $response = $httpClient->get($url)->send();
-                        $data = json_decode($response->getBody(true));
-                        echo '> ' . $data->move . PHP_EOL;
-
-                        $position = $player->move($data->move);
-                        if ($this->validatePosition($game->maze(), $position)) {
-                            $entity->setPlayers($players);
-                            $em->persist($entity);
-                            $em->flush();
-                        }
-                    }
+                if ($engine->movePlayers($game)) {
+                    $entity->setPlayers($game->players());
+                    $em->persist($entity);
+                    $em->flush();
                 }
             }
 
@@ -86,25 +69,5 @@ class GameEngineCommand extends ContainerAwareCommand
         }
 
         return 0;
-    }
-
-    protected function validatePosition(DomainMaze\Maze $maze, Position $position)
-    {
-        $y = $position->y();
-        $x = $position->x();
-
-        if ($y < 0 || $y >= $maze->height()) {
-            return false;
-        }
-
-        if ($x < 0 || $x >= $maze->width()) {
-            return false;
-        }
-
-        if ($maze[$y][$x]->getContent() == DomainMaze\MazeCell::CELL_WALL) {
-            return false;
-        }
-
-        return true;
     }
 }

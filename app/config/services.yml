@@ -9,5 +9,29 @@ services:
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
 
     davamigo.http.client:
-        class: "Davamigo\\HttpClient\\CurlHttpClient\\CurlHttpClient"
+        class: Davamigo\HttpClient\CurlHttpClient\CurlHttpClient
 
+    app.maze.builder:
+        class: AppBundle\Domain\Service\MazeBuilder\MazeBuilderRecursiveDivision
+
+    app.maze.renderer:
+        class: AppBundle\Domain\Service\MazeRender\MazeHtmlRender
+
+    app.game.engine:
+        class: AppBundle\Domain\Service\GameEngine\GameEngine
+        arguments:
+            - "@app.player.move.factory"
+
+    app.player.move.api:
+        class: AppBundle\Domain\Service\MovePlayer\MoveApiPlayer
+        arguments:
+            - "@davamigo.http.client"
+
+    app.player.move.bot:
+        class: AppBundle\Domain\Service\MovePlayer\MoveBotPlayer
+
+    app.player.move.factory:
+        class: AppBundle\Domain\Service\MovePlayer\MovePlayerFactory
+        arguments:
+            - 1: "@app.player.move.api"
+            - 2: "@app.player.move.bot"

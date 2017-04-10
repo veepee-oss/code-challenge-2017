@@ -38,6 +38,11 @@ class ApiController extends Controller
      */
     public function moveAction(Request $request)
     {
+        $body = $request->getContent();
+
+        $data = json_decode($body, true);
+
+
         $move = rand(0, 3);
         switch ($move) {
             case 0:

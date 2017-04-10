@@ -19,10 +19,11 @@ class ApiPlayer extends Player
      *
      * @param string $url
      * @param Position $position
+     * @param Position $previous
      */
-    public function __construct($url, Position $position)
+    public function __construct($url, Position $position, Position $previous = null)
     {
-        parent::__construct(parent::TYPE_API, $position);
+        parent::__construct(parent::TYPE_API, $position, $previous);
         $this->url = $url;
     }
 
@@ -43,9 +44,7 @@ class ApiPlayer extends Player
      */
     public function serialize()
     {
-        return array(
-            'type' => $this->type(),
-            'position' => $this->position()->serialize(),
+        return parent::serialize() + array(
             'url' => $this->url()
         );
     }
@@ -54,13 +53,14 @@ class ApiPlayer extends Player
      * Unserialize from an array and create the object
      *
      * @param array $data
-     * @return Position
+     * @return ApiPlayer
      */
     public static function unserialize(array $data)
     {
         return new static(
             $data['url'],
-            Position::unserialize($data['position'])
+            Position::unserialize($data['position']),
+            Position::unserialize(isset($data['previuos']) ? $data['previuos'] : $data['position'])
         );
     }
 }

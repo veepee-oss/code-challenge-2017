@@ -42,7 +42,7 @@ class Maze implements \ArrayAccess, \Countable, \Iterator
         $this->validateWidth($width);
         $this->height = $height;
         $this->width = $width;
-        $this->rows = [];
+        $this->rows = array();
         $this->index = 0;
 
         for ($i = 0; $i < $this->height; ++$i) {

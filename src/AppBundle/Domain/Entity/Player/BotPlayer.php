@@ -20,10 +20,11 @@ class BotPlayer extends Player
      * @param string $command
      * @param Position $position
      * @param Position $previous
+     * @param int $status
      */
-    public function __construct($command, Position $position, Position $previous = null)
+    public function __construct($command, Position $position, Position $previous = null, $status = null)
     {
-        parent::__construct(parent::TYPE_BOT, $position, $previous);
+        parent::__construct(parent::TYPE_BOT, $position, $previous, $status);
         $this->command = $command;
     }
 
@@ -60,7 +61,8 @@ class BotPlayer extends Player
         return new static(
             $data['command'],
             Position::unserialize($data['position']),
-            Position::unserialize(isset($data['previuos']) ? $data['previuos'] : $data['position'])
+            Position::unserialize(isset($data['previuos']) ? $data['previuos'] : $data['position']),
+            isset($data['status']) ? $data['status'] : static::STATUS_PLAYING
         );
     }
 }

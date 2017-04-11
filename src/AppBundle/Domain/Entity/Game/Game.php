@@ -82,4 +82,26 @@ class Game
     {
         return $this->uuid;
     }
+
+    /**
+     * Starts playing the game
+     *
+     * @return $this
+     */
+    public function startPlaying()
+    {
+        $this->status = static::STATUS_RUNNING;
+        return $this;
+    }
+
+    /**
+     * Stops playing the game
+     *
+     * @return $this
+     */
+    public function stopPlaying()
+    {
+        $this->status = static::STATUS_FINISHED;
+        return $this;
+    }
 }

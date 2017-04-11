@@ -55,11 +55,8 @@ class GameEngineCommand extends ContainerAwareCommand
             foreach ($entities as $entity) {
                 /** @var DomainGame\Game $game */
                 $game = $entity->toDomainEntity();
-
-                echo $entity->getUuid() . PHP_EOL;
-
                 if ($engine->movePlayers($game)) {
-                    $entity->setPlayers($game->players());
+                    $entity->fromDomainEntity($game);
                     $em->persist($entity);
                     $em->flush();
                 }

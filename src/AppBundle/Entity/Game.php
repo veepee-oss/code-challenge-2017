@@ -131,15 +131,12 @@ class Game
             $this->players = $source->getPlayers();
         } elseif ($source instanceof DomainGame\Game) {
             $this->id = null;
-            $this->uuid = $source->uuid();
-            $this->status = $source->status();
-            $this->setMaze($source->maze());
-            $this->setPlayers($source->players());
+            $this->fromDomainEntity($source);
         }
     }
 
     /**
-     * Convert entity
+     * Convert entity to a domain game
      *
      * @return DomainGame\Game
      */
@@ -163,6 +160,21 @@ class Game
         }
 
         return new DomainGame\Game($maze, $players, $this->status, $this->uuid);
+    }
+
+    /**
+     * Update entity from a domain game
+     *
+     * @param DomainGame\Game $game
+     * @return $this
+     */
+    public function fromDomainEntity(DomainGame\Game $game)
+    {
+        $this->uuid = $game->uuid();
+        $this->status = $game->status();
+        $this->setMaze($game->maze());
+        $this->setPlayers($game->players());
+        return $this;
     }
 
     /**

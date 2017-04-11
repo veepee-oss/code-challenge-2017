@@ -28,7 +28,7 @@ class MazeRow implements \ArrayAccess, \Countable, \Iterator
     {
         $this->validateOffset($count);
         $this->count = $count;
-        $this->cells = [];
+        $this->cells = array();
         $this->position = 0;
 
         for ($i = 0; $i < $this->count; ++$i) {

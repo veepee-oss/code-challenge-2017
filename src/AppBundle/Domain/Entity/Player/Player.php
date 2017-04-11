@@ -19,6 +19,10 @@ class Player
     const DIRECTION_LEFT = 'left';
     const DIRECTION_RIGHT = 'right';
 
+    const STATUS_PLAYING = 1;
+    const STATUS_DIED = 8;
+    const STATUS_WINNER = 12;
+
     /** @var int */
     protected $type;
 
@@ -28,18 +32,23 @@ class Player
     /** @var Position */
     protected $previous;
 
+    /** @var int */
+    protected $status;
+
     /**
      * Player constructor.
      *
      * @param int $type
      * @param Position $position
      * @param Position $previous
+     * @param int $status
      */
-    public function __construct($type, Position $position, Position $previous = null)
+    public function __construct($type, Position $position, Position $previous = null, $status = null)
     {
         $this->type = $type;
         $this->position = $position;
         $this->previous = $previous ?: $position;
+        $this->status = $status ?: static::STATUS_PLAYING;
     }
 
     /**
@@ -53,7 +62,7 @@ class Player
     }
 
     /**
-     * Get position
+     * Get current position
      *
      * @return Position
      */
@@ -73,6 +82,16 @@ class Player
     }
 
     /**
+     * Get current status
+     *
+     * @return int
+     */
+    public function status()
+    {
+        return $this->status;
+    }
+
+    /**
      * Moves the player
      *
      * @param Position $position
@@ -82,6 +101,28 @@ class Player
     {
         $this->previous = clone $this->position;
         $this->position = clone $position;
+        return $this;
+    }
+
+    /**
+     * Win the game
+     *
+     * @return $this
+     */
+    public function winner()
+    {
+        $this->status = static::STATUS_WINNER;
+        return $this;
+    }
+
+    /**
+     * Loose the game
+     *
+     * @return $this
+     */
+    public function looser()
+    {
+        $this->status = static::STATUS_DIED;
         return $this;
     }
 
@@ -96,6 +137,7 @@ class Player
             'type' => $this->type(),
             'position' => $this->position()->serialize(),
             'previous' => $this->previous()->serialize(),
+            'status' => $this->status()
         );
     }
 
@@ -110,7 +152,8 @@ class Player
         return new static(
             $data['type'],
             Position::unserialize($data['position']),
-            Position::unserialize(isset($data['previuos']) ? $data['previuos'] : $data['position'])
+            Position::unserialize(isset($data['previuos']) ? $data['previuos'] : $data['position']),
+            isset($data['status']) ? $data['status'] : static::STATUS_PLAYING
         );
     }
 }

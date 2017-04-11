@@ -8,16 +8,34 @@ body {
     margin-right: auto;
 }
 
+.maze td {
+    text-align: center;
+    vertical-align: middle;
+    overflow: hidden;
+}
+
 .maze .empty {
     background-color: #000000;
+}
+
+.maze .empty:after {
+    content: "\A0";
 }
 
 .maze .wall {
     background-color: #808080;
 }
 
+.maze .wall:after {
+    content: "\A0";
+}
+
 .maze .start {
     background-color: #FFFF00;
+}
+
+.maze .start:after {
+    content: "\25CE";
 }
 
 .maze .goal {
@@ -25,7 +43,33 @@ body {
     color: #FFFFFF;
 }
 
+.maze .goal:after {
+    content: "\1F3C1";
+}
+
 .maze .player {
     background-color: #000000;
     color: #FFFFFF;
+}
+
+.maze .player:after {
+    content: "\1F6B9";
+}
+
+.maze .shadow {
+    background-color: #000000;
+    color: #404040;
+}
+
+.maze .shadow:after {
+    content: "\1F6B9";
+}
+
+.maze .ghost {
+    background-color: #000000;
+    color: #404040;
+}
+
+.maze .ghost:after {
+    content: "\1F47B";
 }

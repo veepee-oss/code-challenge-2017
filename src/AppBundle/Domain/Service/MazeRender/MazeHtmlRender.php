@@ -36,24 +36,30 @@ class MazeHtmlRender implements MazeRenderInterface
         for ($row = 0; $row < $rows; ++$row) {
             $html .= '<tr>';
             for ($col = 0; $col < $cols; ++$col) {
-                $drawPlayer = false;
+                $drawPlayer = $drawShadow = false;
                 foreach ($players as $player) {
                     if ($player->position()->x() == $col && $player->position()->y() == $row) {
                         $drawPlayer = true;
                         break;
                     }
+                    if ($player->previous()->x() == $col && $player->previous()->y() == $row) {
+                        $drawShadow = true;
+                        break;
+                    }
                 }
                 $cell = $maze[$row][$col]->getContent();
                 if ($drawPlayer) {
-                    $html .= '<td class="player">' . static::CELL_PLAYER . '</td>';
+                    $html .= '<td class="player"></td>';
+                } elseif ($drawShadow) {
+                    $html .= '<td class="shadow"></td>';
                 } elseif ($cell == MazeCell::CELL_WALL) {
-                    $html .= '<td class="wall">' . static::CELL_WALL . '</td>';
+                    $html .= '<td class="wall"></td>';
                 } elseif ($cell == MazeCell::CELL_START) {
-                    $html .= '<td class="start">' . static::CELL_START . '</td>';
+                    $html .= '<td class="start"></td>';
                 } elseif ($cell == MazeCell::CELL_GOAL) {
-                    $html .= '<td class="goal">' . static::CELL_GOAL . '</td>';
+                    $html .= '<td class="goal"></td>';
                 } else {
-                    $html .= '<td class="empty">' . static::CELL_EMPTY . '</td>';
+                    $html .= '<td class="empty"></td>';
                 }
             }
             $html .= '</tr>';

@@ -55,9 +55,12 @@ class MoveApiPlayer extends MovePlayer
         }
 
         $body = $response->getBody(true);
-        $obj = json_decode($body);
-        $direction = $obj->move;
+        $data = json_decode($body, true);
+        if (null === $data || empty($data) || !is_array($data) || !array_key_exists('move', $data)) {
+            throw new MovePlayerException('Invalid API response: ' . $body);
+        }
 
+        $direction = $data['move'];
         return $direction;
     }
 }

@@ -152,7 +152,7 @@ class Player
         return new static(
             $data['type'],
             Position::unserialize($data['position']),
-            Position::unserialize(isset($data['previuos']) ? $data['previuos'] : $data['position']),
+            Position::unserialize(isset($data['previous']) ? $data['previous'] : $data['position']),
             isset($data['status']) ? $data['status'] : static::STATUS_PLAYING
         );
     }

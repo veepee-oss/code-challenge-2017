@@ -26,14 +26,22 @@ abstract class MovePlayer implements MovePlayerInterface
      */
     public function movePlayer(Player& $player, Maze $maze)
     {
+        echo sprintf(PHP_EOL . 'Current: (%02d, %02d)' . PHP_EOL, $player->position()->x(), $player->position()->y());
+        echo sprintf('From (%02d, %02d)' . PHP_EOL, $player->previous()->x(), $player->previous()->y());
+
         // Reads the next movement of the player: "up", "down", "left" or "right".
         $direction = $this->readNextMovement($player, $maze);
+
+        echo sprintf('Direction: %s' . PHP_EOL, $direction);
 
         // Computes the new position
         $position = $this->computeNewPosition($player->position(), $direction);
         if (!$this->validatePosition($position, $maze)) {
+            echo '>>>>>>>>>>>>>>> Invalid!' . PHP_EOL;
             return false;
         }
+
+        echo sprintf('Move to (%02d, %02d)' . PHP_EOL, $position->x(), $position->y());
 
         $player->move($position);
 
@@ -79,7 +87,7 @@ abstract class MovePlayer implements MovePlayerInterface
             $x2 -= $x1;
             $x1 = 0;
         } elseif ($x2 >= $maze->width()) {
-            $x1 -= ($pos->y() - $maze->width() + 1);
+            $x1 -= ($pos->x() - $maze->width() + 1);
             $x2 = $maze->width() - 1;
         }
 
@@ -117,6 +125,10 @@ abstract class MovePlayer implements MovePlayerInterface
                     'height'    => $maze->height(),
                     'width'     => $maze->width()
                 ),
+                'goal'  => array(
+                    'y'         => $maze->goal()->y(),
+                    'x'         => $maze->goal()->x()
+                ),
                 'walls'     => $walls
             )
         );
@@ -149,7 +161,7 @@ abstract class MovePlayer implements MovePlayerInterface
                 break;
 
             case Player::DIRECTION_RIGHT:
-                $y--;
+                $x++;
                 break;
         }
 

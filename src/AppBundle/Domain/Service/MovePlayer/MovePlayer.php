@@ -111,6 +111,7 @@ abstract class MovePlayer implements MovePlayerInterface
                 'id'        => $game->uuid()
             ),
             'player'    => array(
+                'id'        => $player->uuid(),
                 'position'  => array(
                     'y'         => $pos->y(),
                     'x'         => $pos->x()

@@ -34,6 +34,8 @@ class Game
      *
      * @param Maze $maze
      * @param Player[] $players
+     * @param int $status
+     * @param string $uuid
      */
     public function __construct(Maze $maze, array $players, $status = self::STATUS_NOT_STARTED, $uuid = null)
     {

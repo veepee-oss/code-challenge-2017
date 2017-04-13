@@ -5,7 +5,6 @@ namespace AppBundle\Controller;
 use AppBundle\Domain\Entity\Maze\MazeObject;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -44,7 +43,7 @@ class ApiController extends Controller
         $data = json_decode($body);
 
         // Extract some vars
-        $uuid = $data->game->id;
+        $uuid = $data->player->id;
         $walls = $data->maze->walls;
         $height = $data->maze->size->height;
         $width = $data->maze->size->width;
@@ -67,7 +66,7 @@ class ApiController extends Controller
         }
 
         // Get data from session
-        $savedData = $request->cookies->get($uuid, null);
+        $savedData = $this->readFile($uuid);
         if ($savedData) {
             $savedData = json_decode($savedData, false);
             $iter = $savedData->iter;
@@ -96,24 +95,23 @@ class ApiController extends Controller
         // Compute the next direction
         $dir = $this->findNextMove($maze, $pos, $dir, $goal);
 
-        echo PHP_EOL;
-        foreach ($maze as $y => $row) {
-            foreach ($row as $x => $cell) {
-                echo ($cell < 0) ? 'X' : (($y == $pos->y && $x == $pos->x) ? 'P' : ($cell > 0 ? '.' : ' '));
-            }
-            echo PHP_EOL;
-        }
+//        echo PHP_EOL;
+//        foreach ($maze as $y => $row) {
+//            foreach ($row as $x => $cell) {
+//                echo ($cell < 0) ? 'X' : (($y == $pos->y && $x == $pos->x) ? 'P' : ($cell > 0 ? '.' : ' '));
+//            }
+//            echo PHP_EOL;
+//        }
+
+        $savedData = new \stdClass();
+        $savedData->iter = 1 + $iter;
+        $savedData->maze = $maze;
+        $this->writeFile($uuid, json_encode($savedData));
 
         $result = new \stdClass();
         $result->name = static::NAME;
         $result->move = $dir;
         $response = new JsonResponse($result);
-
-        $savedData = new \stdClass();
-        $savedData->iter = 1 + $iter;
-        $savedData->maze = $maze;
-        $response->headers->setCookie(new Cookie($uuid, json_encode($savedData), time()+(60*60)));
-
         return $response;
     }
 
@@ -228,5 +226,47 @@ class ApiController extends Controller
                 break;
         }
         return $new;
+    }
+
+    /**
+     * Reads the temporary file with the saved data
+     *
+     * @param string $uuid
+     * @return string|false
+     */
+    private function readFile($uuid)
+    {
+        $filename = sys_get_temp_dir() . '/' . $uuid . '.json';
+        $handler = @fopen($filename, 'rb');
+        if (!$handler) {
+            return false;
+        }
+
+        $data = @fgets($handler);
+        if (!$data) {
+            return false;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Writes the process data to a temporary file
+     *
+     * @param string $uuid
+     * @param string $data
+     * @return bool
+     */
+    private function writeFile($uuid, $data)
+    {
+        $filename = sys_get_temp_dir() . '/' . $uuid . '.json';
+        $handler = @fopen($filename, 'wb');
+        if (!$handler) {
+            return false;
+        }
+
+        fwrite($handler, $data);
+        fclose($handler);
+        return true;
     }
 }

@@ -4,6 +4,7 @@ namespace AppBundle\Domain\Entity\Player;
 
 use AppBundle\Domain\Entity\Maze\MazeObject;
 use AppBundle\Domain\Entity\Position\Position;
+use J20\Uuid\Uuid;
 
 /**
  * Domain Entity: Player
@@ -27,6 +28,9 @@ class Player extends MazeObject
     /** @var int */
     protected $status;
 
+    /** @var string */
+    protected $uuid;
+
     /**
      * Player constructor.
      *
@@ -34,12 +38,14 @@ class Player extends MazeObject
      * @param Position $position
      * @param Position $previous
      * @param int $status
+     * @param string $uuid
      */
-    public function __construct($type, Position $position, Position $previous = null, $status = null)
+    public function __construct($type, Position $position, Position $previous = null, $status = null, $uuid = null)
     {
         parent::__construct($position, $previous);
         $this->type = $type;
         $this->status = $status ?: static::STATUS_PLAYING;
+        $this->uuid = $uuid ?: Uuid::v4();
     }
 
     /**
@@ -60,6 +66,16 @@ class Player extends MazeObject
     public function status()
     {
         return $this->status;
+    }
+
+    /**
+     * Get uuid
+     *
+     * @return string
+     */
+    public function uuid()
+    {
+        return $this->uuid;
     }
 
     /**
@@ -95,7 +111,8 @@ class Player extends MazeObject
             'type' => $this->type(),
             'position' => $this->position()->serialize(),
             'previous' => $this->previous()->serialize(),
-            'status' => $this->status()
+            'status' => $this->status(),
+            'uuid' => $this->uuid()
         );
     }
 
@@ -111,7 +128,8 @@ class Player extends MazeObject
             $data['type'],
             Position::unserialize($data['position']),
             Position::unserialize(isset($data['previous']) ? $data['previous'] : $data['position']),
-            isset($data['status']) ? $data['status'] : static::STATUS_PLAYING
+            isset($data['status']) ? $data['status'] : static::STATUS_PLAYING,
+            isset($data['uuid']) ? $data['uuid'] : Uuid::v4()
         );
     }
 }

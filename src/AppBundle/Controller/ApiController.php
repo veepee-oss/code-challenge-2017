@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Class ApiController
@@ -38,6 +39,9 @@ class ApiController extends Controller
      */
     public function moveAction(Request $request)
     {
+        $session = new Session();
+        $session->start();
+
         // Get the data form the request
         $body = $request->getContent();
         $data = json_decode($body);

@@ -2,7 +2,7 @@
 
 namespace AppBundle\Domain\Service\MovePlayer;
 
-use AppBundle\Domain\Entity\Maze\Maze;
+use AppBundle\Domain\Entity\Game\Game;
 use AppBundle\Domain\Entity\Player\ApiPlayer;
 use AppBundle\Domain\Entity\Player\Player;
 use Davamigo\HttpClient\Domain\HttpClient;
@@ -32,18 +32,18 @@ class MoveApiPlayer extends MovePlayer
      * Reads the next movement of the player: "up", "down", "left" or "right".
      *
      * @param Player $player
-     * @param Maze $maze
+     * @param Game $game
      * @return string The next movement
      * @throws MovePlayerException
      */
-    protected function readNextMovement(Player $player, Maze $maze)
+    protected function readNextMovement(Player $player, Game $game)
     {
         if (!$player instanceof ApiPlayer) {
             throw new MovePlayerException('The $player object must be an instance of ' . ApiPlayer::class);
         }
 
         $url = $player->url();
-        $data = $this->createRequestData($player, $maze);
+        $data = $this->createRequestData($player, $game);
         $headers = array(
             'Content-Type' => 'application/json; charset=UTF-8'
         );

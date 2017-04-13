@@ -46,7 +46,7 @@ class GameEngine
         foreach ($players as $player) {
             if ($player->status() == Player::STATUS_PLAYING) {
                 $moverService = $this->factory->locate($player);
-                if ($moverService->movePlayer($player, $game->maze())) {
+                if ($moverService->movePlayer($player, $game)) {
                     $moved = true;
                     if ($this->checkIfGoalReached($player, $game->maze()->goal())) {
                         $winner = true;

@@ -2,7 +2,7 @@
 
 namespace AppBundle\Domain\Service\MovePlayer;
 
-use AppBundle\Domain\Entity\Maze\Maze;
+use AppBundle\Domain\Entity\Game\Game;
 use AppBundle\Domain\Entity\Player\Player;
 
 /**
@@ -16,9 +16,9 @@ interface MovePlayerInterface
      * Moves the player
      *
      * @param Player $player
-     * @param Maze $maze
+     * @param Game $game
      * @return bool true=successs, false=error
      * @throws MovePlayerException
      */
-    public function movePlayer(Player& $player, Maze $maze);
+    public function movePlayer(Player& $player, Game $game);
 }

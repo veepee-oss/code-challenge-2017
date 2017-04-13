@@ -2,6 +2,7 @@
 
 namespace AppBundle\Domain\Service\MovePlayer;
 
+use AppBundle\Domain\Entity\Game\Game;
 use AppBundle\Domain\Entity\Maze\Maze;
 use AppBundle\Domain\Entity\Maze\MazeCell;
 use AppBundle\Domain\Entity\Maze\MazeObject;
@@ -21,23 +22,23 @@ abstract class MovePlayer implements MovePlayerInterface
      * Moves the player
      *
      * @param Player $player
-     * @param Maze $maze
+     * @param Game $game
      * @return bool true=successs, false=error
      * @throws MovePlayerException
      */
-    public function movePlayer(Player& $player, Maze $maze)
+    public function movePlayer(Player& $player, Game $game)
     {
         echo sprintf(PHP_EOL . 'Current: (%02d, %02d)' . PHP_EOL, $player->position()->x(), $player->position()->y());
         echo sprintf('From (%02d, %02d)' . PHP_EOL, $player->previous()->x(), $player->previous()->y());
 
         // Reads the next movement of the player: "up", "down", "left" or "right".
-        $direction = $this->readNextMovement($player, $maze);
+        $direction = $this->readNextMovement($player, $game);
 
         echo sprintf('Direction: %s' . PHP_EOL, $direction);
 
         // Computes the new position
         $position = $this->computeNewPosition($player->position(), $direction);
-        if (!$this->validatePosition($position, $maze)) {
+        if (!$this->validatePosition($position, $game->maze())) {
             echo '>>>>>>>>>>>>>>> Invalid!' . PHP_EOL;
             return false;
         }
@@ -53,21 +54,22 @@ abstract class MovePlayer implements MovePlayerInterface
      * Reads the next movemento of the player: "up", "down", "left" or "right".
      *
      * @param Player $player
-     * @param Maze $maze
+     * @param Game $game
      * @return string The next movement
      * @throws MovePlayerException
      */
-    abstract protected function readNextMovement(Player $player, Maze $maze);
+    abstract protected function readNextMovement(Player $player, Game $game);
 
     /**
      * Creates the request data to send to the player bot or api.
      *
      * @param Player $player
-     * @param Maze $maze
+     * @param Game $game
      * @return string Request in json format
      */
-    protected function createRequestData(Player $player, Maze $maze)
+    protected function createRequestData(Player $player, Game $game)
     {
+        $maze = $game->maze();
         $pos = $player->position();
         $prev = $player->previous();
 
@@ -105,6 +107,9 @@ abstract class MovePlayer implements MovePlayerInterface
         }
 
         $data = array(
+            'game'      => array(
+                'id'        => $game->uuid()
+            ),
             'player'    => array(
                 'position'  => array(
                     'y'         => $pos->y(),

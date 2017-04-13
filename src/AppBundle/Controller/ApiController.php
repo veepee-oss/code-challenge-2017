@@ -5,9 +5,9 @@ namespace AppBundle\Controller;
 use AppBundle\Domain\Entity\Maze\MazeObject;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Class ApiController
@@ -39,33 +39,18 @@ class ApiController extends Controller
      */
     public function moveAction(Request $request)
     {
-        $session = new Session();
-        $session->start();
-
         // Get the data form the request
         $body = $request->getContent();
         $data = json_decode($body);
 
         // Extract some vars
+        $uuid = $data->game->id;
         $walls = $data->maze->walls;
         $height = $data->maze->size->height;
         $width = $data->maze->size->width;
         $pos = $data->player->position;
         $prev = $data->player->previous;
-
-        // Create visible maz matrix
-        $maze = array();
-        foreach ($walls as $wall) {
-            $maze[$wall->y][$wall->x] = 1;
-        }
-
-        // Available moves
-        $moves = array(
-            MazeObject::DIRECTION_UP,
-            MazeObject::DIRECTION_RIGHT,
-            MazeObject::DIRECTION_DOWN,
-            MazeObject::DIRECTION_LEFT
-        );
+        $goal = $data->maze->goal;
 
         // Compute current direction
         $dir = null;
@@ -77,89 +62,171 @@ class ApiController extends Controller
             $dir = MazeObject::DIRECTION_LEFT;
         } elseif ($pos->x > $prev->x) {
             $dir = MazeObject::DIRECTION_RIGHT;
+        } else {
+            $dir = MazeObject::DIRECTION_UP;
         }
 
-        if ($dir) {
-            // 20% probability of turning right or left
-            $turn = (rand(0, 9) < 2);
-            if ($turn) {
-                $add = (rand(0, 1) == 0) ? 1 : 3;
-                $dir = $moves[($add + array_search($dir, $moves)) % 4];
-            }
-        }
-
-//        echo PHP_EOL;
-//        foreach ($maze as $y => $row) {
-//            for ($x = 0; $x < $width; $x++) {
-//                echo isset($row[$x]) ? 'X' : (($y == $pos->y && $x == $pos->x) ? 'P' : ' ');
-//            }
-//            echo PHP_EOL;
-//        }
-
-        if (!$this->testMove($maze, $height, $width, $pos, $dir)) {
-            unset($moves[array_search($dir, $moves)]);
-
-            shuffle($moves);
-            foreach ($moves as $move) {
-                if ($dir != $move && $this->testMove($maze, $height, $width, $pos, $move)) {
-                    $dir = $move;
-                    break;
+        // Get data from session
+        $savedData = $request->cookies->get($uuid, null);
+        if ($savedData) {
+            $savedData = json_decode($savedData, false);
+            $iter = $savedData->iter;
+            $maze = $savedData->maze;
+        } else {
+            $iter = 1;
+            $maze = array();
+            for ($y = 0; $y < $height; ++$y) {
+                $maze[$y] = array();
+                for ($x = 0; $x < $width; ++$x) {
+                    $maze[$y][$x] = 0;
                 }
             }
         }
 
-        $result = array(
-            'name' => static::NAME,
-            'move' => $dir
-        );
+        // Add visible walls to the maze
+        foreach ($walls as $wall) {
+            $maze[$wall->y][$wall->x] = -1;
+        }
 
-        return new JsonResponse($result);
+        // Saving current iteration
+        if ($maze[$pos->y][$pos->x] == 0) {
+            $maze[$pos->y][$pos->x] = $iter;
+        }
+
+        // Compute the next direction
+        $dir = $this->findNextMove($maze, $pos, $dir, $goal);
+
+        echo PHP_EOL;
+        foreach ($maze as $y => $row) {
+            foreach ($row as $x => $cell) {
+                echo ($cell < 0) ? 'X' : (($y == $pos->y && $x == $pos->x) ? 'P' : ($cell > 0 ? '.' : ' '));
+            }
+            echo PHP_EOL;
+        }
+
+        $result = new \stdClass();
+        $result->name = static::NAME;
+        $result->move = $dir;
+        $response = new JsonResponse($result);
+
+        $savedData = new \stdClass();
+        $savedData->iter = 1 + $iter;
+        $savedData->maze = $maze;
+        $response->headers->setCookie(new Cookie($uuid, json_encode($savedData), time()+(60*60)));
+
+        return $response;
     }
 
     /**
+     * Computes the next movement
+     *
      * @param array $maze
-     * @param int $height
-     * @param int $width
      * @param \stdClass $pos
      * @param string $dir
-     * @return bool
+     * @param array $goal
+     * @return string
      */
-    private function testMove($maze, $height, $width, $pos, $dir)
+    private function findNextMove($maze, $pos, $dir, $goal)
+    {
+        $moves = array(
+            MazeObject::DIRECTION_UP,
+            MazeObject::DIRECTION_RIGHT,
+            MazeObject::DIRECTION_DOWN,
+            MazeObject::DIRECTION_LEFT
+        );
+
+        $rightDir = $moves[(array_search($dir, $moves) + 1) % 4];
+        $leftDir = $moves[(array_search($dir, $moves) + 3) % 4];
+        $backDir = $moves[(array_search($dir, $moves) + 2) % 4];
+
+        $forwardPos = $this->nextPosition($pos, $dir);
+        $rightPos = $this->nextPosition($pos, $rightDir);
+        $leftPos = $this->nextPosition($pos, $leftDir);
+        $backPos = $this->nextPosition($pos, $backDir);
+
+        if ($forwardPos->y == $goal->y && $forwardPos->x == $goal->x) {
+            return $dir;
+        }
+
+        if ($rightPos->y == $goal->y && $rightPos->x == $goal->x) {
+            return $rightDir;
+        }
+
+        if ($leftPos->y == $goal->y && $leftPos->x == $goal->x) {
+            return $leftDir;
+        }
+
+        if ($backPos->y == $goal->y && $backPos->x == $goal->x) {
+            return $backDir;
+        }
+
+        $currentContent= $maze[$pos->y][$pos->x];
+        $forwardContent= $maze[$forwardPos->y][$forwardPos->x];
+        $rightContent= $maze[$rightPos->y][$rightPos->x];
+        $leftContent= $maze[$leftPos->y][$leftPos->x];
+        $backContent= $maze[$backPos->y][$backPos->x];
+
+        if ($forwardContent == 0) {
+            return $dir;
+        }
+
+        if ($rightContent == 0) {
+            return $rightDir;
+        }
+
+        if ($leftContent == 0) {
+            return $leftDir;
+        }
+
+        $moves = array();
+        if ($forwardContent > 0 && $forwardContent < $currentContent) {
+            $moves[$forwardContent] = $dir;
+        }
+
+        if ($rightContent > 0 && $rightContent < $currentContent) {
+            $moves[$rightContent] = $rightDir;
+        }
+
+        if ($leftContent > 0 && $leftContent < $currentContent) {
+            $moves[$leftContent] = $leftDir;
+        }
+
+        if ($backContent > 0 && $backContent < $currentContent) {
+            $moves[$backContent] = $backDir;
+        }
+
+        ksort($moves, SORT_NUMERIC);
+        $moves = array_reverse($moves);
+        return reset($moves);
+    }
+
+    /**
+     * Computes the next position
+     *
+     * @param \stdClass $pos
+     * @param string $dir
+     * @return \stdClass
+     */
+    private function nextPosition($pos, $dir)
     {
         $new = clone $pos;
         switch ($dir) {
             case MazeObject::DIRECTION_UP:
-                if (--$new->y < 0) {
-                    return false;
-                }
+                --$new->y;
                 break;
 
             case MazeObject::DIRECTION_DOWN:
-                if (++$new->y >= $height) {
-                    return false;
-                }
+                ++$new->y;
                 break;
 
             case MazeObject::DIRECTION_LEFT:
-                if (--$new->x < 0) {
-                    return false;
-                }
+                --$new->x;
                 break;
 
             case MazeObject::DIRECTION_RIGHT:
-                if (++$new->x >= $width) {
-                    return false;
-                }
+                ++$new->x;
                 break;
-
-            default:
-                return false;
         }
-
-        if (isset($maze[$new->y][$new->x]) && $maze[$new->y][$new->x] == 1) {
-            return false;
-        }
-
-        return true;
+        return $new;
     }
 }

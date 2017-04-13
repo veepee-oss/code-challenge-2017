@@ -2,6 +2,7 @@
 
 namespace AppBundle\Domain\Entity\Player;
 
+use AppBundle\Domain\Entity\Maze\MazeObject;
 use AppBundle\Domain\Entity\Position\Position;
 
 /**
@@ -9,28 +10,19 @@ use AppBundle\Domain\Entity\Position\Position;
  *
  * @package AppBundle\Domain\Entity\Player
  */
-class Player
+class Player extends MazeObject
 {
+    /** Player types */
     const TYPE_API = 1;
     const TYPE_BOT = 2;
 
-    const DIRECTION_UP = 'up';
-    const DIRECTION_DOWN = 'down';
-    const DIRECTION_LEFT = 'left';
-    const DIRECTION_RIGHT = 'right';
-
+    /** Player statuses */
     const STATUS_PLAYING = 1;
     const STATUS_DIED = 8;
     const STATUS_WINNER = 12;
 
     /** @var int */
     protected $type;
-
-    /** @var Position */
-    protected $position;
-
-    /** @var Position */
-    protected $previous;
 
     /** @var int */
     protected $status;
@@ -45,9 +37,8 @@ class Player
      */
     public function __construct($type, Position $position, Position $previous = null, $status = null)
     {
+        parent::__construct($position, $previous);
         $this->type = $type;
-        $this->position = $position;
-        $this->previous = $previous ?: $position;
         $this->status = $status ?: static::STATUS_PLAYING;
     }
 
@@ -62,26 +53,6 @@ class Player
     }
 
     /**
-     * Get current position
-     *
-     * @return Position
-     */
-    public function position()
-    {
-        return $this->position;
-    }
-
-    /**
-     * Get previous position
-     *
-     * @return Position
-     */
-    public function previous()
-    {
-        return $this->previous;
-    }
-
-    /**
      * Get current status
      *
      * @return int
@@ -89,19 +60,6 @@ class Player
     public function status()
     {
         return $this->status;
-    }
-
-    /**
-     * Moves the player
-     *
-     * @param Position $position
-     * @return $this
-     */
-    public function move(Position $position)
-    {
-        $this->previous = clone $this->position;
-        $this->position = clone $position;
-        return $this;
     }
 
     /**

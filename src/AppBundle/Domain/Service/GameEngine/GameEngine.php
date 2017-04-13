@@ -48,7 +48,7 @@ class GameEngine
                 $moverService = $this->factory->locate($player);
                 if ($moverService->movePlayer($player, $game->maze())) {
                     $moved = true;
-                    if ($this->checkGoal($player, $game->maze()->goal())) {
+                    if ($this->checkIfGoalReached($player, $game->maze()->goal())) {
                         $winner = true;
                     }
                 }
@@ -56,7 +56,7 @@ class GameEngine
         }
 
         if ($winner || $looser) {
-            if (!$this->$this->checkSomePlayersAlive($game)) {
+            if (!$this->$this->checkIfSomePlayersAlive($game)) {
                 $game->stopPlaying();
             }
         }
@@ -65,13 +65,13 @@ class GameEngine
     }
 
     /**
-     * Checks the goal
+     * Checks if a player reached the goal
      *
      * @param Player $player
      * @param Position $goal
      * @return bool
      */
-    protected function checkGoal(Player& $player, Position $goal)
+    protected function checkIfGoalReached(Player& $player, Position $goal)
     {
         $pos = $player->position();
         if ($pos->y() == $goal->y() && $pos->x() == $goal->x()) {
@@ -87,7 +87,7 @@ class GameEngine
      * @param Game $game
      * @return bool
      */
-    protected function checkSomePlayersAlive(Game $game)
+    protected function checkIfSomePlayersAlive(Game $game)
     {
         /** @var Player[] $players */
         $players = $game->players();

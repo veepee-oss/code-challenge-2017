@@ -2,7 +2,7 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Domain\Entity\Player\Player;
+use AppBundle\Domain\Entity\Maze\MazeObject;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -57,22 +57,22 @@ class ApiController extends Controller
 
         // Available moves
         $moves = array(
-            Player::DIRECTION_UP,
-            Player::DIRECTION_RIGHT,
-            Player::DIRECTION_DOWN,
-            Player::DIRECTION_LEFT
+            MazeObject::DIRECTION_UP,
+            MazeObject::DIRECTION_RIGHT,
+            MazeObject::DIRECTION_DOWN,
+            MazeObject::DIRECTION_LEFT
         );
 
         // Compute current direction
         $dir = null;
         if ($pos->y < $prev->y) {
-            $dir = Player::DIRECTION_UP;
+            $dir = MazeObject::DIRECTION_UP;
         } elseif ($pos->y > $prev->y) {
-            $dir = Player::DIRECTION_DOWN;
+            $dir = MazeObject::DIRECTION_DOWN;
         } elseif ($pos->x < $prev->x) {
-            $dir = Player::DIRECTION_LEFT;
+            $dir = MazeObject::DIRECTION_LEFT;
         } elseif ($pos->x > $prev->x) {
-            $dir = Player::DIRECTION_RIGHT;
+            $dir = MazeObject::DIRECTION_RIGHT;
         }
 
         if ($dir) {
@@ -124,25 +124,25 @@ class ApiController extends Controller
     {
         $new = clone $pos;
         switch ($dir) {
-            case Player::DIRECTION_UP:
+            case MazeObject::DIRECTION_UP:
                 if (--$new->y < 0) {
                     return false;
                 }
                 break;
 
-            case Player::DIRECTION_DOWN:
+            case MazeObject::DIRECTION_DOWN:
                 if (++$new->y >= $height) {
                     return false;
                 }
                 break;
 
-            case Player::DIRECTION_LEFT:
+            case MazeObject::DIRECTION_LEFT:
                 if (--$new->x < 0) {
                     return false;
                 }
                 break;
 
-            case Player::DIRECTION_RIGHT:
+            case MazeObject::DIRECTION_RIGHT:
                 if (++$new->x >= $width) {
                     return false;
                 }

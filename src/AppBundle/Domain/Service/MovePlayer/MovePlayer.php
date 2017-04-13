@@ -4,6 +4,7 @@ namespace AppBundle\Domain\Service\MovePlayer;
 
 use AppBundle\Domain\Entity\Maze\Maze;
 use AppBundle\Domain\Entity\Maze\MazeCell;
+use AppBundle\Domain\Entity\Maze\MazeObject;
 use AppBundle\Domain\Entity\Player\Player;
 use AppBundle\Domain\Entity\Position\Position;
 
@@ -148,19 +149,19 @@ abstract class MovePlayer implements MovePlayerInterface
         $y = $position->y();
         $x = $position->x();
         switch ($direction) {
-            case Player::DIRECTION_UP:
+            case MazeObject::DIRECTION_UP:
                 $y--;
                 break;
 
-            case Player::DIRECTION_DOWN:
+            case MazeObject::DIRECTION_DOWN:
                 $y++;
                 break;
 
-            case Player::DIRECTION_LEFT:
+            case MazeObject::DIRECTION_LEFT:
                 $x--;
                 break;
 
-            case Player::DIRECTION_RIGHT:
+            case MazeObject::DIRECTION_RIGHT:
                 $x++;
                 break;
         }

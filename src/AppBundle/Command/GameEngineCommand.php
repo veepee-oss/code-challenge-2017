@@ -25,7 +25,7 @@ class GameEngineCommand extends ContainerAwareCommand
     {
         $this
             ->setName('app:code-challenge:engine')
-            ->setDescription('Privlia Code Cahllenge 2017 engine daemon.');
+            ->setDescription('Privalia Code Challenge 2017 engine daemon.');
     }
 
     /**

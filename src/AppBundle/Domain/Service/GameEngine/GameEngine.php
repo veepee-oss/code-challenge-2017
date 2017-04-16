@@ -56,8 +56,8 @@ class GameEngine
         }
 
         if ($winner || $looser) {
-            if (!$this->$this->checkIfSomePlayersAlive($game)) {
-                $game->stopPlaying();
+            if (!$this->checkIfSomePlayersAlive($game)) {
+                $game->endGame();
             }
         }
 

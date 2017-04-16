@@ -94,4 +94,85 @@ class GameController extends Controller
             'maze' => $maze
         ));
     }
+
+    /**
+     * Start a game
+     *
+     * @Route("/view/{uuid}/start",name="game_start",
+     *     requirements={"uuid": "[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}"})
+     *
+     * @param string $uuid
+     * @return Response
+     */
+    public function startAction($uuid)
+    {
+        /** @var \AppBundle\Entity\Game $entity */
+        $entity = $this->getDoctrine()->getRepository('AppBundle:Game')->findOneBy(array(
+            'uuid' => $uuid
+        ));
+
+        $game = $entity->toDomainEntity();
+        $game->startPlaying();
+
+        $entity->fromDomainEntity($game);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($entity);
+        $em->flush();
+
+        return new Response();
+    }
+
+    /**
+     * Stop a game
+     *
+     * @Route("/view/{uuid}/stop",name="game_stop",
+     *     requirements={"uuid": "[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}"})
+     *
+     * @param string $uuid
+     * @return Response
+     */
+    public function stopAction($uuid)
+    {
+        /** @var \AppBundle\Entity\Game $entity */
+        $entity = $this->getDoctrine()->getRepository('AppBundle:Game')->findOneBy(array(
+            'uuid' => $uuid
+        ));
+
+        $game = $entity->toDomainEntity();
+        $game->stopPlaying();
+
+        $entity->fromDomainEntity($game);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($entity);
+        $em->flush();
+
+        return new Response();
+    }
+
+    /**
+     * Reset a game
+     *
+     * @Route("/view/{uuid}/reset",name="game_reset",
+     *     requirements={"uuid": "[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}"})
+     *
+     * @param string $uuid
+     * @return Response
+     */
+    public function resetAction($uuid)
+    {
+        /** @var \AppBundle\Entity\Game $entity */
+        $entity = $this->getDoctrine()->getRepository('AppBundle:Game')->findOneBy(array(
+            'uuid' => $uuid
+        ));
+
+        $game = $entity->toDomainEntity();
+        $game->resetPlaying();
+
+        $entity->fromDomainEntity($game);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($entity);
+        $em->flush();
+
+        return new Response();
+    }
 }

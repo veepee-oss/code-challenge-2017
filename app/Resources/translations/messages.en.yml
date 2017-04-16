@@ -20,5 +20,11 @@ app:
 
         rules:          "See the rules"
 
+    gamepage:
+        buttons:
+            start:          "Start"
+            stop:           "Stop"
+            reset:          "Reset"
+
     credits:
         title:          "Credits and Attributions"

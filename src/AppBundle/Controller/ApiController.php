@@ -121,11 +121,12 @@ class ApiController extends Controller
      * @param array $maze
      * @param \stdClass $pos
      * @param string $dir
-     * @param array $goal
+     * @param \stdClass $goal
      * @return string
      */
     private function findNextMove($maze, $pos, $dir, $goal)
     {
+        // Array of movements
         $moves = array(
             MazeObject::DIRECTION_UP,
             MazeObject::DIRECTION_RIGHT,
@@ -142,6 +143,7 @@ class ApiController extends Controller
         $leftPos = $this->nextPosition($pos, $leftDir);
         $backPos = $this->nextPosition($pos, $backDir);
 
+        // If the goal is at a side, move to it
         if ($forwardPos->y == $goal->y && $forwardPos->x == $goal->x) {
             return $dir;
         }
@@ -158,23 +160,35 @@ class ApiController extends Controller
             return $backDir;
         }
 
-        $currentContent= $maze[$pos->y][$pos->x];
+        // Go forward if possible
         $forwardContent= $maze[$forwardPos->y][$forwardPos->x];
-        $rightContent= $maze[$rightPos->y][$rightPos->x];
-        $leftContent= $maze[$leftPos->y][$leftPos->x];
-        $backContent= $maze[$backPos->y][$backPos->x];
-
         if ($forwardContent == 0) {
             return $dir;
         }
 
-        if ($rightContent == 0) {
-            return $rightDir;
+        // Turn right or left if possible (random)
+        $rightContent= $maze[$rightPos->y][$rightPos->x];
+        $leftContent= $maze[$leftPos->y][$leftPos->x];
+
+        if (0 == rand(0, 1)) {
+            if ($rightContent == 0) {
+                return $rightDir;
+            }
+            if ($leftContent == 0) {
+                return $leftDir;
+            }
+        } else {
+            if ($leftContent == 0) {
+                return $leftDir;
+            }
+            if ($rightContent == 0) {
+                return $rightDir;
+            }
         }
 
-        if ($leftContent == 0) {
-            return $leftDir;
-        }
+        // Else: go back
+        $backContent= $maze[$backPos->y][$backPos->x];
+        $currentContent= $maze[$pos->y][$pos->x];
 
         $moves = array();
         if ($forwardContent > 0 && $forwardContent < $currentContent) {

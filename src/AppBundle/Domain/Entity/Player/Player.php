@@ -101,6 +101,20 @@ class Player extends MazeObject
     }
 
     /**
+     * Reset the game for this player
+     *
+     * @param Position $pos
+     * @return $this
+     */
+    public function reset(Position $pos)
+    {
+        $this->status = static::STATUS_PLAYING;
+        $this->position = clone $pos;
+        $this->previous = clone $pos;
+        return $this;
+    }
+
+    /**
      * Serialize the object into an array
      *
      * @return array

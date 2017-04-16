@@ -6,6 +6,44 @@
             {% include ':game:maze.html.twig' with { 'maze': maze } %}
         </div>
     </div>
+
+    <hr>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="maze-buttons">
+                    <div class="btn-group" role="group">
+                        <button
+                            type="button"
+                            {% if game.status != constant('AppBundle\\Domain\\Entity\\Game\\Game::STATUS_NOT_STARTED') %}
+                                disabled="disabled"
+                            {% endif %}
+                            class="btn btn-success js-btn-start"
+                            data-url="{{ url('game_start', { 'uuid': game.uuid }) }}">
+                            {{ 'app.gamepage.buttons.start' | trans }}
+                        </button>
+                        <button
+                            type="button"
+                            {% if game.status != constant('AppBundle\\Domain\\Entity\\Game\\Game::STATUS_RUNNING') %}
+                                disabled="disabled"
+                            {% endif %}
+                            class="btn btn-danger js-btn-stop"
+                            data-url="{{ url('game_stop', { 'uuid': game.uuid }) }}">
+                            {{ 'app.gamepage.buttons.stop' | trans }}
+                        </button>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="btn btn-warning js-btn-reset"
+                        data-url="{{ url('game_reset', { 'uuid': game.uuid }) }}">
+                        {{ 'app.gamepage.buttons.reset' | trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block more_javascripts %}
@@ -16,23 +54,87 @@
             'use strict';
 
             var $maze = $('.js-maze'),
-                url = $maze.data('url');
+                $btnStart = $('.js-btn-start'),
+                $btnStop = $('.js-btn-stop'),
+                $btnReset = $('.js-btn-reset'),
+                reloadUrl = $maze.data('url'),
+                startUrl = $btnStart.data('url'),
+                stopUrl = $btnStop.data('url'),
+                resetUrl = $btnReset.data('url');
+
+            /**
+             * configureButtons()
+             */
+            var configureButtons = function() {
+                $btnStart.click(function(ev) {
+                    ev.preventDefault();
+                    startPlaying();
+                });
+
+                $btnStop.click(function(ev) {
+                    ev.preventDefault();
+                    stopPlaying();
+                });
+
+                $btnReset.click(function(ev) {
+                    ev.preventDefault();
+                    resetPlaying();
+                });
+            };
+
+            /**
+             * startPlaying()
+             */
+            var startPlaying = function () {
+                $.get(startUrl)
+                    .done(function() {
+                        $btnStart.attr('disabled', 'disabled');
+                        $btnStop.attr('disabled', null);
+                        reloadMaze();
+                    });
+            };
+
+            /**
+             * stopPlaying()
+             */
+            var stopPlaying = function () {
+                $.get(stopUrl)
+                    .done(function() {
+                        $btnStart.attr('disabled', null);
+                        $btnStop.attr('disabled', 'disabled');
+                        reloadMaze();
+                    });
+            };
+
+            /**
+             * resetPlaying()
+             */
+            var resetPlaying = function () {
+                $.get(resetUrl)
+                    .done(function() {
+                        $btnStart.attr('disabled', null);
+                        $btnStop.attr('disabled', 'disabled');
+                        reloadMaze();
+                    });
+            };
 
             /**
              * startTimer()
              */
             var startTimer = function () {
-                win.setTimeout(reloadMaze, 1000);
+                if ($btnStop.attr('disabled') != 'disabled') {
+                    win.setTimeout(reloadMaze, 1000);
+                }
             };
 
             /**
              * reloadMaze()
              */
             var reloadMaze = function () {
-                $.get(url)
+                $.get(reloadUrl)
                     .done(function(html) {
                         $maze.html(html);
-//                        startTimer();
+                        startTimer();
                     });
             };
 
@@ -40,6 +142,7 @@
              * init()
              */
             var init = function() {
+                configureButtons();
                 startTimer();
             };
 

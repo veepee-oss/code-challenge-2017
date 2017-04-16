@@ -103,7 +103,32 @@ class Game
      */
     public function stopPlaying()
     {
+        $this->status = static::STATUS_NOT_STARTED;
+        return $this;
+    }
+
+    /**
+     * Ends playing the game
+     *
+     * @return $this
+     */
+    public function endGame()
+    {
         $this->status = static::STATUS_FINISHED;
+        return $this;
+    }
+
+    /**
+     * Resets the game to its initial position
+     *
+     * @return $this
+     */
+    public function resetPlaying()
+    {
+        $this->status = static::STATUS_NOT_STARTED;
+        foreach ($this->players as $player) {
+            $player->reset($this->maze()->start());
+        }
         return $this;
     }
 }

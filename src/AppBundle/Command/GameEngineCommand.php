@@ -60,6 +60,8 @@ class GameEngineCommand extends ContainerAwareCommand
                     $em->persist($entity);
                     $em->flush();
                 }
+
+                $em->detach($entity);
             }
 
             usleep(100000);

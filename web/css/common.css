@@ -73,3 +73,10 @@ body {
 .maze .ghost:after {
     content: "\1F47B";
 }
+
+.maze-buttons {
+    display: table;
+    margin-left: auto;
+    margin-right: auto;
+
+}

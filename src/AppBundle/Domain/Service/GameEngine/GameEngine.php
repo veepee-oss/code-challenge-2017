@@ -43,12 +43,14 @@ class GameEngine
         $players = $game->players();
         shuffle($players);
 
+        $game->incMoves();
         foreach ($players as $player) {
             if ($player->status() == Player::STATUS_PLAYING) {
                 $moverService = $this->factory->locate($player);
                 if ($moverService->movePlayer($player, $game)) {
                     $moved = true;
-                    if ($this->checkIfGoalReached($player, $game->maze()->goal())) {
+                    if ($game->isGoalReached($player)) {
+                        $player->winner();
                         $winner = true;
                     }
                 }
@@ -56,46 +58,11 @@ class GameEngine
         }
 
         if ($winner || $looser) {
-            if (!$this->checkIfSomePlayersAlive($game)) {
+            if (!$game->arePlayersAlive()) {
                 $game->endGame();
             }
         }
 
         return $moved || $winner || $looser;
-    }
-
-    /**
-     * Checks if a player reached the goal
-     *
-     * @param Player $player
-     * @param Position $goal
-     * @return bool
-     */
-    protected function checkIfGoalReached(Player& $player, Position $goal)
-    {
-        $pos = $player->position();
-        if ($pos->y() == $goal->y() && $pos->x() == $goal->x()) {
-            $player->winner();
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Check if there are at least one player alive
-     *
-     * @param Game $game
-     * @return bool
-     */
-    protected function checkIfSomePlayersAlive(Game $game)
-    {
-        /** @var Player[] $players */
-        $players = $game->players();
-        foreach ($players as $player) {
-            if ($player->status() == Player::STATUS_PLAYING) {
-                return true;
-            }
-        }
-        return false;
     }
 }

@@ -23,8 +23,11 @@ class Game
     /** @var Player[] */
     protected $players;
 
-    /** @var integer */
+    /** @var int */
     protected $status;
+
+    /** @var int */
+    protected $moves;
 
     /** @var string */
     protected $uuid;
@@ -35,13 +38,20 @@ class Game
      * @param Maze $maze
      * @param Player[] $players
      * @param int $status
+     * @param int $moves
      * @param string $uuid
      */
-    public function __construct(Maze $maze, array $players, $status = self::STATUS_NOT_STARTED, $uuid = null)
-    {
+    public function __construct(
+        Maze $maze,
+        array $players,
+        $status = self::STATUS_NOT_STARTED,
+        $moves = 0,
+        $uuid = null
+    ) {
         $this->maze = $maze;
         $this->players = $players;
         $this->status = $status;
+        $this->moves = $moves;
         $this->uuid = $uuid ?: Uuid::v4();
     }
 
@@ -73,6 +83,16 @@ class Game
     public function status()
     {
         return $this->status;
+    }
+
+    /**
+     * Get moves
+     *
+     * @return int
+     */
+    public function moves()
+    {
+        return $this->moves;
     }
 
     /**
@@ -125,10 +145,52 @@ class Game
      */
     public function resetPlaying()
     {
+        $this->moves = 0;
         $this->status = static::STATUS_NOT_STARTED;
         foreach ($this->players as $player) {
             $player->reset($this->maze()->start());
         }
         return $this;
+    }
+
+    /**
+     * Increments the moves counter
+     *
+     * @return $this
+     */
+    public function incMoves()
+    {
+        $this->moves++;
+    }
+
+    /**
+     * Checks if a player reached the goal
+     *
+     * @param Player $player
+     * @return bool
+     */
+    public function isGoalReached(Player $player)
+    {
+        $pos = $player->position();
+        $goal = $this->maze()->goal();
+        if ($pos->y() == $goal->y() && $pos->x() == $goal->x()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Checks if there are at least one player alive
+     *
+     * @return bool
+     */
+    public function arePlayersAlive()
+    {
+        foreach ($this->players as $player) {
+            if ($player->status() == Player::STATUS_PLAYING) {
+                return true;
+            }
+        }
+        return false;
     }
 }

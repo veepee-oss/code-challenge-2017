@@ -65,13 +65,34 @@ class ApiController extends Controller
             $dir = MazeObject::DIRECTION_UP;
         }
 
+        $iter = 1;
+        $maze = array();
+
         // Get data from session
+        $startMaze = true;
         $savedData = $this->readFile($uuid);
         if ($savedData) {
+            $startMaze = false;
             $savedData = json_decode($savedData, false);
-            $iter = $savedData->iter;
-            $maze = $savedData->maze;
-        } else {
+
+            if (!isset($savedData->iter)
+                || !isset($savedData->maze)
+                || !isset($savedData->xPos)
+                || !isset($savedData->yPos)) {
+                $startMaze = true;
+            } else {
+                $iter = $savedData->iter;
+                $maze = $savedData->maze;
+                $xPos = $savedData->xPos;
+                $yPos = $savedData->yPos;
+
+                if ($xPos != $pos->x || $yPos != $pos->y) {
+                    $startMaze = true;
+                }
+            }
+        }
+
+        if ($startMaze) {
             $iter = 1;
             $maze = array();
             for ($y = 0; $y < $height; ++$y) {
@@ -94,6 +115,7 @@ class ApiController extends Controller
 
         // Compute the next direction
         $dir = $this->findNextMove($maze, $pos, $dir, $goal);
+        $pos = $this->nextPosition($pos, $dir);
 
 //        echo PHP_EOL;
 //        foreach ($maze as $y => $row) {
@@ -106,6 +128,8 @@ class ApiController extends Controller
         $savedData = new \stdClass();
         $savedData->iter = 1 + $iter;
         $savedData->maze = $maze;
+        $savedData->xPos = $pos->x;
+        $savedData->yPos = $pos->y;
         $this->writeFile($uuid, json_encode($savedData));
 
         $result = new \stdClass();

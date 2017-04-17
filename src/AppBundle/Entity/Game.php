@@ -99,6 +99,13 @@ class Game
     private $players;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="moves", type="integer", nullable=true)
+     */
+    protected $moves;
+
+    /**
      * Game constructor.
      *
      * @param $source
@@ -117,6 +124,7 @@ class Game
             $this->goalX = null;
             $this->maze = array();
             $this->players = array();
+            $this->moves = 0;
         } elseif ($source instanceof Game) {
             $this->id = $source->getId();
             $this->uuid = $source->getUuid();
@@ -129,6 +137,7 @@ class Game
             $this->goalX = $source->getGoalX();
             $this->maze = $source->getMaze();
             $this->players = $source->getPlayers();
+            $this->moves = $source->getMoves();
         } elseif ($source instanceof DomainGame\Game) {
             $this->id = null;
             $this->fromDomainEntity($source);
@@ -142,9 +151,13 @@ class Game
      */
     public function toDomainEntity()
     {
-        $maze = new DomainMaze\Maze($this->width, $this->height, $this->maze);
-        $maze->setStart(new Position($this->startY, $this->startX));
-        $maze->setGoal(new Position($this->goalY, $this->goalX));
+        $maze = new DomainMaze\Maze(
+            $this->width,
+            $this->height,
+            new Position($this->startY, $this->startX),
+            new Position($this->goalY, $this->goalX),
+            $this->maze
+        );
 
         $players = array();
         foreach ($this->players as $player) {
@@ -159,7 +172,13 @@ class Game
             }
         }
 
-        return new DomainGame\Game($maze, $players, $this->status, $this->uuid);
+        return new DomainGame\Game(
+            $maze,
+            $players,
+            $this->status,
+            $this->moves,
+            $this->uuid
+        );
     }
 
     /**
@@ -174,6 +193,7 @@ class Game
         $this->status = $game->status();
         $this->setMaze($game->maze());
         $this->setPlayers($game->players());
+        $this->setMoves($game->moves());
         return $this;
     }
 
@@ -417,7 +437,9 @@ class Game
                 $this->players = $players;
             } else {
                 for ($i = 0; $i < count($players); $i++) {
-                    $this->players[] = $players[$i]->serialize();
+                    /** @var DomainPlayer\Player $player */
+                    $player = $players[$i];
+                    $this->players[] = $player->serialize();
                 }
             }
         }
@@ -432,5 +454,27 @@ class Game
     public function getPlayers()
     {
         return $this->players;
+    }
+
+    /**
+     * Set moves
+     *
+     * @param int $moves
+     * @return $this
+     */
+    public function setMoves($moves)
+    {
+        $this->moves = $moves;
+        return $this;
+    }
+
+    /**
+     * Get moves
+     *
+     * @return int
+     */
+    public function getMoves()
+    {
+        return $this->moves;
     }
 }

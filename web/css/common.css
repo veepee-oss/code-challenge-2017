@@ -4,6 +4,8 @@ body {
 
 .maze {
     font-family: monospace;
+    font-size: 15px;
+    line-height: 15px;
     margin-left: auto;
     margin-right: auto;
 }
@@ -12,6 +14,8 @@ body {
     text-align: center;
     vertical-align: middle;
     overflow: hidden;
+    width: 15px;
+    height: 15px;
 }
 
 .maze .empty {

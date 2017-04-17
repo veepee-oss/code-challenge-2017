@@ -34,14 +34,23 @@ class Maze implements \ArrayAccess, \Countable, \Iterator
      *
      * @param int $width
      * @param int $height
+     * @param Position $start
+     * @param Position $goal
      * @param array $cells
      */
-    public function __construct($width, $height, array $cells = null)
-    {
+    public function __construct(
+        $width,
+        $height,
+        Position $start = null,
+        Position $goal = null,
+        array $cells = null
+    ) {
         $this->validateHeight($height);
         $this->validateWidth($width);
         $this->height = $height;
         $this->width = $width;
+        $this->start = $start ? clone $start : null;
+        $this->goal = $goal ? clone $goal: null;
         $this->rows = array();
         $this->index = 0;
 

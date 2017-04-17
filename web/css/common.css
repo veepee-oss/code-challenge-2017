@@ -60,13 +60,108 @@ body {
     content: "\1F6B9";
 }
 
-.maze .shadow {
+.maze .player1,
+.maze .player2,
+.maze .player3,
+.maze .player4,
+.maze .player5,
+.maze .player6,
+.maze .player7,
+.maze .player8,
+.maze .player9,
+.maze .player10,
+.maze .player11,
+.maze .player12,
+.maze .player13,
+.maze .player14,
+.maze .player15,
+.maze .player16,
+.maze .player17,
+.maze .player18,
+.maze .player19,
+.maze .player20 {
     background-color: #000000;
-    color: #404040;
+    color: #FFFFFF;
 }
 
-.maze .shadow:after {
-    content: "\1F6B9";
+.maze .player1:after {
+    content: "\2776";
+}
+
+.maze .player2:after {
+    content: "\2777";
+}
+
+.maze .player3:after {
+    content: "\2778";
+}
+
+.maze .player4:after {
+    content: "\2779";
+}
+
+.maze .player5:after {
+    content: "\277A";
+}
+
+.maze .player6:after {
+    content: "\277B";
+}
+
+.maze .player7:after {
+    content: "\277C";
+}
+
+.maze .player8:after {
+    content: "\277D";
+}
+
+.maze .player9:after {
+    content: "\277E";
+}
+
+.maze .player10:after {
+    content: "\277F";
+}
+
+.maze .player11:after {
+    content: "\24EB";
+}
+
+.maze .player12:after {
+    content: "\24EC";
+}
+
+.maze .player13:after {
+    content: "\24ED";
+}
+
+.maze .player14:after {
+    content: "\24EE";
+}
+
+.maze .player15:after {
+    content: "\24EF";
+}
+
+.maze .player16:after {
+    content: "\24F0";
+}
+
+.maze .player17:after {
+    content: "\24F1";
+}
+
+.maze .player18:after {
+    content: "\24F2";
+}
+
+.maze .player19:after {
+    content: "\24F3";
+}
+
+.maze .player20:after {
+    content: "\24F4";
 }
 
 .maze .ghost {

@@ -26,7 +26,7 @@ class GameController extends Controller
     public function createRandomAction()
     {
         $mazeBuilder = $this->get('app.maze.builder');
-        $maze = $mazeBuilder->buildRandomMaze(80, 20);
+        $maze = $mazeBuilder->buildRandomMaze(80, 40);
 
         $player1 = new ApiPlayer('http://localhost/web/app_dev.php/api/move', $maze->start());
         $player2 = new ApiPlayer('http://localhost/web/app_dev.php/api/move', $maze->start());

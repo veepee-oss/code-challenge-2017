@@ -101,7 +101,7 @@ class Game
     /**
      * @var int
      *
-     * @ORM\Column(name="moves", type="integer", nullable=true)
+     * @ORM\Column(name="moves", type="integer", options={"default"=0})
      */
     protected $moves;
 

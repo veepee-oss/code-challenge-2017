@@ -36,22 +36,18 @@ class MazeHtmlRender implements MazeRenderInterface
         for ($row = 0; $row < $rows; ++$row) {
             $html .= '<tr>';
             for ($col = 0; $col < $cols; ++$col) {
-                $drawPlayer = $drawShadow = false;
-                foreach ($players as $player) {
+                $drawPlayer = false;
+                $playerNum = null;
+                foreach ($players as $index => $player) {
                     if ($player->position()->x() == $col && $player->position()->y() == $row) {
+                        $playerNum = 1 + $index;
                         $drawPlayer = true;
-                        break;
-                    }
-                    if ($player->previous()->x() == $col && $player->previous()->y() == $row) {
-                        $drawShadow = true;
                         break;
                     }
                 }
                 $cell = $maze[$row][$col]->getContent();
                 if ($drawPlayer) {
-                    $html .= '<td class="player"></td>';
-                } elseif ($drawShadow) {
-                    $html .= '<td class="shadow"></td>';
+                    $html .= '<td class="player' . $playerNum . '"></td>';
                 } elseif ($cell == MazeCell::CELL_WALL) {
                     $html .= '<td class="wall"></td>';
                 } elseif ($cell == MazeCell::CELL_START) {

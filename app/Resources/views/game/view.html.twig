@@ -2,8 +2,8 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-xs-12 js-maze" data-url="{{ url('game_render', { 'uuid': game.uuid }) }}">
-            {% include ':game:maze.html.twig' with { 'maze': maze } %}
+        <div class="col-xs-12 js-maze" data-url="{{ url('game_refresh', { 'uuid': game.uuid }) }}">
+            {% include ':game:maze.html.twig' with { 'game': game, 'maze': maze } %}
         </div>
     </div>
 
@@ -57,7 +57,7 @@
                 $btnStart = $('.js-btn-start'),
                 $btnStop = $('.js-btn-stop'),
                 $btnReset = $('.js-btn-reset'),
-                reloadUrl = $maze.data('url'),
+                refreshUrl = $maze.data('url'),
                 startUrl = $btnStart.data('url'),
                 stopUrl = $btnStop.data('url'),
                 resetUrl = $btnReset.data('url');
@@ -90,7 +90,7 @@
                     .done(function() {
                         $btnStart.attr('disabled', 'disabled');
                         $btnStop.attr('disabled', null);
-                        reloadMaze();
+                        refreshMaze();
                     });
             };
 
@@ -102,7 +102,7 @@
                     .done(function() {
                         $btnStart.attr('disabled', null);
                         $btnStop.attr('disabled', 'disabled');
-                        reloadMaze();
+                        refreshMaze();
                     });
             };
 
@@ -114,7 +114,7 @@
                     .done(function() {
                         $btnStart.attr('disabled', null);
                         $btnStop.attr('disabled', 'disabled');
-                        reloadMaze();
+                        refreshMaze();
                     });
             };
 
@@ -123,18 +123,26 @@
              */
             var startTimer = function () {
                 if ($btnStop.attr('disabled') != 'disabled') {
-                    win.setTimeout(reloadMaze, 1000);
+                    win.setTimeout(refreshMaze, 1000);
                 }
             };
 
             /**
-             * reloadMaze()
+             * refreshMaze()
              */
-            var reloadMaze = function () {
-                $.get(reloadUrl)
-                    .done(function(html) {
-                        $maze.html(html);
-                        startTimer();
+            var refreshMaze = function () {
+                $.get(refreshUrl)
+                    .done(function(data) {
+                        $maze.html(data.html);
+                        if (data.playing) {
+                            $btnStop.attr('disabled', null);
+                            startTimer();
+                        } else {
+                            $btnStop.attr('disabled', 'disabled');
+                            if (!data.finished) {
+                                $btnStart.attr('disabled', 'disabled');
+                            }
+                        }
                     });
             };
 

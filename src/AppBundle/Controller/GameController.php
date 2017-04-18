@@ -7,6 +7,7 @@ use AppBundle\Domain\Entity\Player\ApiPlayer;
 use AppBundle\Domain\Service\MazeRender\MazeHtmlRender;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -73,13 +74,13 @@ class GameController extends Controller
     /**
      * View only maze
      *
-     * @Route("/view/{uuid}/render",name="game_render",
+     * @Route("/view/{uuid}/refresh",name="game_refresh",
      *     requirements={"uuid": "[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}"})
      *
      * @param string $uuid
-     * @return Response
+     * @return JsonResponse
      */
-    public function renderAction($uuid)
+    public function refreshAction($uuid)
     {
         /** @var \AppBundle\Entity\Game $entity */
         $entity = $this->getDoctrine()->getRepository('AppBundle:Game')->findOneBy(array(
@@ -90,9 +91,18 @@ class GameController extends Controller
         $game = $entity->toDomainEntity();
         $maze = $renderer->render($game);
 
-        return $this->render(':game:maze.html.twig', array(
+        $html = $this->renderView(':game:maze.html.twig', array(
+            'game' => $game,
             'maze' => $maze
         ));
+
+        $data = array(
+            'html' => $html,
+            'playing' => $game->playing(),
+            'finished' => $game->finished()
+        );
+
+        return new JsonResponse($data);
     }
 
     /**

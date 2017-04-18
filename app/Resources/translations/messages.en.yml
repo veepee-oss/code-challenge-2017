@@ -26,5 +26,13 @@ app:
             stop:           "Stop"
             reset:          "Reset"
 
+    mazepage:
+        texts:
+            moves:          "Moves"
+            players:        "Players"
+            status:         "Status"
+            status-text:    "{0} Not started|{1} Playing|{9}Finished"
+
     credits:
         title:          "Credits and Attributions"
+

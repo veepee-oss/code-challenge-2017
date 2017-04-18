@@ -1,1 +1,15 @@
 {{ maze | raw }}
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-4 text-left">
+            {{ 'app.mazepage.texts.moves' | trans }}: <strong>{{ game.moves }}</strong>
+        </div>
+        <div class="col-sm-4 text-center">
+            {{ 'app.mazepage.texts.players' | trans }}: <strong>{{ game.players | length }}</strong>
+        </div>
+        <div class="col-sm-4 text-right">
+            {{ 'app.mazepage.texts.status' | trans }}: <strong>{{ 'app.mazepage.texts.status-text' | transchoice(game.status) }}</strong>
+        </div>
+    </div>
+</div>

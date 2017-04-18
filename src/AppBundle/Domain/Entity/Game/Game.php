@@ -106,6 +106,26 @@ class Game
     }
 
     /**
+     * Returns if the game is playing
+     *
+     * @return bool
+     */
+    public function playing()
+    {
+        return static::STATUS_RUNNING == $this->status;
+    }
+
+    /**
+     * Returns if the game is finished
+     *
+     * @return bool
+     */
+    public function finished()
+    {
+        return static::STATUS_FINISHED == $this->status;
+    }
+
+    /**
      * Starts playing the game
      *
      * @return $this
@@ -123,7 +143,9 @@ class Game
      */
     public function stopPlaying()
     {
-        $this->status = static::STATUS_NOT_STARTED;
+        if ($this->status != static::STATUS_FINISHED) {
+            $this->status = static::STATUS_NOT_STARTED;
+        }
         return $this;
     }
 

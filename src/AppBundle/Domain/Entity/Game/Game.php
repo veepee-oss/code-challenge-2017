@@ -2,6 +2,7 @@
 
 namespace AppBundle\Domain\Entity\Game;
 
+use AppBundle\Domain\Entity\Ghost\Ghost;
 use AppBundle\Domain\Entity\Maze\Maze;
 use AppBundle\Domain\Entity\Player\Player;
 use J20\Uuid\Uuid;
@@ -23,6 +24,12 @@ class Game
     /** @var Player[] */
     protected $players;
 
+    /** @var Ghost[] */
+    protected $ghosts;
+
+    /** @var int */
+    protected $ghostRate;
+
     /** @var int */
     protected $status;
 
@@ -37,6 +44,8 @@ class Game
      *
      * @param Maze $maze
      * @param Player[] $players
+     * @param Ghost[] $ghosts
+     * @param int $ghostRate
      * @param int $status
      * @param int $moves
      * @param string $uuid
@@ -44,12 +53,16 @@ class Game
     public function __construct(
         Maze $maze,
         array $players,
+        array $ghosts,
+        $ghostRate = 0,
         $status = self::STATUS_NOT_STARTED,
         $moves = 0,
         $uuid = null
     ) {
         $this->maze = $maze;
         $this->players = $players;
+        $this->ghosts = $ghosts;
+        $this->ghostRate = $ghostRate;
         $this->status = $status;
         $this->moves = $moves;
         $this->uuid = $uuid ?: Uuid::v4();
@@ -73,6 +86,26 @@ class Game
     public function players()
     {
         return $this->players;
+    }
+
+    /**
+     * Get Ghosts
+     *
+     * @return Ghost[]
+     */
+    public function ghosts()
+    {
+        return $this->ghosts;
+    }
+
+    /**
+     * Get gost rate
+     *
+     * @return int
+     */
+    public function ghostRate()
+    {
+        return $this->ghostRate;
     }
 
     /**
@@ -168,6 +201,7 @@ class Game
     public function resetPlaying()
     {
         $this->moves = 0;
+        $this->ghosts = array();
         $this->status = static::STATUS_NOT_STARTED;
         foreach ($this->players as $player) {
             $player->reset($this->maze()->start());
@@ -183,6 +217,36 @@ class Game
     public function incMoves()
     {
         $this->moves++;
+        return $this;
+    }
+
+    /**
+     * Adds a ghost
+     *
+     * @param Ghost $ghost
+     * @return $this
+     */
+    public function addGhost(Ghost $ghost)
+    {
+        $this->ghosts[] = clone $ghost;
+        return $this;
+    }
+
+    /**
+     * Removes a ghost
+     *
+     * @param Ghost $ghost
+     * @return $this
+     */
+    public function removeGhost(Ghost $ghost)
+    {
+        foreach ($this->ghosts as $key => $item) {
+            if ($ghost == $item) {
+                unset($this->ghosts[$key]);
+                break;
+            }
+        }
+        return $this;
     }
 
     /**

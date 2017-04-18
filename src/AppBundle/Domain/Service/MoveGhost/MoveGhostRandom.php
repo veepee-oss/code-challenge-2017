@@ -2,6 +2,7 @@
 
 namespace AppBundle\Domain\Service\MoveGhost;
 
+use AppBundle\Domain\Entity\Game\Game;
 use AppBundle\Domain\Entity\Ghost\Ghost;
 use AppBundle\Domain\Entity\Maze\Maze;
 use AppBundle\Domain\Entity\Maze\MazeCell;
@@ -13,19 +14,20 @@ use AppBundle\Domain\Entity\Position\Position;
  *
  * @package AppBundle\Domain\Service\MoveGhost
  */
-class MoveGhostRandom implements MoveGhostInterface
+class MoveGhostRandom extends MoveGhost
 {
     /**
-     * Moves the ghost
+     * Computes the next movement of the ghost: "up", "down", "left" or "right".
      *
      * @param Ghost $ghost
-     * @param Maze $maze
-     * @return bool true=successs, false=error
+     * @param Game $game
+     * @return string The next movement
      * @throws MoveGhostException
      */
-    public function moveGhost(Ghost& $ghost, Maze $maze)
+    protected function computeNextMovement(Ghost $ghost, Game $game)
     {
         // Extract some vars
+        $maze = $game->maze();
         $height = $maze->height();
         $width = $maze->width();
         $pos = $ghost->position();
@@ -49,7 +51,7 @@ class MoveGhostRandom implements MoveGhostInterface
             }
 
             // Test movement
-            if (!$this->testMove($maze, $height, $width, $pos, $dir)) {
+            if ($this->testMove($maze, $height, $width, $pos, $dir)) {
                 return $dir;
             }
 
@@ -78,31 +80,29 @@ class MoveGhostRandom implements MoveGhostInterface
      */
     private function testMove(Maze $maze, $height, $width, Position $pos, $dir)
     {
+        $y = $pos->y();
+        $x = $pos->x();
         switch ($dir) {
             case MazeObject::DIRECTION_UP:
-                $new = new Position($pos->y() -  1, $pos->x());
-                if ($new->y() < 0) {
+                if (--$y < 0) {
                     return false;
                 }
                 break;
 
             case MazeObject::DIRECTION_DOWN:
-                $new = new Position($pos->y() +  1, $pos->x());
-                if ($new->y() >= $height) {
+                if (++$y >= $height) {
                     return false;
                 }
                 break;
 
             case MazeObject::DIRECTION_LEFT:
-                $new = new Position($pos->y(), $pos->x() - 1);
-                if ($new->x() < 0) {
+                if (--$x < 0) {
                     return false;
                 }
                 break;
 
             case MazeObject::DIRECTION_RIGHT:
-                $new = new Position($pos->y(), $pos->x() + 1);
-                if ($new->x() >= $width) {
+                if (++$x >= $width) {
                     return false;
                 }
                 break;
@@ -111,7 +111,7 @@ class MoveGhostRandom implements MoveGhostInterface
                 return false;
         }
 
-        if ($maze[$new->y()][$new->x()]->getContent() == MazeCell::CELL_WALL) {
+        if ($maze[$y][$x]->getContent() == MazeCell::CELL_WALL) {
             return false;
         }
 

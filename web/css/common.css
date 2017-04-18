@@ -22,24 +22,12 @@ body {
     background-color: #000000;
 }
 
-.maze .empty:after {
-    content: "\A0";
-}
-
 .maze .wall {
     background-color: #808080;
 }
 
-.maze .wall:after {
-    content: "\A0";
-}
-
 .maze .start {
     background-color: #FFFF00;
-}
-
-.maze .start:after {
-    content: "\25CE";
 }
 
 .maze .goal {
@@ -47,19 +35,7 @@ body {
     color: #FFFFFF;
 }
 
-.maze .goal:after {
-    content: "\1F3C1";
-}
-
-.maze .player {
-    background-color: #000000;
-    color: #FFFFFF;
-}
-
-.maze .player:after {
-    content: "\1F6B9";
-}
-
+.maze .player,
 .maze .player1,
 .maze .player2,
 .maze .player3,
@@ -82,6 +58,33 @@ body {
 .maze .player20 {
     background-color: #000000;
     color: #FFFFFF;
+}
+
+.maze .killed {
+    background-color: #CCCCCC;
+    color: #FF0000;
+}
+
+.maze .ghost {
+    background-color: #000000;
+    color: #0088FF;
+}
+
+.maze .empty:after,
+.maze .wall:after {
+    content: "\A0";
+}
+
+.maze .start:after {
+    content: "\25CE";
+}
+
+.maze .goal:after {
+    content: "\1F3C1";
+}
+
+.maze .player:after {
+    content: "\1F6B9";
 }
 
 .maze .player1:after {
@@ -164,13 +167,12 @@ body {
     content: "\24F4";
 }
 
-.maze .ghost {
-    background-color: #000000;
-    color: #404040;
+.maze .killed:after {
+    content: "\271D";
 }
 
 .maze .ghost:after {
-    content: "\1F47B";
+    content: "\2B1F";
 }
 
 .maze-buttons {

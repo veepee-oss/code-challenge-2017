@@ -2,14 +2,17 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-sm-4 text-left">
-            {{ 'app.mazepage.texts.moves' | trans }}: <strong>{{ game.moves }}</strong>
+        <div class="col-sm-3 text-left">
+            {{ 'app.mazepage.texts.moves' | trans }}: <strong class="text-info">{{ game.moves }}</strong>
         </div>
-        <div class="col-sm-4 text-center">
-            {{ 'app.mazepage.texts.players' | trans }}: <strong>{{ game.players | length }}</strong>
+        <div class="col-sm-3 text-center">
+            {{ 'app.mazepage.texts.players' | trans }}: <strong class="text-info">{{ game.players | length }}</strong>
         </div>
-        <div class="col-sm-4 text-right">
-            {{ 'app.mazepage.texts.status' | trans }}: <strong>{{ 'app.mazepage.texts.status-text' | transchoice(game.status) }}</strong>
+        <div class="col-sm-3 text-center">
+            {{ 'app.mazepage.texts.ghosts' | trans }}: <strong class="text-info">{{ game.ghosts | length }}</strong>
+        </div>
+        <div class="col-sm-3 text-right">
+            {{ 'app.mazepage.texts.status' | trans }}: <strong class="text-info">{{ 'app.mazepage.texts.status-text' | transchoice(game.status) }}</strong>
         </div>
     </div>
 </div>

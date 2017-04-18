@@ -69,6 +69,16 @@ class Player extends MazeObject
     }
 
     /**
+     * Get if current status is died
+     *
+     * @return bool
+     */
+    public function died()
+    {
+        return static::STATUS_DIED == $this->status;
+    }
+
+    /**
      * Get uuid
      *
      * @return string
@@ -83,7 +93,7 @@ class Player extends MazeObject
      *
      * @return $this
      */
-    public function winner()
+    public function win()
     {
         $this->status = static::STATUS_WINNER;
         return $this;
@@ -94,7 +104,7 @@ class Player extends MazeObject
      *
      * @return $this
      */
-    public function looser()
+    public function loose()
     {
         $this->status = static::STATUS_DIED;
         return $this;

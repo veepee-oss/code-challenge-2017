@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use AppBundle\Domain\Entity\Game as DomainGame;
+use AppBundle\Domain\Entity\Ghost as DomainGhost;
 use AppBundle\Domain\Entity\Maze as DomainMaze;
 use AppBundle\Domain\Entity\Player as DomainPlayer;
 
@@ -85,6 +86,20 @@ class Game
     private $goalX;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="ghost_rate", type="integer", options={"default"=0})
+     */
+    protected $ghostRate;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="moves", type="integer", options={"default"=0})
+     */
+    protected $moves;
+
+    /**
      * @var array
      *
      * @ORM\Column(name="maze", type="json_array")
@@ -99,11 +114,11 @@ class Game
     private $players;
 
     /**
-     * @var int
+     * @var array
      *
-     * @ORM\Column(name="moves", type="integer", options={"default"=0})
+     * @ORM\Column(name="ghosts", type="json_array", nullable=true)
      */
-    protected $moves;
+    private $ghosts;
 
     /**
      * Game constructor.
@@ -122,9 +137,11 @@ class Game
             $this->startX = null;
             $this->goalY = null;
             $this->goalX = null;
+            $this->moves = 0;
+            $this->ghostRate = 0;
             $this->maze = array();
             $this->players = array();
-            $this->moves = 0;
+            $this->ghosts = array();
         } elseif ($source instanceof Game) {
             $this->id = $source->getId();
             $this->uuid = $source->getUuid();
@@ -135,9 +152,11 @@ class Game
             $this->startX = $source->getStartX();
             $this->goalY = $source->getGoalY();
             $this->goalX = $source->getGoalX();
+            $this->ghostRate = $source->getGhostRate();
+            $this->moves = $source->getMoves();
             $this->maze = $source->getMaze();
             $this->players = $source->getPlayers();
-            $this->moves = $source->getMoves();
+            $this->ghosts = $source->getGhosts();
         } elseif ($source instanceof DomainGame\Game) {
             $this->id = null;
             $this->fromDomainEntity($source);
@@ -172,9 +191,16 @@ class Game
             }
         }
 
+        $ghosts = array();
+        foreach ($this->ghosts as $ghost) {
+            $ghosts[] = DomainGhost\Ghost::unserialize($ghost);
+        }
+
         return new DomainGame\Game(
             $maze,
             $players,
+            $ghosts,
+            $this->ghostRate,
             $this->status,
             $this->moves,
             $this->uuid
@@ -193,6 +219,8 @@ class Game
         $this->status = $game->status();
         $this->setMaze($game->maze());
         $this->setPlayers($game->players());
+        $this->setGhosts($game->ghosts());
+        $this->setGhostRate($game->ghostRate());
         $this->setMoves($game->moves());
         return $this;
     }
@@ -296,16 +324,6 @@ class Game
     }
 
     /**
-     * Get maze start Y coordinate
-     *
-     * @return int
-     */
-    public function getStartY()
-    {
-        return $this->startY;
-    }
-
-    /**
      * Set maze start Y coordinate
      *
      * @param int $startY
@@ -318,13 +336,13 @@ class Game
     }
 
     /**
-     * Get maze start X coordinate
+     * Get maze start Y coordinate
      *
      * @return int
      */
-    public function getStartX()
+    public function getStartY()
     {
-        return $this->startX;
+        return $this->startY;
     }
 
     /**
@@ -340,13 +358,13 @@ class Game
     }
 
     /**
-     * Get maze goal Y coordinate
+     * Get maze start X coordinate
      *
      * @return int
      */
-    public function getGoalY()
+    public function getStartX()
     {
-        return $this->goalY;
+        return $this->startX;
     }
 
     /**
@@ -362,13 +380,13 @@ class Game
     }
 
     /**
-     * Get maze goal X coordinate
+     * Get maze goal Y coordinate
      *
      * @return int
      */
-    public function getGoalX()
+    public function getGoalY()
     {
-        return $this->goalX;
+        return $this->goalY;
     }
 
     /**
@@ -381,6 +399,60 @@ class Game
     {
         $this->goalX = $goalX;
         return $this;
+    }
+
+    /**
+     * Get maze goal X coordinate
+     *
+     * @return int
+     */
+    public function getGoalX()
+    {
+        return $this->goalX;
+    }
+
+    /**
+     * Set ghost rate
+     *
+     * @param int $ghostRate
+     * @return $this
+     */
+    public function setGhostRate($ghostRate)
+    {
+        $this->ghostRate = $ghostRate;
+        return $this;
+    }
+
+    /**
+     * Get ghost rate
+     *
+     * @return int
+     */
+    public function getGhostRate()
+    {
+        return $this->ghostRate;
+    }
+
+    /**
+     * Set moves
+     *
+     * @param int $moves
+     * @return $this
+     */
+    public function setMoves($moves)
+    {
+        $this->moves = $moves;
+        return $this;
+    }
+
+    /**
+     * Get moves
+     *
+     * @return int
+     */
+    public function getMoves()
+    {
+        return $this->moves;
     }
 
     /**
@@ -424,7 +496,7 @@ class Game
     }
 
     /**
-     * Get players
+     * Set players
      *
      * @param array $players
      * @return $this
@@ -437,9 +509,11 @@ class Game
                 $this->players = $players;
             } else {
                 for ($i = 0; $i < count($players); $i++) {
-                    /** @var DomainPlayer\Player $player */
-                    $player = $players[$i];
-                    $this->players[] = $player->serialize();
+                    if (array_key_exists($i, $players)) {
+                        /** @var DomainPlayer\Player $player */
+                        $player = $players[$i];
+                        $this->players[] = $player->serialize();
+                    }
                 }
             }
         }
@@ -457,24 +531,37 @@ class Game
     }
 
     /**
-     * Set moves
+     * Set ghosts
      *
-     * @param int $moves
+     * @param array $ghosts
      * @return $this
      */
-    public function setMoves($moves)
+    public function setGhosts($ghosts = null)
     {
-        $this->moves = $moves;
+        $this->ghosts = array();
+        if (null !== $ghosts && count($ghosts) > 0) {
+            if (!$ghosts[0] instanceof DomainGhost\Ghost) {
+                $this->ghosts = $ghosts;
+            } else {
+                for ($i = 0; $i < count($ghosts); $i++) {
+                    if (array_key_exists($i, $ghosts)) {
+                        /** @var DomainGhost\Ghost $ghost */
+                        $ghost = $ghosts[$i];
+                        $this->ghosts[] = $ghost->serialize();
+                    }
+                }
+            }
+        }
         return $this;
     }
 
     /**
-     * Get moves
+     * Set ghosts
      *
-     * @return int
+     * @return array
      */
-    public function getMoves()
+    public function getGhosts()
     {
-        return $this->moves;
+        return $this->ghosts;
     }
 }

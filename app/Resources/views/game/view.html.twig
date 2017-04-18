@@ -139,7 +139,7 @@
                             startTimer();
                         } else {
                             $btnStop.attr('disabled', 'disabled');
-                            if (!data.finished) {
+                            if (data.finished) {
                                 $btnStart.attr('disabled', 'disabled');
                             }
                         }

@@ -21,6 +21,7 @@ services:
         class: AppBundle\Domain\Service\GameEngine\GameEngine
         arguments:
             - "@app.player.move.factory"
+            - "@app.ghost.move.factory"
 
     app.player.move.api:
         class: AppBundle\Domain\Service\MovePlayer\MoveApiPlayer
@@ -30,8 +31,16 @@ services:
     app.player.move.bot:
         class: AppBundle\Domain\Service\MovePlayer\MoveBotPlayer
 
+    app.ghost.move.random:
+        class: AppBundle\Domain\Service\MoveGhost\MoveGhostRandom
+
     app.player.move.factory:
         class: AppBundle\Domain\Service\MovePlayer\MovePlayerFactory
         arguments:
             - 1: "@app.player.move.api"
             - 2: "@app.player.move.bot"
+
+    app.ghost.move.factory:
+        class: AppBundle\Domain\Service\MoveGhost\MoveGhostFactory
+        arguments:
+            - 1: "@app.ghost.move.random"

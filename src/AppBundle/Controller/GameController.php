@@ -32,7 +32,7 @@ class GameController extends Controller
         $player1 = new ApiPlayer('http://localhost/web/app_dev.php/api/move', $maze->start());
         $player2 = new ApiPlayer('http://localhost/web/app_dev.php/api/move', $maze->start());
 
-        $game = new Game($maze, array($player1, $player2));
+        $game = new Game($maze, array($player1, $player2), array(), 500);
 
         $entity = new \AppBundle\Entity\Game($game);
 

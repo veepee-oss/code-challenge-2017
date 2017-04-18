@@ -28,34 +28,56 @@ class MazeHtmlRender implements MazeRenderInterface
     public function render(Game $game)
     {
         $maze = $game->maze();
-        $players = $game->players();
         $html = '<table class="maze">';
 
         $rows = $maze->height();
         $cols = $maze->width();
+
+        // For each row...
         for ($row = 0; $row < $rows; ++$row) {
             $html .= '<tr>';
+
+            // For each column...
             for ($col = 0; $col < $cols; ++$col) {
-                $drawPlayer = false;
-                $playerNum = null;
-                foreach ($players as $index => $player) {
-                    if ($player->position()->x() == $col && $player->position()->y() == $row) {
-                        $playerNum = 1 + $index;
-                        $drawPlayer = true;
-                        break;
-                    }
-                }
                 $cell = $maze[$row][$col]->getContent();
-                if ($drawPlayer) {
-                    $html .= '<td class="player' . $playerNum . '"></td>';
-                } elseif ($cell == MazeCell::CELL_WALL) {
+                if ($cell == MazeCell::CELL_WALL) {
                     $html .= '<td class="wall"></td>';
                 } elseif ($cell == MazeCell::CELL_START) {
                     $html .= '<td class="start"></td>';
                 } elseif ($cell == MazeCell::CELL_GOAL) {
                     $html .= '<td class="goal"></td>';
                 } else {
-                    $html .= '<td class="empty"></td>';
+                    $drawPlayer = null;
+                    $drawKilled = false;
+                    $drawGhost = false;
+
+                    $players = $game->players();
+                    foreach ($players as $index => $player) {
+                        if ($player->position()->x() == $col && $player->position()->y() == $row) {
+                            if ($player->died()) {
+                                $drawKilled = true;
+                            } else {
+                                $drawPlayer = 1 + $index;
+                            }
+                        }
+                    }
+
+                    $ghosts = $game->ghosts();
+                    foreach ($ghosts as $index => $ghost) {
+                        if ($ghost->position()->x() == $col && $ghost->position()->y() == $row) {
+                            $drawGhost = true;
+                        }
+                    }
+
+                    if (null != $drawPlayer) {
+                        $html .= '<td class="player' . $drawPlayer . '"></td>';
+                    } elseif ($drawKilled) {
+                        $html .= '<td class="killed"></td>';
+                    } elseif ($drawGhost) {
+                        $html .= '<td class="ghost"></td>';
+                    } else {
+                        $html .= '<td class="empty"></td>';
+                    }
                 }
             }
             $html .= '</tr>';

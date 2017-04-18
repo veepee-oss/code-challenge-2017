@@ -28,13 +28,14 @@ abstract class MovePlayer implements MovePlayerInterface
      */
     public function movePlayer(Player& $player, Game $game)
     {
-        echo sprintf(PHP_EOL . 'Current: (%02d, %02d)' . PHP_EOL, $player->position()->x(), $player->position()->y());
-        echo sprintf('From (%02d, %02d)' . PHP_EOL, $player->previous()->x(), $player->previous()->y());
+        echo sprintf(PHP_EOL . 'Player at [%02d, %02d] << ', $player->position()->x(), $player->position()->y());
+        echo sprintf('from [%02d, %02d] << ', $player->previous()->x(), $player->previous()->y());
+        echo sprintf('direction [%s]' . PHP_EOL, $player->direction());
 
         // Reads the next movement of the player: "up", "down", "left" or "right".
         $direction = $this->readNextMovement($player, $game);
 
-        echo sprintf('Direction: %s' . PHP_EOL, $direction);
+        echo sprintf('New Direction [%s] ', $direction);
 
         // Computes the new position
         $position = $this->computeNewPosition($player->position(), $direction);
@@ -43,7 +44,7 @@ abstract class MovePlayer implements MovePlayerInterface
             return false;
         }
 
-        echo sprintf('Move to (%02d, %02d)' . PHP_EOL, $position->x(), $position->y());
+        echo sprintf('>> Move to [%02d, %02d]' . PHP_EOL, $position->x(), $position->y());
 
         $player->move($position);
 

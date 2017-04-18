@@ -55,11 +55,11 @@ class GameEngineCommand extends ContainerAwareCommand
             foreach ($entities as $entity) {
                 /** @var DomainGame\Game $game */
                 $game = $entity->toDomainEntity();
-                if ($engine->movePlayers($game)) {
-                    $entity->fromDomainEntity($game);
-                    $em->persist($entity);
-                    $em->flush();
-                }
+                $engine->move($game);
+
+                $entity->fromDomainEntity($game);
+                $em->persist($entity);
+                $em->flush();
 
                 $em->detach($entity);
             }

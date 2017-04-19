@@ -39,7 +39,9 @@ class MoveApiPlayer extends MovePlayer
     protected function readNextMovement(Player $player, Game $game)
     {
         if (!$player instanceof ApiPlayer) {
-            throw new MovePlayerException('The $player object must be an instance of ' . ApiPlayer::class);
+            throw new MovePlayerException(
+                'The $player object must be an instance of \AppBundle\Domain\Entity\Player\ApiPlayer'
+            );
         }
 
         $url = $player->url();

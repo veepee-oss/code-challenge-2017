@@ -24,7 +24,9 @@ class MoveBotPlayer extends MovePlayer
     protected function readNextMovement(Player $player, Game $game)
     {
         if (!$player instanceof BotPlayer) {
-            throw new MovePlayerException('The $player object must be an instance of ' . BotPlayer::class);
+            throw new MovePlayerException(
+                'The $player object must be an instance of \AppBundle\Domain\Entity\Player\BotPlayer'
+            );
         }
 
         $command = $player->command();

@@ -6,7 +6,6 @@ use AppBundle\Domain\Entity\Game as DomainGame;
 use AppBundle\Domain\Entity\Ghost as DomainGhost;
 use AppBundle\Domain\Entity\Maze as DomainMaze;
 use AppBundle\Domain\Entity\Player as DomainPlayer;
-
 use AppBundle\Domain\Entity\Position\Position;
 use Doctrine\ORM\Mapping as ORM;
 use J20\Uuid\Uuid;
@@ -95,6 +94,13 @@ class Game
     /**
      * @var int
      *
+     * @ORM\Column(name="min_ghosts", type="integer", options={"default"=0})
+     */
+    protected $minGhosts;
+
+    /**
+     * @var int
+     *
      * @ORM\Column(name="moves", type="integer", options={"default"=0})
      */
     protected $moves;
@@ -139,6 +145,7 @@ class Game
             $this->goalX = null;
             $this->moves = 0;
             $this->ghostRate = 0;
+            $this->minGhosts = 0;
             $this->maze = array();
             $this->players = array();
             $this->ghosts = array();
@@ -153,6 +160,7 @@ class Game
             $this->goalY = $source->getGoalY();
             $this->goalX = $source->getGoalX();
             $this->ghostRate = $source->getGhostRate();
+            $this->minGhosts = $source->getMinGhosts();
             $this->moves = $source->getMoves();
             $this->maze = $source->getMaze();
             $this->players = $source->getPlayers();
@@ -201,6 +209,7 @@ class Game
             $players,
             $ghosts,
             $this->ghostRate,
+            $this->minGhosts,
             $this->status,
             $this->moves,
             $this->uuid
@@ -221,6 +230,7 @@ class Game
         $this->setPlayers($game->players());
         $this->setGhosts($game->ghosts());
         $this->setGhostRate($game->ghostRate());
+        $this->setMinGhosts($game->minGhosts());
         $this->setMoves($game->moves());
         return $this;
     }
@@ -412,6 +422,28 @@ class Game
     }
 
     /**
+     * Set min ghosts
+     *
+     * @param int $minGhosts
+     * @return $this
+     */
+    public function setMinGhosts($minGhosts)
+    {
+        $this->minGhosts = $minGhosts;
+        return $this;
+    }
+
+    /**
+     * Get min ghosts
+     *
+     * @return int
+     */
+    public function getMinGhosts()
+    {
+        return $this->minGhosts;
+    }
+
+    /**
      * Set ghost rate
      *
      * @param int $ghostRate
@@ -505,15 +537,11 @@ class Game
     {
         $this->players = array();
         if (null !== $players && count($players) > 0) {
-            if (!$players[0] instanceof DomainPlayer\Player) {
-                $this->players = $players;
-            } else {
-                for ($i = 0; $i < count($players); $i++) {
-                    if (array_key_exists($i, $players)) {
-                        /** @var DomainPlayer\Player $player */
-                        $player = $players[$i];
-                        $this->players[] = $player->serialize();
-                    }
+            foreach ($players as $player) {
+                if ($players[0] instanceof DomainPlayer\Player) {
+                    $this->players[] = $player->serialize();
+                } else {
+                    $this->players[] = $player;
                 }
             }
         }
@@ -540,15 +568,11 @@ class Game
     {
         $this->ghosts = array();
         if (null !== $ghosts && count($ghosts) > 0) {
-            if (!$ghosts[0] instanceof DomainGhost\Ghost) {
-                $this->ghosts = $ghosts;
-            } else {
-                for ($i = 0; $i < count($ghosts); $i++) {
-                    if (array_key_exists($i, $ghosts)) {
-                        /** @var DomainGhost\Ghost $ghost */
-                        $ghost = $ghosts[$i];
-                        $this->ghosts[] = $ghost->serialize();
-                    }
+            foreach ($ghosts as $ghost) {
+                if ($ghost instanceof DomainGhost\Ghost) {
+                    $this->ghosts[] = $ghost->serialize();
+                } else {
+                    $this->ghosts[] = $ghost;
                 }
             }
         }

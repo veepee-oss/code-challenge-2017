@@ -31,9 +31,14 @@
                         {{ 'app.homepage.lower-text.2' | trans | raw }}
                         {{ 'app.homepage.lower-text.3' | trans | raw }}
                     </p>
-                    <p><a class="btn btn-primary btn-lg" href="{{ url('rules') }}" role="button">
-                        {{ 'app.homepage.rules' | trans }} &raquo;
-                    </a></p>
+                    <p>
+                        <a class="btn btn-primary btn-lg" href="{{ url('rules') }}" role="button">
+                            {{ 'app.homepage.rules' | trans }} &#x2714;
+                        </a>
+                        <a class="btn btn-success btn-lg" href="{{ url('game_create') }}" role="button">
+                            {{ 'app.homepage.create' | trans }} &#x272A;
+                        </a>
+                    </p>
                 </div>
             </div>
         </div>

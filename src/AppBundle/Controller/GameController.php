@@ -5,9 +5,11 @@ namespace AppBundle\Controller;
 use AppBundle\Domain\Entity\Game\Game;
 use AppBundle\Domain\Entity\Player\ApiPlayer;
 use AppBundle\Domain\Service\MazeRender\MazeHtmlRender;
+use AppBundle\Form\CreateGame\GameEntity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -19,29 +21,46 @@ use Symfony\Component\HttpFoundation\Response;
 class GameController extends Controller
 {
     /**
-     * Create random test game
+     * Create new game
      *
-     * @Route("/create/test", name="game_create_random")
+     * @Route("/create", name="game_create")
+     * @param Request $request
      * @return Response
      */
-    public function createRandomAction()
+    public function createAction(Request $request)
     {
-        $mazeBuilder = $this->get('app.maze.builder');
-        $maze = $mazeBuilder->buildRandomMaze(80, 40);
+        $gameEntity = new GameEntity();
 
-        $player1 = new ApiPlayer('http://localhost/web/app_dev.php/api/move', $maze->start());
-        $player2 = new ApiPlayer('http://localhost/web/app_dev.php/api/move', $maze->start());
+        $form = $this->createForm('\AppBundle\Form\CreateGame\GameForm', $gameEntity);
 
-        $game = new Game($maze, array($player1, $player2), array(), 500);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $mazeBuilder = $this->get('app.maze.builder');
+            $maze = $mazeBuilder->buildRandomMaze(
+                $gameEntity->getHeight(),
+                $gameEntity->getWidth()
+            );
 
-        $entity = new \AppBundle\Entity\Game($game);
+            $players = array();
+            for ($i = 0; $i < $gameEntity->getPlayers(); $i++) {
+                $players[] = new ApiPlayer('http://localhost/web/app_dev.php/api/move', $maze->start());
+            }
 
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($entity);
-        $em->flush();
+            $game = new Game($maze, $players, array(), $gameEntity->getGhostRate(), $gameEntity->getMinGhosts());
 
-        return $this->redirectToRoute('game_view', array(
-            'uuid' => $game->uuid()
+            $entity = new \AppBundle\Entity\Game($game);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($entity);
+            $em->flush();
+
+            return $this->redirectToRoute('game_view', array(
+                'uuid' => $game->uuid()
+            ));
+        }
+
+        return $this->render('game/create.html.twig', array(
+            'form' => $form->createView(),
         ));
     }
 

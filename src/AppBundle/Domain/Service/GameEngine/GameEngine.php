@@ -4,6 +4,7 @@ namespace AppBundle\Domain\Service\GameEngine;
 
 use AppBundle\Domain\Entity\Game\Game;
 use AppBundle\Domain\Entity\Ghost\Ghost;
+use AppBundle\Domain\Entity\Maze\MazeCell;
 use AppBundle\Domain\Entity\Player\Player;
 use AppBundle\Domain\Entity\Position\Position;
 use AppBundle\Domain\Service\MoveGhost\MoveGhostFactory;
@@ -127,7 +128,7 @@ class GameEngine
     }
 
     /**
-     * Create new ghost if ghost rate reached
+     * Create new ghost if ghost rate reached or not enough ghosts
      *
      * @param Game $game
      * @return $this
@@ -135,10 +136,30 @@ class GameEngine
     protected function createGhosts(Game &$game)
     {
         if ($game->moves() % $game->ghostRate() == 0) {
-            $y = rand(1, $game->maze()->height() - 1);
-            $x = rand(1, $game->maze()->width() - 1);
-            $game->addGhost(new Ghost(Ghost::TYPE_SIMPLE, new Position($y, $x)));
+            $this->createNewGhost($game);
         }
+
+        while (count($game->ghosts()) < $game->minGhosts()) {
+            $this->createNewGhost($game);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Create new ghost
+     *
+     * @param Game $game
+     * @return $this
+     */
+    protected function createNewGhost(Game &$game, $type = Ghost::TYPE_SIMPLE)
+    {
+        $maze = $game->maze();
+        do {
+            $y = rand(1, $maze->height() - 2);
+            $x = rand(1, $maze->width() - 2);
+        } while ($maze[$y][$x]->getContent() != MazeCell::CELL_EMPTY);
+        $game->addGhost(new Ghost($type, new Position($y, $x)));
         return $this;
     }
 }

@@ -23,6 +23,9 @@ services:
             - "@app.player.move.factory"
             - "@app.ghost.move.factory"
 
+    app.game.engine.daemon:
+        class: AppBundle\Service\GameEngine\GameEngineDaemon
+
     app.player.move.api:
         class: AppBundle\Domain\Service\MovePlayer\MoveApiPlayer
         arguments:

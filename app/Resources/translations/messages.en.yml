@@ -19,6 +19,18 @@ app:
             3:              "The first bot to find its way out of the maze wins the game."
 
         rules:          "See the rules"
+        create:         "Create test game"
+
+    createpage:
+        title:          "Create new game"
+
+        form:
+            height:         "Height of the maze"
+            width:          "Width of the maze"
+            players:        "Number of players (1 to 20)"
+            min-ghosts:     "Minimum number of ghosts)"
+            ghost-rate:     "Movements to create a new ghost (0 for no ghosts)"
+            create:         "Create game"
 
     gamepage:
         buttons:

@@ -28,14 +28,14 @@ abstract class MovePlayer implements MovePlayerInterface
      */
     public function movePlayer(Player& $player, Game $game)
     {
-        echo sprintf(PHP_EOL . 'Player at [%02d, %02d] << ', $player->position()->x(), $player->position()->y());
-        echo sprintf('from [%02d, %02d] << ', $player->previous()->x(), $player->previous()->y());
-        echo sprintf('direction [%s]' . PHP_EOL, $player->direction());
+        echo sprintf(PHP_EOL . 'Player at [%02d, %02d] ', $player->position()->x(), $player->position()->y());
+        echo sprintf('from [%02d, %02d] ', $player->previous()->x(), $player->previous()->y());
+        echo sprintf('direction %s' . PHP_EOL, $player->direction());
 
         // Reads the next movement of the player: "up", "down", "left" or "right".
         $direction = $this->readNextMovement($player, $game);
 
-        echo sprintf('New Direction [%s] ', $direction);
+        echo sprintf('New Direction: %s ', $direction);
 
         // Computes the new position
         $position = $this->computeNewPosition($player->position(), $direction);
@@ -71,28 +71,37 @@ abstract class MovePlayer implements MovePlayerInterface
     protected function createRequestData(Player $player, Game $game)
     {
         $maze = $game->maze();
+        $height = $maze->height();
+        $width = $maze->width();
         $pos = $player->position();
         $prev = $player->previous();
 
-        $y1 = $pos->y() - static::STEP;
-        $y2 = $pos->y() + static::STEP;
-        $x1 = $pos->x() - static::STEP;
-        $x2 = $pos->x() + static::STEP;
+        $step = static::STEP;
+        $size = 1 + ($step * 2);
+        while ($size > $height || $size > $height) {
+            --$step;
+            $size = 1 + ($step * 2);
+        }
+
+        $y1 = $pos->y() - $step;
+        $y2 = $pos->y() + $step;
+        $x1 = $pos->x() - $step;
+        $x2 = $pos->x() + $step;
 
         if ($y1 < 0) {
             $y2 -= $y1;
             $y1 = 0;
-        } elseif ($y2 >= $maze->height()) {
-            $y1 -= ($pos->y() - $maze->height() + 1);
-            $y2 = $maze->height() - 1;
+        } elseif ($y2 >= $height) {
+            $y1 -= ($pos->y() - $height + 1);
+            $y2 = $height - 1;
         }
 
         if ($x1 < 0) {
             $x2 -= $x1;
             $x1 = 0;
-        } elseif ($x2 >= $maze->width()) {
-            $x1 -= ($pos->x() - $maze->width() + 1);
-            $x2 = $maze->width() - 1;
+        } elseif ($x2 >= $width) {
+            $x1 -= ($pos->x() - $width + 1);
+            $x2 = $width - 1;
         }
 
         $walls = array();
@@ -130,8 +139,8 @@ abstract class MovePlayer implements MovePlayerInterface
             ),
             'maze'      => array(
                 'size'      => array(
-                    'height'    => $maze->height(),
-                    'width'     => $maze->width()
+                    'height'    => $height,
+                    'width'     => $width
                 ),
                 'goal'  => array(
                     'y'         => $maze->goal()->y(),

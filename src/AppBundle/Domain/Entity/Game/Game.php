@@ -31,6 +31,9 @@ class Game
     protected $ghostRate;
 
     /** @var int */
+    protected $minGhosts;
+
+    /** @var int */
     protected $status;
 
     /** @var int */
@@ -46,6 +49,7 @@ class Game
      * @param Player[] $players
      * @param Ghost[] $ghosts
      * @param int $ghostRate
+     * @param int $minGhosts
      * @param int $status
      * @param int $moves
      * @param string $uuid
@@ -55,6 +59,7 @@ class Game
         array $players,
         array $ghosts,
         $ghostRate = 0,
+        $minGhosts = 0,
         $status = self::STATUS_NOT_STARTED,
         $moves = 0,
         $uuid = null
@@ -63,6 +68,7 @@ class Game
         $this->players = $players;
         $this->ghosts = $ghosts;
         $this->ghostRate = $ghostRate;
+        $this->minGhosts = $minGhosts;
         $this->status = $status;
         $this->moves = $moves;
         $this->uuid = $uuid ?: Uuid::v4();
@@ -99,13 +105,23 @@ class Game
     }
 
     /**
-     * Get gost rate
+     * Get ghost rate
      *
      * @return int
      */
     public function ghostRate()
     {
         return $this->ghostRate;
+    }
+
+    /**
+     * Get min ghosts
+     *
+     * @return int
+     */
+    public function minGhosts()
+    {
+        return $this->minGhosts;
     }
 
     /**

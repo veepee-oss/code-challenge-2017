@@ -179,8 +179,8 @@ class Game
     public function toDomainEntity()
     {
         $maze = new DomainMaze\Maze(
-            $this->width,
             $this->height,
+            $this->width,
             new Position($this->startY, $this->startX),
             new Position($this->goalY, $this->goalX),
             $this->maze

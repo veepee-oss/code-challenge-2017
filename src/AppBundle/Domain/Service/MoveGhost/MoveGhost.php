@@ -24,14 +24,8 @@ abstract class MoveGhost implements MoveGhostInterface
      */
     public function moveGhost(Ghost& $ghost, Game $game)
     {
-        echo sprintf(PHP_EOL . 'Ghost at [%02d, %02d] << ', $ghost->position()->x(), $ghost->position()->y());
-        echo sprintf('from [%02d, %02d] << ', $ghost->previous()->x(), $ghost->previous()->y());
-        echo sprintf('direction [%s]' . PHP_EOL, $ghost->direction());
-
         // Computes the next movement of the ghost: "up", "down", "left" or "right".
         $direction = $this->computeNextMovement($ghost, $game);
-
-        echo sprintf('New Direction [%s] ', $direction);
 
         // Computes the new position
         $position = $ghost->position();
@@ -56,8 +50,6 @@ abstract class MoveGhost implements MoveGhostInterface
         }
 
         $position = new Position($y, $x);
-
-        echo sprintf('>> Move to [%02d, %02d]' . PHP_EOL, $position->x(), $position->y());
 
         $ghost->move($position);
         return true;

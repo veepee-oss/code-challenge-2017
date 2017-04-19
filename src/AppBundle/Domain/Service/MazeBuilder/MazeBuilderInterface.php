@@ -14,10 +14,10 @@ interface MazeBuilderInterface
     /**
      * Creates a random maze
      *
-     * @param int $width
      * @param int $height
+     * @param int $width
      * @return Maze
      * @throws MazeBuilderException
      */
-    public function buildRandomMaze($width, $height);
+    public function buildRandomMaze($height, $width);
 }

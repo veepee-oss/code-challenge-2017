@@ -44,27 +44,49 @@ class GameEngineCommand extends ContainerAwareCommand
         $em = $container->get('doctrine')->getManager();
         $repo = $em->getRepository('AppBundle:Game');
         $engine = $container->get('app.game.engine');
+        $memoryLimit = ini_get('memory_limit');
+        if (preg_match('/^(\d+)\s*(.)/', $memoryLimit, $matches)) {
+            if ($matches[2] == 'M') {
+                $memoryLimit = $matches[1] * 1024 * 1024;
+            } elseif ($matches[2] == 'K') {
+                $memoryLimit = $matches[1] * 1024;
+            }
+        }
 
-        // Infinite loop
         while (1) {
             /** @var Game[] $entities */
             $entities = $repo->findBy(array(
                 'status' => DomainGame\Game::STATUS_RUNNING
             ));
 
-            foreach ($entities as $entity) {
-                /** @var DomainGame\Game $game */
-                $game = $entity->toDomainEntity();
-                $engine->move($game);
+            if (empty($entities)) {
+                usleep(250000);
+            } else {
+                foreach ($entities as $entity) {
+                    /** @var DomainGame\Game $game */
+                    $game = $entity->toDomainEntity();
+                    $engine->move($game);
 
-                $entity->fromDomainEntity($game);
-                $em->persist($entity);
-                $em->flush();
+                    $entity->fromDomainEntity($game);
+                    $em->persist($entity);
+                    $em->flush();
 
-                $em->detach($entity);
+                    $em->detach($entity);
+                    $entity = null;
+                    unset($entity);
+                }
+
+                $em->clear();
+
+                $memoryUsage = memory_get_usage(true);
+                $percent = ((float) $memoryUsage) / ((float) $memoryLimit);
+                if ($percent > 0.8) {
+                    $output->writeln('<info>Memory usage excedes 80%</info>');
+                    $daemon = $container->get('app.game.engine.daemon');
+                    $daemon->start(true);
+                    return 1;
+                }
             }
-
-            usleep(100000);
         }
 
         return 0;

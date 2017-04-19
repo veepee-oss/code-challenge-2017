@@ -14,11 +14,13 @@ class GameEngineDaemon
 
     /**
      * Starts the game engine daemon
+     *
+     * @param bool $force
      */
-    public function start()
+    public function start($force = false)
     {
-        if (!$this->isRunning()) {
-            $command = 'php ' . realpath(static::CONSOLE) . ' ' . static::COMMAND . ' > /dev/null 2>/dev/null &';
+        if ($force || !$this->isRunning()) {
+            $command = 'nohup php ' . realpath(static::CONSOLE) . ' ' . static::COMMAND . ' > /dev/null 2> /dev/null &';
             @shell_exec($command);
         }
     }
@@ -53,7 +55,7 @@ class GameEngineDaemon
      */
     public function getProcessId()
     {
-        $command = 'ps ax'
+        $command = 'ps ax -w'
             . ' | grep \'' . static::COMMAND . '\''
             . ' | grep -v \'grep\''
             . ' | awk \'{print $1}\'';

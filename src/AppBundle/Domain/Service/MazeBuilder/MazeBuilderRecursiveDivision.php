@@ -23,15 +23,15 @@ class MazeBuilderRecursiveDivision implements MazeBuilderInterface
     /**
      * Creates a random maze
      *
-     * @param int $width
      * @param int $height
+     * @param int $width
      * @return Maze
      * @throws MazeBuilderException
      */
-    public function buildRandomMaze($width, $height)
+    public function buildRandomMaze($height, $width)
     {
         $this
-            ->createMaze($width, $height)
+            ->createMaze($height, $width)
             ->createBorders()
             ->makeDivisions(0, 0, $width - 1, $height - 1)
             ->createStartAndGoal();
@@ -42,13 +42,13 @@ class MazeBuilderRecursiveDivision implements MazeBuilderInterface
     /**
      * Creates the empty maze object
      *
-     * @param int $width
      * @param int $height
+     * @param int $width
      * @return $this
      */
-    protected function createMaze($width, $height)
+    protected function createMaze($height, $width)
     {
-        $this->maze = new Maze($width, $height);
+        $this->maze = new Maze($height, $width);
         return $this;
     }
 
@@ -59,8 +59,8 @@ class MazeBuilderRecursiveDivision implements MazeBuilderInterface
      */
     protected function createBorders()
     {
-        $width = $this->maze->width();
         $height = $this->maze->height();
+        $width = $this->maze->width();
 
         $x1 = 0;
         $y1 = 0;

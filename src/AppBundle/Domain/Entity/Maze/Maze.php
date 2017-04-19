@@ -32,15 +32,15 @@ class Maze implements \ArrayAccess, \Countable, \Iterator
     /**
      * Maze constructor.
      *
-     * @param int $width
      * @param int $height
+     * @param int $width
      * @param Position $start
      * @param Position $goal
      * @param array $cells
      */
     public function __construct(
-        $width,
         $height,
+        $width,
         Position $start = null,
         Position $goal = null,
         array $cells = null

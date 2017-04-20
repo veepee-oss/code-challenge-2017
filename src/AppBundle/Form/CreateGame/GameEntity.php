@@ -30,7 +30,7 @@ class GameEntity
      * @Assert\NotBlank()
      * @Assert\Range(min=1, max=20)
      */
-    private $players = 1;
+    private $playerNum = 1;
 
     /**
      * @var int
@@ -45,6 +45,12 @@ class GameEntity
      * @Assert\Range(min=0, max=1000)
      */
     private $ghostRate = 250;
+
+    /**
+     * @var PlayerEntity[]
+     * @Assert\Valid()
+     */
+    private $players = array();
 
     /**
      * @return int
@@ -81,17 +87,17 @@ class GameEntity
     /**
      * @return int
      */
-    public function getPlayers()
+    public function getPlayerNum()
     {
-        return $this->players;
+        return $this->playerNum;
     }
 
     /**
-     * @param int $players
+     * @param int $playerNum
      */
-    public function setPlayers($players)
+    public function setPlayerNum($playerNum)
     {
-        $this->players = $players;
+        $this->playerNum = $playerNum;
     }
 
     /**
@@ -124,5 +130,42 @@ class GameEntity
     public function setGhostRate($ghostRate)
     {
         $this->ghostRate = $ghostRate;
+    }
+
+    /**
+     * @param PlayerEntity[] $players
+     */
+    public function setPlayers($players)
+    {
+        $this->players = $players;
+    }
+
+    /**
+     * @return PlayerEntity[]
+     */
+    public function getPlayers()
+    {
+        return $this->players;
+    }
+
+    /**
+     * @param PlayerEntity $player
+     */
+    public function addPlayer(PlayerEntity $player)
+    {
+        $this->players[] = $player;
+    }
+
+    /**
+     * @param int $pos
+     * @return PlayerEntity
+     * @throws \Exception
+     */
+    public function getPlayerAt($pos)
+    {
+        if (!array_key_exists($pos, $this->players)) {
+            throw new \Exception('The key ' . $pos . ' in invalid for players array.');
+        }
+        return $this->players[$pos];
     }
 }

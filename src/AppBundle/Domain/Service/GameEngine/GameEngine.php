@@ -135,7 +135,7 @@ class GameEngine
      */
     protected function createGhosts(Game &$game)
     {
-        if ($game->moves() % $game->ghostRate() == 0) {
+        if ($game->ghostRate() > 0 && $game->moves() % $game->ghostRate() == 0) {
             $this->createNewGhost($game);
         }
 

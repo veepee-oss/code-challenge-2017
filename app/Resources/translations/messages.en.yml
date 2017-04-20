@@ -27,9 +27,11 @@ app:
         form:
             height:         "Height of the maze"
             width:          "Width of the maze"
-            players:        "Number of players (1 to 20)"
+            player-num:     "Number of players (1 to 20)"
             min-ghosts:     "Minimum number of ghosts)"
             ghost-rate:     "Movements to create a new ghost (0 for no ghosts)"
+            url:            "URL"
+            next:           "Next step"
             create:         "Create game"
 
     gamepage:

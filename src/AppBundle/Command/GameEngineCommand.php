@@ -63,13 +63,22 @@ class GameEngineCommand extends ContainerAwareCommand
                 usleep(250000);
             } else {
                 foreach ($entities as $entity) {
-                    /** @var DomainGame\Game $game */
-                    $game = $entity->toDomainEntity();
-                    $engine->move($game);
+                    try {
+                        /** @var DomainGame\Game $game */
+                        $game = $entity->toDomainEntity();
+                        $engine->move($game);
 
-                    $entity->fromDomainEntity($game);
-                    $em->persist($entity);
-                    $em->flush();
+                        $entity->fromDomainEntity($game);
+                        $em->persist($entity);
+                        $em->flush();
+                    } catch (\Exception $exc) {
+                        // TODO log the exception
+                        $output->writeln('<error>' . $exc->getMessage() . '</error>');
+                        if ($output->getVerbosity() > OutputInterface::VERBOSITY_VERY_VERBOSE) {
+                            $output->writeln($exc->getFile() . ': ' . $exc->getLine());
+                            $output->writeln($exc->getTraceAsString());
+                        }
+                    }
 
                     $em->detach($entity);
                     $entity = null;
@@ -80,7 +89,7 @@ class GameEngineCommand extends ContainerAwareCommand
 
                 $memoryUsage = memory_get_usage(true);
                 $percent = ((float) $memoryUsage) / ((float) $memoryLimit);
-                if ($percent > 0.8) {
+                if ($percent > 0.95) {
                     $output->writeln('<info>Memory usage excedes 80%</info>');
                     $daemon = $container->get('app.game.engine.daemon');
                     $daemon->start(true);

@@ -1,18 +1,3 @@
 {{ maze | raw }}
 
-<div class="container">
-    <div class="row">
-        <div class="col-sm-3 text-left">
-            {{ 'app.mazepage.texts.moves' | trans }}: <strong class="text-info">{{ game.moves }}</strong>
-        </div>
-        <div class="col-sm-3 text-center">
-            {{ 'app.mazepage.texts.players' | trans }}: <strong class="text-info">{{ game.players | length }}</strong>
-        </div>
-        <div class="col-sm-3 text-center">
-            {{ 'app.mazepage.texts.ghosts' | trans }}: <strong class="text-info">{{ game.ghosts | length }}</strong>
-        </div>
-        <div class="col-sm-3 text-right">
-            {{ 'app.mazepage.texts.status' | trans }}: <strong class="text-info">{{ 'app.mazepage.texts.status-text' | transchoice(game.status) }}</strong>
-        </div>
-    </div>
-</div>
+{% include ':game:panels.html.twig' with { 'game': game, 'maze': maze } %}

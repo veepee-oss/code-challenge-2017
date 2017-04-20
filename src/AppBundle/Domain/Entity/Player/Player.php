@@ -28,8 +28,14 @@ class Player extends MazeObject
     /** @var int */
     protected $status;
 
+    /** @var \DateTime */
+    protected $timestamp;
+
     /** @var string */
     protected $uuid;
+
+    /** @var string */
+    protected $name;
 
     /**
      * Player constructor.
@@ -38,14 +44,25 @@ class Player extends MazeObject
      * @param Position $position
      * @param Position $previous
      * @param int $status
+     * @param \DateTime $timestamp
      * @param string $uuid
+     * @param string $name
      */
-    public function __construct($type, Position $position, Position $previous = null, $status = null, $uuid = null)
-    {
+    public function __construct(
+        $type,
+        Position $position,
+        Position $previous = null,
+        $status = null,
+        \DateTime $timestamp = null,
+        $uuid = null,
+        $name = null
+    ) {
         parent::__construct($position, $previous);
         $this->type = $type;
         $this->status = $status ?: static::STATUS_PLAYING;
+        $this->timestamp = $timestamp ?: new \DateTime();
         $this->uuid = $uuid ?: Uuid::v4();
+        $this->name = $name ?: $this->uuid;
     }
 
     /**
@@ -69,13 +86,13 @@ class Player extends MazeObject
     }
 
     /**
-     * Get if current status is died
+     * Get current timestamp
      *
-     * @return bool
+     * @return \DateTime
      */
-    public function died()
+    public function timestamp()
     {
-        return static::STATUS_DIED == $this->status;
+        return $this->timestamp;
     }
 
     /**
@@ -89,25 +106,55 @@ class Player extends MazeObject
     }
 
     /**
-     * Win the game
+     * @return string
+     */
+    public function name()
+    {
+        return $this->name;
+    }
+
+    /**
+     * The player wins the game
      *
      * @return $this
      */
-    public function win()
+    public function wins()
     {
         $this->status = static::STATUS_WINNER;
+        $this->timestamp = new \DateTime();
         return $this;
     }
 
     /**
-     * Loose the game
+     * Get if the player won the game
+     *
+     * @return bool
+     */
+    public function winner()
+    {
+        return static::STATUS_WINNER == $this->status;
+    }
+
+    /**
+     * The player dies
      *
      * @return $this
      */
-    public function loose()
+    public function dies()
     {
         $this->status = static::STATUS_DIED;
+        $this->timestamp = new \DateTime();
         return $this;
+    }
+
+    /**
+     * Get if the player died
+     *
+     * @return bool
+     */
+    public function dead()
+    {
+        return static::STATUS_DIED == $this->status;
     }
 
     /**
@@ -119,6 +166,7 @@ class Player extends MazeObject
     public function reset(Position $pos)
     {
         $this->status = static::STATUS_PLAYING;
+        $this->timestamp = new \DateTime();
         $this->position = clone $pos;
         $this->previous = clone $pos;
         return $this;
@@ -136,7 +184,9 @@ class Player extends MazeObject
             'position' => $this->position()->serialize(),
             'previous' => $this->previous()->serialize(),
             'status' => $this->status(),
-            'uuid' => $this->uuid()
+            'timestamp' => $this->timestamp()->format('YmdHisu'),
+            'uuid' => $this->uuid(),
+            'name' => $this->name()
         );
     }
 
@@ -151,9 +201,11 @@ class Player extends MazeObject
         return new static(
             $data['type'],
             Position::unserialize($data['position']),
-            Position::unserialize(isset($data['previous']) ? $data['previous'] : $data['position']),
-            isset($data['status']) ? $data['status'] : static::STATUS_PLAYING,
-            isset($data['uuid']) ? $data['uuid'] : Uuid::v4()
+            isset($data['previous']) ? Position::unserialize($data['previous']) : null,
+            isset($data['status']) ? $data['status'] : null,
+            isset($data['timestamp']) ? \DateTime::createFromFormat('YmdHisu', $data['timestamp']) : null,
+            isset($data['uuid']) ? $data['uuid'] : null,
+            isset($data['name']) ? $data['name'] : null
         );
     }
 }

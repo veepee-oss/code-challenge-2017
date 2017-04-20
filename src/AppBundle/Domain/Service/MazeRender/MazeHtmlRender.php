@@ -45,7 +45,20 @@ class MazeHtmlRender implements MazeRenderInterface
                 } elseif ($cell == MazeCell::CELL_START) {
                     $html .= '<td class="start"></td>';
                 } elseif ($cell == MazeCell::CELL_GOAL) {
-                    $html .= '<td class="goal"></td>';
+                    $drawWinner = false;
+                    $players = $game->players();
+                    foreach ($players as $index => $player) {
+                        if ($player->winner()
+                            && $player->position()->x() == $col && $player->position()->y() == $row) {
+                            $drawWinner = true;
+                        }
+                    }
+
+                    if (null != $drawWinner) {
+                        $html .= '<td class="winner"></td>';
+                    } else {
+                        $html .= '<td class="goal"></td>';
+                    }
                 } else {
                     $drawPlayer = null;
                     $drawKilled = false;
@@ -54,7 +67,7 @@ class MazeHtmlRender implements MazeRenderInterface
                     $players = $game->players();
                     foreach ($players as $index => $player) {
                         if ($player->position()->x() == $col && $player->position()->y() == $row) {
-                            if ($player->died()) {
+                            if ($player->dead()) {
                                 $drawKilled = true;
                             } else {
                                 $drawPlayer = 1 + $index;

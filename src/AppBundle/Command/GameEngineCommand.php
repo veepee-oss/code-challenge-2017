@@ -18,6 +18,12 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class GameEngineCommand extends ContainerAwareCommand
 {
+    // Sleep time: 250 ms = 1/4 sec
+    const SLEEP_TIME = 250000;
+
+    // Maz iddle time: 15 min * 60 sec * 4 (1/4 sec)
+    const MAX_IDDLE = 3600;
+
     /**
      * Configures the current command.
      */
@@ -53,6 +59,7 @@ class GameEngineCommand extends ContainerAwareCommand
             }
         }
 
+        $iddle = 0;
         while (1) {
             /** @var Game[] $entities */
             $entities = $repo->findBy(array(
@@ -60,8 +67,12 @@ class GameEngineCommand extends ContainerAwareCommand
             ));
 
             if (empty($entities)) {
-                usleep(250000);
+                usleep(static::SLEEP_TIME);
+                if (++$iddle > static::MAX_IDDLE) {
+                    return 2;
+                }
             } else {
+                $iddle = 0;
                 foreach ($entities as $entity) {
                     try {
                         /** @var DomainGame\Game $game */
@@ -91,8 +102,6 @@ class GameEngineCommand extends ContainerAwareCommand
                 $percent = ((float) $memoryUsage) / ((float) $memoryLimit);
                 if ($percent > 0.95) {
                     $output->writeln('<info>Memory usage excedes 80%</info>');
-                    $daemon = $container->get('app.game.engine.daemon');
-                    $daemon->start(true);
                     return 1;
                 }
             }

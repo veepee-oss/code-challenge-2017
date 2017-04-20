@@ -8,6 +8,8 @@ body {
     line-height: 15px;
     margin-left: auto;
     margin-right: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .maze td {
@@ -30,7 +32,8 @@ body {
     background-color: #FFFF00;
 }
 
-.maze .goal {
+.maze .goal,
+.maze .winner {
     background-color: #008000;
     color: #FFFFFF;
 }
@@ -81,6 +84,10 @@ body {
 
 .maze .goal:after {
     content: "\1F3C1";
+}
+
+.maze .winner:after {
+    content: "\1F3C6";
 }
 
 .maze .player:after {
@@ -181,3 +188,4 @@ body {
     margin-right: auto;
 
 }
+

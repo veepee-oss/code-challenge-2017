@@ -73,7 +73,7 @@ class GameEngine
                 $moverService = $this->mpf->locate($player);
                 if ($moverService->movePlayer($player, $game)) {
                     if ($game->isGoalReached($player)) {
-                        $player->win();
+                        $player->wins();
                     }
                 }
             }
@@ -120,7 +120,7 @@ class GameEngine
             if ($player->position()->y() == $ghost->position()->y()
                 && $player->position()->x() == $ghost->position()->x()) {
                 $game->removeGhost($ghost);
-                $player->loose();
+                $player->dies();
                 return true;
             }
         }

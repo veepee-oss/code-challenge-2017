@@ -124,7 +124,7 @@ class GameController extends Controller
     /**
      * View Game
      *
-     * @Route("/view/{uuid}",name="game_view",
+     * @Route("/{uuid}/view",name="game_view",
      *     requirements={"uuid": "[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}"})
      *
      * @param string $uuid
@@ -150,9 +150,37 @@ class GameController extends Controller
     }
 
     /**
+     * Panels Game
+     *
+     * @Route("/{uuid}/panels",name="game_panels",
+     *     requirements={"uuid": "[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}"})
+     *
+     * @param string $uuid
+     * @return Response
+     */
+    public function panelsAction($uuid)
+    {
+        $this->checkDaemon();
+
+        /** @var \AppBundle\Entity\Game $entity */
+        $entity = $this->getDoctrine()->getRepository('AppBundle:Game')->findOneBy(array(
+            'uuid' => $uuid
+        ));
+
+        $renderer = new MazeHtmlRender();
+        $game = $entity->toDomainEntity();
+        $maze = $renderer->render($game);
+
+        return $this->render(':game:panels.html.twig', array(
+            'game' => $game,
+            'maze' => $maze
+        ));
+    }
+
+    /**
      * View only maze
      *
-     * @Route("/view/{uuid}/refresh",name="game_refresh",
+     * @Route("/{uuid}/refresh",name="game_refresh",
      *     requirements={"uuid": "[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}"})
      *
      * @param string $uuid
@@ -188,7 +216,7 @@ class GameController extends Controller
     /**
      * Start a game
      *
-     * @Route("/view/{uuid}/start",name="game_start",
+     * @Route("/{uuid}/start",name="game_start",
      *     requirements={"uuid": "[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}"})
      *
      * @param string $uuid
@@ -217,7 +245,7 @@ class GameController extends Controller
     /**
      * Stop a game
      *
-     * @Route("/view/{uuid}/stop",name="game_stop",
+     * @Route("/{uuid}/stop",name="game_stop",
      *     requirements={"uuid": "[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}"})
      *
      * @param string $uuid
@@ -246,7 +274,7 @@ class GameController extends Controller
     /**
      * Reset a game
      *
-     * @Route("/view/{uuid}/reset",name="game_reset",
+     * @Route("/{uuid}/reset",name="game_reset",
      *     requirements={"uuid": "[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}"})
      *
      * @param string $uuid

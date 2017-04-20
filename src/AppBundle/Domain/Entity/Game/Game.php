@@ -295,4 +295,30 @@ class Game
         }
         return false;
     }
+
+    /**
+     * Get the current classification
+     *
+     * @return Player[]
+     */
+    public function classification()
+    {
+        $players = $this->players;
+        usort($players, function (Player $p1, Player $p2) {
+            if ($p1->status() == $p2->status()) {
+                if ($p1->timestamp() < $p2->timestamp()) {
+                    return -1;
+                } elseif ($p1->timestamp() > $p2->timestamp()) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            } elseif ($p1->winner() || $p2->dead()) {
+                return -1;
+            } else {
+                return 1;
+            }
+        });
+        return $players;
+    }
 }

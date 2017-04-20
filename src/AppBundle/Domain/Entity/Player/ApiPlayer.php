@@ -22,11 +22,20 @@ class ApiPlayer extends Player
      * @param Position $position
      * @param Position $previous
      * @param int $status
+     * @param \DateTime $timestamp
      * @param string $uuid
+     * @param string $name
      */
-    public function __construct($url, Position $position, Position $previous = null, $status = null, $uuid = null)
-    {
-        parent::__construct(parent::TYPE_API, $position, $previous, $status, $uuid);
+    public function __construct(
+        $url,
+        Position $position,
+        Position $previous = null,
+        $status = null,
+        \DateTime $timestamp = null,
+        $uuid = null,
+        $name = null
+    ) {
+        parent::__construct(parent::TYPE_API, $position, $previous, $status, $timestamp, $uuid, $name);
         $this->url = $url;
     }
 
@@ -63,9 +72,11 @@ class ApiPlayer extends Player
         return new static(
             $data['url'],
             Position::unserialize($data['position']),
-            Position::unserialize(isset($data['previous']) ? $data['previous'] : $data['position']),
-            isset($data['status']) ? $data['status'] : static::STATUS_PLAYING,
-            isset($data['uuid']) ? $data['uuid'] : Uuid::v4()
+            isset($data['previous']) ? Position::unserialize($data['previous']) : null,
+            isset($data['status']) ? $data['status'] : null,
+            isset($data['timestamp']) ? \DateTime::createFromFormat('YmdHisu', $data['timestamp']) : null,
+            isset($data['uuid']) ? $data['uuid'] : null,
+            isset($data['name']) ? $data['name'] : null
         );
     }
 }

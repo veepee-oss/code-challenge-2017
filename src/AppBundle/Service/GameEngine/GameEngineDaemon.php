@@ -55,16 +55,31 @@ class GameEngineDaemon
      */
     public function getProcessId()
     {
+        $result = $this->findProcess();
+        if (!$result || !intval($result)) {
+            return false;
+        }
+
+        return intval($result);
+    }
+
+    /**
+     * Finds the process status and return the process ID
+     *
+     * @return string|false
+     */
+    public function findProcess()
+    {
         $command = 'ps ax -w'
             . ' | grep \'' . static::COMMAND . '\''
             . ' | grep -v \'grep\''
             . ' | awk \'{print $1}\'';
 
         $result = @shell_exec($command);
-        if (empty($result) || !intval($result)) {
+        if (empty($result)) {
             return false;
         }
 
-        return intval($result);
+        return $result;
     }
 }

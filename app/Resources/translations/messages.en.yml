@@ -54,6 +54,17 @@ app:
             no-dead:        "No dead players yet!"
             no-players:     "No remaining players!"
 
+    adminpage:
+        title:          "Game administration"
+
+        texts:
+            process-id:     "Process ID"
+            not-running:    "Not running"
+
+        buttons:
+            start:          "Start daemon"
+            stop:           "Stop daemon"
+            restart:        "Restart daemon"
+
     credits:
         title:          "Credits and Attributions"
-

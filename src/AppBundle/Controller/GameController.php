@@ -311,4 +311,73 @@ class GameController extends Controller
         $daemon = $this->get('app.game.engine.daemon');
         $daemon->start();
     }
+
+    /**
+     * Admin game daemon
+     *
+     * @Route("/admin", name="admin_view")
+     * @return Response
+     */
+    public function adminAction()
+    {
+        /** @var GameEngineDaemon $daemon */
+        $daemon = $this->get('app.game.engine.daemon');
+        $processId = $daemon->getProcessId();
+
+        return $this->render('game/admin.html.twig', array(
+            'processId' => $processId
+        ));
+    }
+
+    /**
+     * Start athe daemon
+     *
+     * @Route("/admin/start",name="admin_start")
+     * @return Response
+     */
+    public function startDaemonAction()
+    {
+        /** @var GameEngineDaemon $daemon */
+        $daemon = $this->get('app.game.engine.daemon');
+        $daemon->start();
+
+        return $this->redirectToRoute('admin_view');
+    }
+
+    /**
+     * Start athe daemon
+     *
+     * @Route("/admin/stop",name="admin_stop")
+     * @return Response
+     */
+    public function stopDaemonAction()
+    {
+        /** @var GameEngineDaemon $daemon */
+        $daemon = $this->get('app.game.engine.daemon');
+        $daemon->stop();
+
+        return $this->redirectToRoute('admin_view');
+    }
+
+    /**
+     * Start athe daemon
+     *
+     * @Route("/admin/restart",name="admin_restart")
+     * @return Response
+     */
+    public function restartDaemonAction()
+    {
+        /** @var GameEngineDaemon $daemon */
+        $daemon = $this->get('app.game.engine.daemon');
+
+        $count = 0;
+        do {
+            $daemon->stop();
+            usleep(100000);
+        } while ($daemon->isRunning() || ++$count > 100);
+
+        $daemon->start();
+
+        return $this->redirectToRoute('admin_view');
+    }
 }

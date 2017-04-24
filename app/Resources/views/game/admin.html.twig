@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'app.adminpage.title' | trans }} - {{ parent() }}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="page-header">
+            <h1>
+                {{ 'app.adminpage.title' | trans }}
+                <small>
+                    {{ 'app.global.title' | trans }}
+                </small>
+            </h1>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-2 bg-primary img-rounded">
+                <small>{{ 'app.adminpage.texts.process-id' | trans }}:</small><br>
+                <span class="lead">{{ processId | default('app.adminpage.texts.not-running' | trans) }}</span>
+            </div>
+            <div class="col-lg-10">
+                <a  {% if processId %}
+                        disabled="disabled"
+                    {% endif %}
+                    class="btn btn-success js-btn-start"
+                    href="{{ url('admin_start') }}">
+                    {{ 'app.adminpage.buttons.start' | trans }}
+                </a>
+
+                <a  {% if not processId %}
+                        disabled="disabled"
+                    {% endif %}
+                    class="btn btn-danger js-btn-stop"
+                    href="{{ url('admin_stop') }}">
+                    {{ 'app.adminpage.buttons.stop' | trans }}
+                </a>
+
+                <a  {% if not processId %}
+                        disabled="disabled"
+                    {% endif %}
+                    class="btn btn-warning js-btn-restart"
+                    href="{{ url('admin_restart') }}">
+                    {{ 'app.adminpage.buttons.restart' | trans }}
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

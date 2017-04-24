@@ -1,5 +1,15 @@
+/app/bootstrap.php.cache
 /app/config/parameters.yml
+/app/cache/*
+!app/cache/.gitkeep
+/app/logs/*
+!app/logs/.gitkeep
+/app/phpunit.xml
 /build/
+/bin/
+/web/bundles/
+/vendor/
+/composer.phar
 /phpunit.xml
 /var/*
 !/var/cache
@@ -12,7 +22,8 @@
 /var/sessions/*
 !var/sessions/.gitkeep
 !var/SymfonyRequirements.php
-/vendor/
-/web/bundles/
 /supervisord*
 /.idea
+/deploy
+!/deploy/deploy.sh
+!/deploy/remote/install.sh

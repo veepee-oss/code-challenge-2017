@@ -54,6 +54,27 @@ app:
             no-dead:        "No dead players yet!"
             no-players:     "No remaining players!"
 
+    adminpage:
+        title:          "Game administration"
+
+        texts:
+            process-id:     "Daemon process"
+            not-running:    "Not running"
+            actions:        "Actions"
+            height:         "Height: %height%"
+            width:          "Width: %width%"
+            players:        "{0} No players|{1} One player|]1,Inf[ Players: %players%"
+            ask-remove:     "Remove %uuid%?"
+            games:
+                not-started:    "Not started games"
+                running:        "Running games"
+                finished:       "Finished games"
+                none:           "No games found!"
+
+        buttons:
+            start:          "Start daemon"
+            stop:           "Stop daemon"
+            restart:        "Restart daemon"
+
     credits:
         title:          "Credits and Attributions"
-

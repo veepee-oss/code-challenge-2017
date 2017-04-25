@@ -226,6 +226,26 @@ class Game
     }
 
     /**
+     * Get the height of the maze
+     *
+     * @return int
+     */
+    public function height()
+    {
+        return $this->maze()->height();
+    }
+
+    /**
+     * Get the width of the maze
+     *
+     * @return int
+     */
+    public function width()
+    {
+        return $this->maze()->width();
+    }
+
+    /**
      * Increments the moves counter
      *
      * @return $this

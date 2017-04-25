@@ -9,6 +9,7 @@ use AppBundle\Form\CreateGame\GameEntity;
 use AppBundle\Form\CreateGame\GameForm;
 use AppBundle\Form\CreateGame\PlayerEntity;
 use AppBundle\Service\GameEngine\GameEngineDaemon;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -124,7 +125,7 @@ class GameController extends Controller
     /**
      * View Game
      *
-     * @Route("/{uuid}/view",name="game_view",
+     * @Route("/{uuid}/view", name="game_view",
      *     requirements={"uuid": "[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}"})
      *
      * @param string $uuid
@@ -150,9 +151,9 @@ class GameController extends Controller
     }
 
     /**
-     * Panels Game
+     * Shows game panels
      *
-     * @Route("/{uuid}/panels",name="game_panels",
+     * @Route("/{uuid}/panels", name="game_panels",
      *     requirements={"uuid": "[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}"})
      *
      * @param string $uuid
@@ -180,7 +181,7 @@ class GameController extends Controller
     /**
      * View only maze
      *
-     * @Route("/{uuid}/refresh",name="game_refresh",
+     * @Route("/{uuid}/refresh", name="game_refresh",
      *     requirements={"uuid": "[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}"})
      *
      * @param string $uuid
@@ -214,9 +215,34 @@ class GameController extends Controller
     }
 
     /**
+     * remove the game
+     *
+     * @Route("/{uuid}/remove", name="game_remove",
+     *     requirements={"uuid": "[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}"})
+     * @Method("POST")
+     *
+     * @param string $uuid
+     * @return Response
+     */
+    public function removeAction($uuid)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        /** @var \AppBundle\Entity\Game $entity */
+        $entity = $em->getRepository('AppBundle:Game')->findOneBy(array(
+            'uuid' => $uuid
+        ));
+
+        $em->remove($entity);
+        $em->flush();
+
+        return new Response('', 204);
+    }
+
+    /**
      * Start a game
      *
-     * @Route("/{uuid}/start",name="game_start",
+     * @Route("/{uuid}/start", name="game_start",
      *     requirements={"uuid": "[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}"})
      *
      * @param string $uuid
@@ -245,7 +271,7 @@ class GameController extends Controller
     /**
      * Stop a game
      *
-     * @Route("/{uuid}/stop",name="game_stop",
+     * @Route("/{uuid}/stop", name="game_stop",
      *     requirements={"uuid": "[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}"})
      *
      * @param string $uuid
@@ -274,7 +300,7 @@ class GameController extends Controller
     /**
      * Reset a game
      *
-     * @Route("/{uuid}/reset",name="game_reset",
+     * @Route("/{uuid}/reset", name="game_reset",
      *     requirements={"uuid": "[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}"})
      *
      * @param string $uuid
@@ -310,5 +336,88 @@ class GameController extends Controller
         /** @var GameEngineDaemon $daemon */
         $daemon = $this->get('app.game.engine.daemon');
         $daemon->start();
+    }
+
+    /**
+     * Admin game daemon
+     *
+     * @Route("/admin", name="admin_view")
+     * @return Response
+     */
+    public function adminAction()
+    {
+        /** @var GameEngineDaemon $daemon */
+        $daemon = $this->get('app.game.engine.daemon');
+        $processId = $daemon->getProcessId();
+
+        /** @var \AppBundle\Entity\Game[] $entities */
+        $entities = $this->getDoctrine()->getRepository('AppBundle:Game')->findBy(
+            array(),    // Criteria
+            array(      // Order by
+                'status'  => 'asc'
+            )
+        );
+
+        $games = array();
+        foreach ($entities as $entity) {
+            $games[] = $entity->toDomainEntity();
+        }
+
+        return $this->render('game/admin.html.twig', array(
+            'processId' => $processId,
+            'games'     => $games
+        ));
+    }
+
+    /**
+     * Start athe daemon
+     *
+     * @Route("/admin/start", name="admin_start")
+     * @return Response
+     */
+    public function startDaemonAction()
+    {
+        /** @var GameEngineDaemon $daemon */
+        $daemon = $this->get('app.game.engine.daemon');
+        $daemon->start();
+
+        return $this->redirectToRoute('admin_view');
+    }
+
+    /**
+     * Start athe daemon
+     *
+     * @Route("/admin/stop", name="admin_stop")
+     * @return Response
+     */
+    public function stopDaemonAction()
+    {
+        /** @var GameEngineDaemon $daemon */
+        $daemon = $this->get('app.game.engine.daemon');
+        $daemon->stop();
+
+        return $this->redirectToRoute('admin_view');
+    }
+
+    /**
+     * Start athe daemon
+     *
+     * @Route("/admin/restart", name="admin_restart")
+     * @return Response
+     */
+    public function restartDaemonAction()
+    {
+        /** @var GameEngineDaemon $daemon */
+        $daemon = $this->get('app.game.engine.daemon');
+
+        $count = 0;
+        do {
+            $daemon->stop();
+            usleep(100000);
+        } while ($daemon->isRunning() || ++$count > 100);
+
+        $daemon->start();
+
+        return $this->redirectToRoute('admin_view');
     }
 }

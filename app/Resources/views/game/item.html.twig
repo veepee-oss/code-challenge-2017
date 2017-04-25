@@ -1,0 +1,10 @@
+<div class="row">
+    <div class="col-xs-8 col-sm-6">
+        <a href="{{ url('game_view', { 'uuid' : game.uuid }) }}">{{ game.uuid }}</a><br>
+    </div>
+    <div class="col-xs-4 col-md-6">
+        {{ 'app.adminpage.texts.height' | trans({ '%height%': game.height}) }},
+        {{ 'app.adminpage.texts.width' | trans({ '%width%': game.width }) }},
+        {{ 'app.adminpage.texts.players' | transchoice(game.players | length, { '%players%' : game.players | length }) }}
+    </div>
+</div>

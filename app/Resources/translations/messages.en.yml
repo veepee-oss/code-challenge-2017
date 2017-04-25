@@ -58,8 +58,17 @@ app:
         title:          "Game administration"
 
         texts:
-            process-id:     "Process ID"
+            process-id:     "Daemon process"
             not-running:    "Not running"
+            actions:        "Actions"
+            height:         "Height: %height%"
+            width:          "Width: %width%"
+            players:        "{0} No players|{1} One player|]1,Inf[ Players: %players%"
+            games:
+                not-started:    "Not started games"
+                running:        "Running games"
+                finished:       "Finished games"
+                none:           "No games found!"
 
         buttons:
             start:          "Start daemon"

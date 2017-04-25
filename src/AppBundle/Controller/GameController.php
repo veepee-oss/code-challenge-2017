@@ -324,8 +324,22 @@ class GameController extends Controller
         $daemon = $this->get('app.game.engine.daemon');
         $processId = $daemon->getProcessId();
 
+        /** @var \AppBundle\Entity\Game[] $entities */
+        $entities = $this->getDoctrine()->getRepository('AppBundle:Game')->findBy(
+            array(),    // Criteria
+            array(      // Order by
+                'status'  => 'asc'
+            )
+        );
+
+        $games = array();
+        foreach ($entities as $entity) {
+            $games[] = $entity->toDomainEntity();
+        }
+
         return $this->render('game/admin.html.twig', array(
-            'processId' => $processId
+            'processId' => $processId,
+            'games'     => $games
         ));
     }
 

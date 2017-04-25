@@ -14,34 +14,78 @@
         </div>
 
         <div class="row">
-            <div class="col-lg-2 bg-primary img-rounded">
-                <small>{{ 'app.adminpage.texts.process-id' | trans }}:</small><br>
-                <span class="lead">{{ processId | default('app.adminpage.texts.not-running' | trans) }}</span>
+            <div class="col-xs-12 col-sm-2">
+                <div class="well">
+                    <small class="text-primary">{{ 'app.adminpage.texts.process-id' | trans }}:</small><br>
+                    <strong class="lead">{{ processId | default('app.adminpage.texts.not-running' | trans) }}</strong>
+                </div>
+
+                <div class="well">
+                    <small class="text-info">{{ 'app.adminpage.texts.actions' | trans }}:</small><br>
+                    <div class="btn-group-vertical">
+                        <a  {% if processId %}
+                                disabled="disabled"
+                            {% endif %}
+                            class="btn btn-success js-btn-start"
+                            href="{{ url('admin_start') }}">
+                            {{ 'app.adminpage.buttons.start' | trans }}
+                        </a>
+
+                        <a  {% if not processId %}
+                                disabled="disabled"
+                            {% endif %}
+                            class="btn btn-danger js-btn-stop"
+                            href="{{ url('admin_stop') }}">
+                            {{ 'app.adminpage.buttons.stop' | trans }}
+                        </a>
+
+                        <a  {% if not processId %}
+                                disabled="disabled"
+                            {% endif %}
+                            class="btn btn-warning js-btn-restart"
+                            href="{{ url('admin_restart') }}">
+                            {{ 'app.adminpage.buttons.restart' | trans }}
+                        </a>
+                    </div>
+                </div>
             </div>
-            <div class="col-lg-10">
-                <a  {% if processId %}
-                        disabled="disabled"
-                    {% endif %}
-                    class="btn btn-success js-btn-start"
-                    href="{{ url('admin_start') }}">
-                    {{ 'app.adminpage.buttons.start' | trans }}
-                </a>
-
-                <a  {% if not processId %}
-                        disabled="disabled"
-                    {% endif %}
-                    class="btn btn-danger js-btn-stop"
-                    href="{{ url('admin_stop') }}">
-                    {{ 'app.adminpage.buttons.stop' | trans }}
-                </a>
-
-                <a  {% if not processId %}
-                        disabled="disabled"
-                    {% endif %}
-                    class="btn btn-warning js-btn-restart"
-                    href="{{ url('admin_restart') }}">
-                    {{ 'app.adminpage.buttons.restart' | trans }}
-                </a>
+            <div class="col-xs-12 col-sm-10">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        {{ 'app.adminpage.texts.games.not-started' | trans }}
+                    </div>
+                    <div class="panel-body">
+                        {% for game in games if not game.playing and not game.finished %}
+                            {% include ':game:item.html.twig' with { 'game' : game }  %}
+                        {% else %}
+                            {{ 'app.adminpage.texts.games.none' | trans }}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        {{ 'app.adminpage.texts.games.running' | trans }}
+                    </div>
+                    <div class="panel-body">
+                        {% for game in games if game.playing %}
+                            {% include ':game:item.html.twig' with { 'game' : game }  %}
+                        {% else %}
+                            {{ 'app.adminpage.texts.games.none' | trans }}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="panel panel-warning">
+                    <div class="panel-heading">
+                        {{ 'app.adminpage.texts.games.finished' | trans }}
+                    </div>
+                    <div class="panel-body">
+                        {% for game in games if game.finished %}
+                            {% include ':game:item.html.twig' with { 'game' : game }  %}
+                        {% else %}
+                            {{ 'app.adminpage.texts.games.none' | trans }}
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
         </div>
     </div>

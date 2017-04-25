@@ -5,11 +5,15 @@ namespace AppBundle\Command;
 use AppBundle\Domain\Entity\Game as DomainGame;
 use AppBundle\Domain\Entity\Maze as DomainMaze;
 use AppBundle\Domain\Entity\Player as DomainPlayer;
+use AppBundle\Domain\Service\GameEngine\GameEngine;
 use AppBundle\Entity\Game;
+use AppBundle\Repository\GameRepository;
+use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Exception\LogicException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class GameEngineCommand
@@ -46,10 +50,18 @@ class GameEngineCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        /** @var ContainerInterface $container */
         $container = $this->getContainer();
+
+        /** @var EntityManager $em */
         $em = $container->get('doctrine')->getManager();
+
+        /** @var GameRepository $repo */
         $repo = $em->getRepository('AppBundle:Game');
+
+        /** @var GameEngine $engine */
         $engine = $container->get('app.game.engine');
+
         $memoryLimit = ini_get('memory_limit');
         if (preg_match('/^(\d+)\s*(.)/', $memoryLimit, $matches)) {
             if ($matches[2] == 'M') {
@@ -73,6 +85,7 @@ class GameEngineCommand extends ContainerAwareCommand
                 }
             } else {
                 $iddle = 0;
+                $startTime = microtime(true);
                 foreach ($entities as $entity) {
                     try {
                         /** @var DomainGame\Game $game */
@@ -103,6 +116,13 @@ class GameEngineCommand extends ContainerAwareCommand
                 if ($percent > 0.95) {
                     $output->writeln('<info>Memory usage excedes 80%</info>');
                     return 1;
+                }
+
+                $endTime = microtime(true);
+                $diffTime = $endTime - $startTime;
+                if ($diffTime < 1) {
+                    $microSec = (int) ((1 - $diffTime) * 1000000);
+                    usleep($microSec);
                 }
             }
         }

@@ -9,6 +9,7 @@ use AppBundle\Form\CreateGame\GameEntity;
 use AppBundle\Form\CreateGame\GameForm;
 use AppBundle\Form\CreateGame\PlayerEntity;
 use AppBundle\Service\GameEngine\GameEngineDaemon;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -124,7 +125,7 @@ class GameController extends Controller
     /**
      * View Game
      *
-     * @Route("/{uuid}/view",name="game_view",
+     * @Route("/{uuid}/view", name="game_view",
      *     requirements={"uuid": "[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}"})
      *
      * @param string $uuid
@@ -150,9 +151,9 @@ class GameController extends Controller
     }
 
     /**
-     * Panels Game
+     * Shows game panels
      *
-     * @Route("/{uuid}/panels",name="game_panels",
+     * @Route("/{uuid}/panels", name="game_panels",
      *     requirements={"uuid": "[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}"})
      *
      * @param string $uuid
@@ -180,7 +181,7 @@ class GameController extends Controller
     /**
      * View only maze
      *
-     * @Route("/{uuid}/refresh",name="game_refresh",
+     * @Route("/{uuid}/refresh", name="game_refresh",
      *     requirements={"uuid": "[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}"})
      *
      * @param string $uuid
@@ -214,9 +215,34 @@ class GameController extends Controller
     }
 
     /**
+     * remove the game
+     *
+     * @Route("/{uuid}/remove", name="game_remove",
+     *     requirements={"uuid": "[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}"})
+     * @Method("POST")
+     *
+     * @param string $uuid
+     * @return Response
+     */
+    public function removeAction($uuid)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        /** @var \AppBundle\Entity\Game $entity */
+        $entity = $em->getRepository('AppBundle:Game')->findOneBy(array(
+            'uuid' => $uuid
+        ));
+
+        $em->remove($entity);
+        $em->flush();
+
+        return new Response('', 204);
+    }
+
+    /**
      * Start a game
      *
-     * @Route("/{uuid}/start",name="game_start",
+     * @Route("/{uuid}/start", name="game_start",
      *     requirements={"uuid": "[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}"})
      *
      * @param string $uuid
@@ -245,7 +271,7 @@ class GameController extends Controller
     /**
      * Stop a game
      *
-     * @Route("/{uuid}/stop",name="game_stop",
+     * @Route("/{uuid}/stop", name="game_stop",
      *     requirements={"uuid": "[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}"})
      *
      * @param string $uuid
@@ -274,7 +300,7 @@ class GameController extends Controller
     /**
      * Reset a game
      *
-     * @Route("/{uuid}/reset",name="game_reset",
+     * @Route("/{uuid}/reset", name="game_reset",
      *     requirements={"uuid": "[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}"})
      *
      * @param string $uuid
@@ -346,7 +372,7 @@ class GameController extends Controller
     /**
      * Start athe daemon
      *
-     * @Route("/admin/start",name="admin_start")
+     * @Route("/admin/start", name="admin_start")
      * @return Response
      */
     public function startDaemonAction()
@@ -361,7 +387,7 @@ class GameController extends Controller
     /**
      * Start athe daemon
      *
-     * @Route("/admin/stop",name="admin_stop")
+     * @Route("/admin/stop", name="admin_stop")
      * @return Response
      */
     public function stopDaemonAction()
@@ -376,7 +402,7 @@ class GameController extends Controller
     /**
      * Start athe daemon
      *
-     * @Route("/admin/restart",name="admin_restart")
+     * @Route("/admin/restart", name="admin_restart")
      * @return Response
      */
     public function restartDaemonAction()

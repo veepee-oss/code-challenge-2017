@@ -14,7 +14,7 @@
         </div>
 
         <div class="row">
-            <div class="col-xs-12 col-sm-2">
+            <div class="col-sm-12 col-md-3">
                 <div class="well">
                     <small class="text-primary">{{ 'app.adminpage.texts.process-id' | trans }}:</small><br>
                     <strong class="lead">{{ processId | default('app.adminpage.texts.not-running' | trans) }}</strong>
@@ -49,7 +49,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xs-12 col-sm-10">
+            <div class="col-sm-12 col-md-9">
                 <div class="panel panel-info">
                     <div class="panel-heading">
                         {{ 'app.adminpage.texts.games.not-started' | trans }}
@@ -89,4 +89,49 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block more_javascripts %}
+    <script language="JavaScript">
+
+        (function (win, $) {
+
+            'use strict';
+
+            /**
+             * init()
+             */
+            var init = function() {
+                $('.js-btn-remove').each(function () {
+                    var $this = $(this),
+                        url = $this.data('url'),
+                        question = $this.data('question');
+
+                    $this.click(function(ev) {
+                        ev.preventDefault();
+                        if (win.confirm(question)) {
+                            $.post(url)
+                            .done(function() {
+                                win.location.reload(true);
+                            });
+                        }
+                    });
+                });
+
+
+
+
+            };
+
+            /**
+             * Main process
+             */
+            init();
+
+            return {
+                init: init
+            };
+
+        }(window, jQuery));
+    </script>
 {% endblock %}

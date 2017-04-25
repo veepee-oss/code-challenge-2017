@@ -64,6 +64,7 @@ app:
             height:         "Height: %height%"
             width:          "Width: %width%"
             players:        "{0} No players|{1} One player|]1,Inf[ Players: %players%"
+            ask-remove:     "Remove %uuid%?"
             games:
                 not-started:    "Not started games"
                 running:        "Running games"

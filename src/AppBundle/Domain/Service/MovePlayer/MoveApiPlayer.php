@@ -5,6 +5,7 @@ namespace AppBundle\Domain\Service\MovePlayer;
 use AppBundle\Domain\Entity\Game\Game;
 use AppBundle\Domain\Entity\Player\ApiPlayer;
 use AppBundle\Domain\Entity\Player\Player;
+use AppBundle\Domain\Service\LoggerService\LoggerServiceInterface;
 use Davamigo\HttpClient\Domain\HttpClient;
 use Davamigo\HttpClient\Domain\HttpException;
 
@@ -15,17 +16,22 @@ use Davamigo\HttpClient\Domain\HttpException;
  */
 class MoveApiPlayer extends MovePlayer
 {
-    /** @var  HttpClient */
+    /** @var HttpClient */
     protected $httpClient;
+
+    /** @var LoggerServiceInterface */
+    protected $logger;
 
     /**
      * MoveApiPlayer constructor.
      *
      * @param HttpClient $httpClient
+     * @param LoggerServiceInterface $logger
      */
-    public function __construct(HttpClient $httpClient)
+    public function __construct(HttpClient $httpClient, LoggerServiceInterface $logger)
     {
         $this->httpClient = $httpClient;
+        $this->logger = $logger;
     }
 
     /**
@@ -44,25 +50,48 @@ class MoveApiPlayer extends MovePlayer
             );
         }
 
-        $url = $player->url();
-        $data = $this->createRequestData($player, $game);
-        $headers = array(
+        $requestUrl = $player->url();
+        $requestBody = $this->createRequestData($player, $game);
+        $requestHeaders = array(
             'Content-Type' => 'application/json; charset=UTF-8'
         );
 
         try {
-            $response = $this->httpClient->post($url, $headers, $data)->send();
+            $response = $this->httpClient->post($requestUrl, $requestHeaders, $requestBody)->send();
         } catch (HttpException $exc) {
+            $this->logger->log(
+                $game->uuid(),
+                $player->uuid(),
+                array(
+                    'requestUrl'        => $requestUrl,
+                    'requestHeaders'    => $requestHeaders,
+                    'requestBody'       => $requestBody,
+                    'errorCode'         => $exc->getMessage()
+                )
+            );
             throw new MovePlayerException('An error occurred calling the player API.', 0, $exc);
         }
 
-        $body = $response->getBody(true);
-        $data = json_decode($body, true);
-        if (null === $data || empty($data) || !is_array($data) || !array_key_exists('move', $data)) {
-            throw new MovePlayerException('Invalid API response: ' . $body);
+        $this->logger->log(
+            $game->uuid(),
+            $player->uuid(),
+            array(
+                'requestUrl'        => $requestUrl,
+                'requestHeaders'    => $requestHeaders,
+                'requestBody'       => $requestBody,
+                'responseCode'      => $response->getStatusCode(),
+                'responseHeaders'   => $response->getHeaderLines(),
+                'responseBody'      => $response->getBody()
+            )
+        );
+
+        $responseBody = $response->getBody(true);
+        $responseData = json_decode($responseBody, true);
+        if (null === $responseData || !is_array($responseData) || !isset($responseData['move'])) {
+            throw new MovePlayerException('Invalid API response: ' . $responseBody);
         }
 
-        $direction = $data['move'];
+        $direction = $responseData['move'];
         return $direction;
     }
 }

@@ -215,31 +215,6 @@ class GameController extends Controller
     }
 
     /**
-     * remove the game
-     *
-     * @Route("/{uuid}/remove", name="game_remove",
-     *     requirements={"uuid": "[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}"})
-     * @Method("POST")
-     *
-     * @param string $uuid
-     * @return Response
-     */
-    public function removeAction($uuid)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        /** @var \AppBundle\Entity\Game $entity */
-        $entity = $em->getRepository('AppBundle:Game')->findOneBy(array(
-            'uuid' => $uuid
-        ));
-
-        $em->remove($entity);
-        $em->flush();
-
-        return new Response('', 204);
-    }
-
-    /**
      * Start a game
      *
      * @Route("/{uuid}/start", name="game_start",
@@ -308,7 +283,8 @@ class GameController extends Controller
      */
     public function resetAction($uuid)
     {
-        $this->checkDaemon();
+        $logger = $this->get('app.logger');
+        $logger->clear($uuid);
 
         /** @var \AppBundle\Entity\Game $entity */
         $entity = $this->getDoctrine()->getRepository('AppBundle:Game')->findOneBy(array(
@@ -324,6 +300,55 @@ class GameController extends Controller
         $em->flush();
 
         return new Response();
+    }
+
+    /**
+     * remove the game
+     *
+     * @Route("/{uuid}/remove", name="game_remove",
+     *     requirements={"uuid": "[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}"})
+     * @Method("POST")
+     *
+     * @param string $uuid
+     * @return Response
+     */
+    public function removeAction($uuid)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        /** @var \AppBundle\Entity\Game $entity */
+        $entity = $em->getRepository('AppBundle:Game')->findOneBy(array(
+            'uuid' => $uuid
+        ));
+
+        $em->remove($entity);
+        $em->flush();
+
+        return new Response('', 204);
+    }
+
+    /**
+     * Download the logs of the game
+     *
+     * @Route("/{uuid}/download", name="game_download",
+     *     requirements={"uuid": "[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}"})
+     *
+     * @param string $uuid
+     * @return JsonResponse
+     */
+    public function downloadLogAction($uuid)
+    {
+        $logger = $this->get('app.logger');
+        $logs = $logger->read($uuid);
+
+        $headers = array();
+        if (!$this->get('kernel')->isDebug()) {
+            $headers = array(
+                'Content-Disposition' => 'attachment; filename=\'' . $uuid . '.log'
+            );
+        }
+
+        return new JsonResponse($logs, 200, $headers);
     }
 
     /**

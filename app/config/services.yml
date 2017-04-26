@@ -30,6 +30,7 @@ services:
         class: AppBundle\Domain\Service\MovePlayer\MoveApiPlayer
         arguments:
             - "@davamigo.http.client"
+            - "@app.logger"
 
     app.player.move.bot:
         class: AppBundle\Domain\Service\MovePlayer\MoveBotPlayer
@@ -47,3 +48,8 @@ services:
         class: AppBundle\Domain\Service\MoveGhost\MoveGhostFactory
         arguments:
             - 1: "@app.ghost.move.random"
+
+    app.logger:
+        class: AppBundle\Service\LoggerService\LoggerService
+        arguments:
+            - "@doctrine.orm.entity_manager"

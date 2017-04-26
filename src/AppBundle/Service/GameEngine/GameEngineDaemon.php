@@ -2,12 +2,14 @@
 
 namespace AppBundle\Service\GameEngine;
 
+use AppBundle\Domain\Service\GameEngine\GameEngineDaemonInterface;
+
 /**
  * Class GameEngineDaemon
  *
  * @package AppBundle\Service\GameEngine
  */
-class GameEngineDaemon
+class GameEngineDaemon implements GameEngineDaemonInterface
 {
     const CONSOLE = __DIR__ . '/../../../../bin/console';
     const COMMAND = 'app:code-challenge:engine';
@@ -16,6 +18,7 @@ class GameEngineDaemon
      * Starts the game engine daemon
      *
      * @param bool $force
+     * @return void
      */
     public function start($force = false)
     {
@@ -27,6 +30,8 @@ class GameEngineDaemon
 
     /**
      * Stops the game engine daemon
+     *
+     * @return void
      */
     public function stop()
     {

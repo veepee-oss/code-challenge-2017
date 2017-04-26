@@ -107,12 +107,27 @@ abstract class MovePlayer implements MovePlayerInterface
             }
         }
 
+        $ghosts = array();
+        foreach ($game->ghosts() as $ghost) {
+            $pos = $ghost->position();
+            if ($pos->y() >= $y1
+                && $pos->y() <= $y2
+                && $pos->x() >= $x1
+                && $pos->x() <= $x2) {
+                $ghosts[] = array(
+                    'y' => $pos->y(),
+                    'x' => $pos->x()
+                );
+            }
+        }
+
         $data = array(
             'game'      => array(
                 'id'        => $game->uuid()
             ),
             'player'    => array(
                 'id'        => $player->uuid(),
+                'name'      => $player->name(),
                 'position'  => array(
                     'y'         => $pos->y(),
                     'x'         => $pos->x()
@@ -138,7 +153,8 @@ abstract class MovePlayer implements MovePlayerInterface
                     'x'         => $maze->goal()->x()
                 ),
                 'walls'     => $walls
-            )
+            ),
+            'ghosts'    => $ghosts
         );
 
         return json_encode($data);

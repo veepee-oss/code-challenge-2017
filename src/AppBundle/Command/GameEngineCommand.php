@@ -25,8 +25,11 @@ class GameEngineCommand extends ContainerAwareCommand
     // Sleep time: 250 ms = 1/4 sec
     const SLEEP_TIME = 250000;
 
-    // Maz iddle time: 15 min * 60 sec * 4 (1/4 sec)
-    const MAX_IDDLE = 3600;
+    // Max idle time: 15 min * 60 sec * 4 (1/4 sec)
+    const MAX_IDLE = 3600;
+
+    // Memory usage limit: 95%
+    const MEMORY_LIMIT = 0.95;
 
     /**
      * Configures the current command.
@@ -62,6 +65,7 @@ class GameEngineCommand extends ContainerAwareCommand
         /** @var GameEngine $engine */
         $engine = $container->get('app.game.engine');
 
+        // Get memory limit
         $memoryLimit = ini_get('memory_limit');
         if (preg_match('/^(\d+)\s*(.)/', $memoryLimit, $matches)) {
             if ($matches[2] == 'M') {
@@ -71,29 +75,36 @@ class GameEngineCommand extends ContainerAwareCommand
             }
         }
 
-        $iddle = 0;
+        // Inifinite loop (daemom)
+        $idle = 0;
         while (1) {
-            /** @var Game[] $entities */
-            $entities = $repo->findBy(array(
+            /** @var Game[] $games */
+            $games = $repo->findBy(array(
                 'status' => DomainGame\Game::STATUS_RUNNING
             ));
 
-            if (empty($entities)) {
+            if (empty($games)) {
+                // Sleep 1/4 second
                 usleep(static::SLEEP_TIME);
-                if (++$iddle > static::MAX_IDDLE) {
-                    return 2;
+
+                // Kill the process if it's idle many time
+                if (++$idle > static::MAX_IDLE) {
+                    // TODO Log this
+                    $output->writeln('<info>Max idle time reached.</info>');
+                    return 1;
                 }
             } else {
-                $iddle = 0;
+                $idle = 0;
                 $startTime = microtime(true);
-                foreach ($entities as $entity) {
+                foreach ($games as $gameEntity) {
                     try {
                         /** @var DomainGame\Game $game */
-                        $game = $entity->toDomainEntity();
+                        $game = $gameEntity->toDomainEntity();
                         $engine->move($game);
 
-                        $entity->fromDomainEntity($game);
-                        $em->persist($entity);
+                        // Persist game entity
+                        $gameEntity->fromDomainEntity($game);
+                        $em->persist($gameEntity);
                         $em->flush();
                     } catch (\Exception $exc) {
                         // TODO log the exception
@@ -104,18 +115,25 @@ class GameEngineCommand extends ContainerAwareCommand
                         }
                     }
 
-                    $em->detach($entity);
-                    $entity = null;
-                    unset($entity);
+                    // Free memory
+                    $em->detach($gameEntity);
+                    $gameEntity = null;
+                    unset($gameEntity);
                 }
 
+                // Clear the Doctrine cache
                 $em->clear();
 
+                // Test memory usage to avoid errors
                 $memoryUsage = memory_get_usage(true);
                 $percent = ((float) $memoryUsage) / ((float) $memoryLimit);
-                if ($percent > 0.95) {
-                    $output->writeln('<info>Memory usage excedes 80%</info>');
-                    return 1;
+                if ($percent > static::MEMORY_LIMIT) {
+                    // TODO Log this
+                    $output->writeln(sprintf(
+                        '<info>Memory usage excedes %d%%.</info>',
+                        (int)(100 * static::MEMORY_LIMIT)
+                    ));
+                    return 2;
                 }
 
                 $endTime = microtime(true);

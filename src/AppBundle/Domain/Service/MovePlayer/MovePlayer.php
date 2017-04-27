@@ -19,6 +19,21 @@ abstract class MovePlayer implements MovePlayerInterface
     const STEP = 5;
 
     /**
+     * Informs a player the game is starnign and asks his name
+     *
+     * @param Player $player
+     * @param Game $game
+     * @return bool true=successs, false=error
+     * @throws MovePlayerException
+     */
+    public function startGame(Player& $player, Game $game)
+    {
+        $name = $this->getPlayerName($player, $game);
+        $player->setName($name);
+        return true;
+    }
+
+    /**
      * Moves the player
      *
      * @param Player $player
@@ -41,6 +56,16 @@ abstract class MovePlayer implements MovePlayerInterface
 
         return true;
     }
+
+    /**
+     * Asks for the name of the player
+     *
+     * @param Player $player
+     * @param Game $game
+     * @return string The player name
+     * @throws MovePlayerException
+     */
+    abstract protected function getPlayerName(Player $player, Game $game);
 
     /**
      * Reads the next movemento of the player: "up", "down", "left" or "right".

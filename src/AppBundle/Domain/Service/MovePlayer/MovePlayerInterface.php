@@ -13,6 +13,16 @@ use AppBundle\Domain\Entity\Player\Player;
 interface MovePlayerInterface
 {
     /**
+     * Informs a player the game is starnign and asks his name
+     *
+     * @param Player $player
+     * @param Game $game
+     * @return bool true=successs, false=error
+     * @throws MovePlayerException
+     */
+    public function startGame(Player& $player, Game $game);
+
+    /**
      * Moves the player
      *
      * @param Player $player

@@ -35,6 +35,26 @@ class MoveApiPlayer extends MovePlayer
     }
 
     /**
+     * Asks for the name of the player
+     *
+     * @param Player $player
+     * @param Game $game
+     * @return string The player name
+     * @throws MovePlayerException
+     */
+    protected function getPlayerName(Player $player, Game $game)
+    {
+        $responseData = $this->callToApi($player, $game, 'start');
+        if (!isset($responseData['name'])) {
+            $message = 'Invalid API response! Player: ' . $player->name();
+            throw new MovePlayerException($message);
+        }
+
+        $name = $responseData['name'];
+        return $name;
+    }
+
+    /**
      * Reads the next movement of the player: "up", "down", "left" or "right".
      *
      * @param Player $player
@@ -44,13 +64,34 @@ class MoveApiPlayer extends MovePlayer
      */
     protected function readNextMovement(Player $player, Game $game)
     {
+        $responseData = $this->callToApi($player, $game, 'move');
+        if (!isset($responseData['move'])) {
+            $message = 'Invalid API response! Player: ' . $player->name();
+            throw new MovePlayerException($message);
+        }
+
+        $direction = $responseData['move'];
+        return $direction;
+    }
+
+    /**
+     * Calls to the API
+     *
+     * @param Player $player
+     * @param Game $game
+     * @param $function
+     * @return array The read data
+     * @throws MovePlayerException
+     */
+    private function callToApi(Player $player, Game $game, $function)
+    {
         if (!$player instanceof ApiPlayer) {
             throw new MovePlayerException(
                 'The $player object must be an instance of \AppBundle\Domain\Entity\Player\ApiPlayer'
             );
         }
 
-        $requestUrl = $player->url();
+        $requestUrl = $player->url() . '/' . $function;
         $requestBody = $this->createRequestData($player, $game);
         $requestHeaders = array(
             'Content-Type' => 'application/json; charset=UTF-8'
@@ -76,7 +117,7 @@ class MoveApiPlayer extends MovePlayer
 
 
         $responseData = json_decode($responseBody, true);
-        if (null === $responseData || !is_array($responseData) || !isset($responseData['move'])) {
+        if (null === $responseData || !is_array($responseData)) {
             $message = 'Invalid API response! Player: ' . $player->name();
             $this->logger->log(
                 $game->uuid(),
@@ -107,7 +148,6 @@ class MoveApiPlayer extends MovePlayer
             )
         );
 
-        $direction = $responseData['move'];
-        return $direction;
+        return $responseData;
     }
 }

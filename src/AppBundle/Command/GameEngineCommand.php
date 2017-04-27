@@ -101,11 +101,6 @@ class GameEngineCommand extends ContainerAwareCommand
                         /** @var DomainGame\Game $game */
                         $game = $gameEntity->toDomainEntity();
                         $engine->move($game);
-
-                        // Persist game entity
-                        $gameEntity->fromDomainEntity($game);
-                        $em->persist($gameEntity);
-                        $em->flush();
                     } catch (\Exception $exc) {
                         // TODO log the exception
                         $output->writeln('<error>' . $exc->getMessage() . '</error>');
@@ -114,6 +109,11 @@ class GameEngineCommand extends ContainerAwareCommand
                             $output->writeln($exc->getTraceAsString());
                         }
                     }
+
+                    // Persist game entity
+                    $gameEntity->fromDomainEntity($game);
+                    $em->persist($gameEntity);
+                    $em->flush();
 
                     // Free memory
                     $em->detach($gameEntity);

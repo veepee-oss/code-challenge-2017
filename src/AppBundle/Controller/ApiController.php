@@ -16,18 +16,35 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ApiController extends Controller
 {
-    const NAME = 'Dominator API';
+    const NAME = 'Test API';
 
     /**
      * Return the name of the API
      *
-     * @Route("/", name="api_home")
+     * @Route("/start", name="api_start")
      * @return JsonResponse
      */
-    public function indexAction()
+    public function startAction()
     {
+        $candidates = array(
+            'Darth Vader',
+            'Boba Feet',
+            'Han Solo',
+            'Luke Skaywalker',
+            'Leia Organa',
+            'Sauron',
+            'Aragorn',
+            'Bilbo Bolsón',
+            'Tyrion Lanister',
+            'Jaime Lanister',
+            'Jon Snow',
+            'Arya Stark',
+            'Sansa Stark',
+            'Daenerys Targarian'
+        );
+
         return new JsonResponse(array(
-            'name' => static::NAME
+            'name' => $candidates[rand(0, count($candidates) - 1)]
         ));
     }
 
@@ -37,12 +54,16 @@ class ApiController extends Controller
      * @Route("/move", name="api_move")
      * @param Request $request
      * @return JsonResponse
+     * @throws \HttpException
      */
     public function moveAction(Request $request)
     {
         // Get the data form the request
         $body = $request->getContent();
         $data = json_decode($body);
+        if (false === $data) {
+            throw new \HttpException('Invalid request data!', 400);
+        }
 
         // Extract some vars
         $uuid = $data->player->id;
@@ -127,18 +148,16 @@ class ApiController extends Controller
 //            echo PHP_EOL;
 //        }
 
-        $savedData = new \stdClass();
-        $savedData->iter = 1 + $iter;
-        $savedData->maze = $maze;
-        $savedData->xPos = $pos->x;
-        $savedData->yPos = $pos->y;
-        $this->writeFile($uuid, json_encode($savedData));
+        $this->writeFile($uuid, json_encode(array(
+            'iter' => 1 + $iter,
+            'maze' => $maze,
+            'xPos' => $pos->x,
+            'yPos' => $pos->y
+        )));
 
-        $result = new \stdClass();
-        $result->name = static::NAME;
-        $result->move = $dir;
-        $response = new JsonResponse($result);
-        return $response;
+        return new JsonResponse(array(
+            'move' => $dir
+        ));
     }
 
     /**

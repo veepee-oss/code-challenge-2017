@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Domain\Entity\Game\Game;
 use AppBundle\Domain\Entity\Player\ApiPlayer;
 use AppBundle\Domain\Service\MazeRender\MazeHtmlRender;
+use AppBundle\Domain\Service\MovePlayer\MoveApiPlayer;
 use AppBundle\Form\CreateGame\GameEntity;
 use AppBundle\Form\CreateGame\GameForm;
 use AppBundle\Form\CreateGame\PlayerEntity;
@@ -240,6 +241,12 @@ class GameController extends Controller
 
         $game = $entity->toDomainEntity();
         $game->startPlaying();
+
+        /** @var MoveApiPlayer $service */
+        $service = $this->get('app.player.move.api');
+        foreach ($game->players() as $player) {
+            $service->startGame($player, $game);
+        }
 
         $entity->fromDomainEntity($game);
         $em = $this->getDoctrine()->getManager();

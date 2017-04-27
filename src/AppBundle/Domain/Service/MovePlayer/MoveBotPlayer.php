@@ -13,6 +13,20 @@ use AppBundle\Domain\Entity\Player\Player;
  */
 class MoveBotPlayer extends MovePlayer
 {
+
+    /**
+     * Asks for the name of the player
+     *
+     * @param Player $player
+     * @param Game $game
+     * @return string The player name
+     * @throws MovePlayerException
+     */
+    protected function getPlayerName(Player $player, Game $game)
+    {
+        return false;
+    }
+
     /**
      * Reads the next movement of the player: "up", "down", "left" or "right".
      *

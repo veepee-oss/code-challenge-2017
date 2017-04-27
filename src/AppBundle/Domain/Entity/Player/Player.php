@@ -114,6 +114,18 @@ class Player extends MazeObject
     }
 
     /**
+     * Sets the name of the player
+     *
+     * @param string $name
+     * @return $this
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    /**
      * The player wins the game
      *
      * @return $this

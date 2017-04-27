@@ -36,9 +36,10 @@ app:
 
     gamepage:
         buttons:
-            start:          "Start"
-            stop:           "Stop"
-            reset:          "Reset"
+            start:          "Start game"
+            stop:           "Stop game"
+            reset:          "Reset game"
+            download:       "Download log"
 
     mazepage:
         texts:

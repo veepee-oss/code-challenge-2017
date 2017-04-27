@@ -39,6 +39,27 @@
                         data-url="{{ url('game_reset', { 'uuid': game.uuid }) }}">
                         {{ 'app.gamepage.buttons.reset' | trans }}
                     </button>
+
+                    <div class="btn-group">
+                        <button
+                            type="button"
+                            class="btn btn-default dropdown-toggle"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false">
+                            {{ 'app.gamepage.buttons.download' | trans }}
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            {% for player in game.players %}
+                                <li>
+                                    <a href="{{ url('player_download', {'guuid': game.uuid, 'puuid': player.uuid }) }}">
+                                        {{ player.name }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>

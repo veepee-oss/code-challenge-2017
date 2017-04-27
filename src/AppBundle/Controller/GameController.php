@@ -330,21 +330,32 @@ class GameController extends Controller
     /**
      * Download the logs of the game
      *
-     * @Route("/{uuid}/download", name="game_download",
-     *     requirements={"uuid": "[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}"})
+     * @Route("/{guuid}/download", name="game_download",
+     *     requirements={"guuid": "[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}"})
      *
-     * @param string $uuid
+     * @Route("/{guuid}/player/{puuid}/download", name="player_download",
+     *     requirements={
+     *         "guuid": "[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}",
+     *         "puuid": "[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}"
+     *     })
+     *
+     * @param string $guuid Game Uuid
+     * @param string $puuid Player Uuid
      * @return JsonResponse
      */
-    public function downloadLogAction($uuid)
+    public function downloadLogAction($guuid, $puuid = null)
     {
         $logger = $this->get('app.logger');
-        $logs = $logger->read($uuid);
+        $logs = $logger->read($guuid, $puuid);
 
         $headers = array();
         if (!$this->get('kernel')->isDebug()) {
+            $filename = $guuid;
+            if ($puuid) {
+                $filename .= '.' . $puuid;
+            }
             $headers = array(
-                'Content-Disposition' => 'attachment; filename=\'' . $uuid . '.log'
+                'Content-Disposition' => 'attachment; filename=\'' . $filename . '.log'
             );
         }
 

@@ -4,6 +4,9 @@
             <div class="panel panel-primary">
                 <div class="panel-body">
                     <p>
+                        {{ 'app.mazepage.texts.status' | trans }}: <strong class="text-info">{{ 'app.mazepage.texts.status-text' | transchoice(game.status) }}</strong>
+                    </p>
+                    <p>
                         {{ 'app.mazepage.texts.moves' | trans }}: <strong class="text-info">{{ game.moves }}</strong>
                     </p>
                     <p>
@@ -13,7 +16,10 @@
                         {{ 'app.mazepage.texts.ghosts' | trans }}: <strong class="text-info">{{ game.ghosts | length }}</strong>
                     </p>
                     <p>
-                        {{ 'app.mazepage.texts.status' | trans }}: <strong class="text-info">{{ 'app.mazepage.texts.status-text' | transchoice(game.status) }}</strong>
+                        {{ 'app.mazepage.texts.min-ghosts' | trans }}: <strong class="text-info">{{ game.minGhosts }}</strong>
+                    </p>
+                    <p>
+                        {{ 'app.mazepage.texts.ghosts-rate' | trans }}: <strong class="text-info">{{ game.ghostRate }}</strong>
                     </p>
                 </div>
             </div>

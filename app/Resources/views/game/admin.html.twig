@@ -28,6 +28,7 @@
                             {% endif %}
                             class="btn btn-success js-btn-start"
                             href="{{ url('admin_start') }}">
+                            <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
                             {{ 'app.adminpage.buttons.start' | trans }}
                         </a>
 
@@ -36,6 +37,7 @@
                             {% endif %}
                             class="btn btn-danger js-btn-stop"
                             href="{{ url('admin_stop') }}">
+                            <span class="glyphicon glyphicon-stop" aria-hidden="true"></span>
                             {{ 'app.adminpage.buttons.stop' | trans }}
                         </a>
 
@@ -44,6 +46,7 @@
                             {% endif %}
                             class="btn btn-warning js-btn-restart"
                             href="{{ url('admin_restart') }}">
+                            <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
                             {{ 'app.adminpage.buttons.restart' | trans }}
                         </a>
                     </div>

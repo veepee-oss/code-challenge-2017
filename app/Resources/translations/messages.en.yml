@@ -43,10 +43,12 @@ app:
 
     mazepage:
         texts:
+            status:         "Status"
             moves:          "Moves"
             players:        "Players"
             ghosts:         "Ghosts"
-            status:         "Status"
+            min-ghosts:     "Min. ghosts"
+            ghosts-rate:    "Ghost rate"
             status-text:    "{0} Not started|{1} Playing|{9}Finished"
             winners:        "Winners"
             dead:           "Dead players"

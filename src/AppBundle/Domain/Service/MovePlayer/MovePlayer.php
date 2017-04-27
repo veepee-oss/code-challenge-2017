@@ -109,14 +109,14 @@ abstract class MovePlayer implements MovePlayerInterface
 
         $ghosts = array();
         foreach ($game->ghosts() as $ghost) {
-            $pos = $ghost->position();
-            if ($pos->y() >= $y1
-                && $pos->y() <= $y2
-                && $pos->x() >= $x1
-                && $pos->x() <= $x2) {
+            $ghostPos = $ghost->position();
+            if ($ghostPos->y() >= $y1
+                && $ghostPos->y() <= $y2
+                && $ghostPos->x() >= $x1
+                && $ghostPos->x() <= $x2) {
                 $ghosts[] = array(
-                    'y' => $pos->y(),
-                    'x' => $pos->x()
+                    'y' => $ghostPos->y(),
+                    'x' => $ghostPos->x()
                 );
             }
         }

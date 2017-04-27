@@ -26,7 +26,9 @@ class ApiController extends Controller
      */
     public function indexAction()
     {
-        return new JsonResponse(static::NAME);
+        return new JsonResponse(array(
+            'name' => static::NAME
+        ));
     }
 
     /**

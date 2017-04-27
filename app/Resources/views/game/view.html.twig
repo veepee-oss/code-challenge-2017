@@ -3,66 +3,20 @@
 {% block content %}
     <div class="row">
         <div class="col-xs-12 js-maze" data-url="{{ url('game_refresh', { 'uuid': game.uuid }) }}">
-            {% include ':game:maze.html.twig' with { 'game': game, 'maze': maze } %}
+            {% include ':game:viewMaze.html.twig' with { 'game': game, 'maze': maze } %}
         </div>
     </div>
 
     <hr>
 
     <div class="container">
-        <div class="row">
-            <div class="col-xs-12">
-                <div class="maze-buttons">
-                    <button
-                        type="button"
-                        {% if game.status != constant('AppBundle\\Domain\\Entity\\Game\\Game::STATUS_NOT_STARTED') %}
-                            disabled="disabled"
-                        {% endif %}
-                        class="btn btn-success js-btn-start"
-                        data-url="{{ url('game_start', { 'uuid': game.uuid }) }}">
-                        {{ 'app.gamepage.buttons.start' | trans }}
-                    </button>
+        {% include ':game:viewButtons.html.twig' with { 'game': game } %}
+    </div>
 
-                    <button
-                        type="button"
-                        {% if game.status != constant('AppBundle\\Domain\\Entity\\Game\\Game::STATUS_RUNNING') %}
-                            disabled="disabled"
-                        {% endif %}
-                        class="btn btn-danger js-btn-stop"
-                        data-url="{{ url('game_stop', { 'uuid': game.uuid }) }}">
-                        {{ 'app.gamepage.buttons.stop' | trans }}
-                    </button>
+    <hr>
 
-                    <button
-                        type="button"
-                        class="btn btn-warning js-btn-reset"
-                        data-url="{{ url('game_reset', { 'uuid': game.uuid }) }}">
-                        {{ 'app.gamepage.buttons.reset' | trans }}
-                    </button>
-
-                    <div class="btn-group">
-                        <button
-                            type="button"
-                            class="btn btn-default dropdown-toggle"
-                            data-toggle="dropdown"
-                            aria-haspopup="true"
-                            aria-expanded="false">
-                            {{ 'app.gamepage.buttons.download' | trans }}
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            {% for player in game.players %}
-                                <li>
-                                    <a href="{{ url('player_download', {'guuid': game.uuid, 'puuid': player.uuid }) }}">
-                                        {{ player.name }}
-                                    </a>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="container js-panels">
+        {% include ':game:viewPanels.html.twig' with { 'game': game, 'maze': maze } %}
     </div>
 {% endblock %}
 
@@ -74,6 +28,7 @@
             'use strict';
 
             var $maze = $('.js-maze'),
+                $panels = $('.js-panels'),
                 $btnStart = $('.js-btn-start'),
                 $btnStop = $('.js-btn-stop'),
                 $btnReset = $('.js-btn-reset'),
@@ -153,7 +108,8 @@
             var refreshMaze = function () {
                 $.get(refreshUrl)
                     .done(function(data) {
-                        $maze.html(data.html);
+                        $maze.html(data.mazeHtml);
+                        $panels.html(data.panelsHtml);
                         if (data.playing) {
                             $btnStop.attr('disabled', null);
                             startTimer();

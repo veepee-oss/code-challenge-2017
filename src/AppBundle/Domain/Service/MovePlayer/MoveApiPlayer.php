@@ -66,10 +66,32 @@ class MoveApiPlayer extends MovePlayer
                     'requestUrl'        => $requestUrl,
                     'requestHeaders'    => $requestHeaders,
                     'requestBody'       => $requestBody,
-                    'errorCode'         => $exc->getMessage()
+                    'errorMessage'      => $exc->getMessage()
                 )
             );
             throw new MovePlayerException('An error occurred calling the player API.', 0, $exc);
+        }
+
+        $responseBody = $response->getBody(true);
+
+
+        $responseData = json_decode($responseBody, true);
+        if (null === $responseData || !is_array($responseData) || !isset($responseData['move'])) {
+            $message = 'Invalid API response! Player: ' . $player->name();
+            $this->logger->log(
+                $game->uuid(),
+                $player->uuid(),
+                array(
+                    'requestUrl'        => $requestUrl,
+                    'requestHeaders'    => $requestHeaders,
+                    'requestBody'       => $requestBody,
+                    'responseCode'      => $response->getStatusCode(),
+                    'responseHeaders'   => $response->getHeaderLines(),
+                    'responseBody'      => $responseBody,
+                    'errorMessage'      => $message
+                )
+            );
+            throw new MovePlayerException($message);
         }
 
         $this->logger->log(
@@ -81,15 +103,9 @@ class MoveApiPlayer extends MovePlayer
                 'requestBody'       => $requestBody,
                 'responseCode'      => $response->getStatusCode(),
                 'responseHeaders'   => $response->getHeaderLines(),
-                'responseBody'      => $response->getBody()
+                'responseBody'      => $responseBody
             )
         );
-
-        $responseBody = $response->getBody(true);
-        $responseData = json_decode($responseBody, true);
-        if (null === $responseData || !is_array($responseData) || !isset($responseData['move'])) {
-            throw new MovePlayerException('Invalid API response: ' . $responseBody);
-        }
 
         $direction = $responseData['move'];
         return $direction;

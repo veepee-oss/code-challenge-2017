@@ -56,7 +56,7 @@
                     </div>
                     <div class="panel-body">
                         {% for game in games if not game.playing and not game.finished %}
-                            {% include ':game:item.html.twig' with { 'game' : game }  %}
+                            {% include ':game:adminGame.html.twig' with { 'game' : game }  %}
                         {% else %}
                             {{ 'app.adminpage.texts.games.none' | trans }}
                         {% endfor %}
@@ -68,7 +68,7 @@
                     </div>
                     <div class="panel-body">
                         {% for game in games if game.playing %}
-                            {% include ':game:item.html.twig' with { 'game' : game }  %}
+                            {% include ':game:adminGame.html.twig' with { 'game' : game }  %}
                         {% else %}
                             {{ 'app.adminpage.texts.games.none' | trans }}
                         {% endfor %}
@@ -80,7 +80,7 @@
                     </div>
                     <div class="panel-body">
                         {% for game in games if game.finished %}
-                            {% include ':game:item.html.twig' with { 'game' : game }  %}
+                            {% include ':game:adminGame.html.twig' with { 'game' : game }  %}
                         {% else %}
                             {{ 'app.adminpage.texts.games.none' | trans }}
                         {% endfor %}

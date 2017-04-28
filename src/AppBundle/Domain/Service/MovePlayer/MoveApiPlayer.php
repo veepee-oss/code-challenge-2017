@@ -6,6 +6,7 @@ use AppBundle\Domain\Entity\Game\Game;
 use AppBundle\Domain\Entity\Player\ApiPlayer;
 use AppBundle\Domain\Entity\Player\Player;
 use AppBundle\Domain\Service\LoggerService\LoggerServiceInterface;
+use AppBundle\Domain\Service\PlayerRequest\PlayerRequestInterface;
 use Davamigo\HttpClient\Domain\HttpClient;
 use Davamigo\HttpClient\Domain\HttpException;
 
@@ -19,6 +20,9 @@ class MoveApiPlayer extends MovePlayer
     /** @var HttpClient */
     protected $httpClient;
 
+    /** @var PlayerRequestInterface */
+    protected $playerRequest;
+
     /** @var LoggerServiceInterface */
     protected $logger;
 
@@ -26,11 +30,16 @@ class MoveApiPlayer extends MovePlayer
      * MoveApiPlayer constructor.
      *
      * @param HttpClient $httpClient
+     * @param PlayerRequestInterface $playerRequest
      * @param LoggerServiceInterface $logger
      */
-    public function __construct(HttpClient $httpClient, LoggerServiceInterface $logger)
-    {
+    public function __construct(
+        HttpClient $httpClient,
+        PlayerRequestInterface $playerRequest,
+        LoggerServiceInterface $logger
+    ) {
         $this->httpClient = $httpClient;
+        $this->playerRequest = $playerRequest;
         $this->logger = $logger;
     }
 
@@ -92,7 +101,7 @@ class MoveApiPlayer extends MovePlayer
         }
 
         $requestUrl = $player->url() . '/' . $function;
-        $requestBody = $this->createRequestData($player, $game);
+        $requestBody = $this->playerRequest->create($player, $game);
         $requestHeaders = array(
             'Content-Type' => 'application/json; charset=UTF-8'
         );

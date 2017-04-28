@@ -16,8 +16,6 @@ use AppBundle\Domain\Entity\Position\Position;
  */
 abstract class MovePlayer implements MovePlayerInterface
 {
-    const STEP = 5;
-
     /**
      * Informs a player the game is starnign and asks his name
      *
@@ -77,113 +75,6 @@ abstract class MovePlayer implements MovePlayerInterface
      */
     abstract protected function readNextMovement(Player $player, Game $game);
 
-    /**
-     * Creates the request data to send to the player bot or api.
-     *
-     * @param Player $player
-     * @param Game $game
-     * @return string Request in json format
-     */
-    protected function createRequestData(Player $player, Game $game)
-    {
-        $maze = $game->maze();
-        $height = $maze->height();
-        $width = $maze->width();
-        $pos = $player->position();
-        $prev = $player->previous();
-
-        $step = static::STEP;
-        $size = 1 + ($step * 2);
-        while ($size > $height || $size > $height) {
-            --$step;
-            $size = 1 + ($step * 2);
-        }
-
-        $y1 = $pos->y() - $step;
-        $y2 = $pos->y() + $step;
-        $x1 = $pos->x() - $step;
-        $x2 = $pos->x() + $step;
-
-        if ($y1 < 0) {
-            $y2 -= $y1;
-            $y1 = 0;
-        } elseif ($y2 >= $height) {
-            $y1 -= ($pos->y() - $height + 1);
-            $y2 = $height - 1;
-        }
-
-        if ($x1 < 0) {
-            $x2 -= $x1;
-            $x1 = 0;
-        } elseif ($x2 >= $width) {
-            $x1 -= ($pos->x() - $width + 1);
-            $x2 = $width - 1;
-        }
-
-        $walls = array();
-        for ($y = $y1; $y <= $y2; ++$y) {
-            for ($x = $x1; $x <= $x2; ++$x) {
-                if ($maze[$y][$x]->getContent() == MazeCell::CELL_WALL) {
-                    $walls[] = array(
-                        'y' => $y,
-                        'x' => $x
-                    );
-                }
-            }
-        }
-
-        $ghosts = array();
-        foreach ($game->ghosts() as $ghost) {
-            $ghostPos = $ghost->position();
-            if ($ghostPos->y() >= $y1
-                && $ghostPos->y() <= $y2
-                && $ghostPos->x() >= $x1
-                && $ghostPos->x() <= $x2) {
-                $ghosts[] = array(
-                    'y' => $ghostPos->y(),
-                    'x' => $ghostPos->x()
-                );
-            }
-        }
-
-        $data = array(
-            'game'      => array(
-                'id'        => $game->uuid()
-            ),
-            'player'    => array(
-                'id'        => $player->uuid(),
-                'name'      => $player->name(),
-                'position'  => array(
-                    'y'         => $pos->y(),
-                    'x'         => $pos->x()
-                ),
-                'previous'  => array(
-                    'y'         => $prev->y(),
-                    'x'         => $prev->x()
-                ),
-                'area'      => array(
-                    'y1'        => $y1,
-                    'x1'        => $x1,
-                    'y2'        => $y2,
-                    'x2'        => $x2
-                )
-            ),
-            'maze'      => array(
-                'size'      => array(
-                    'height'    => $height,
-                    'width'     => $width
-                ),
-                'goal'  => array(
-                    'y'         => $maze->goal()->y(),
-                    'x'         => $maze->goal()->x()
-                ),
-                'walls'     => $walls
-            ),
-            'ghosts'    => $ghosts
-        );
-
-        return json_encode($data);
-    }
 
     /**
      * Computes the new position for a movement

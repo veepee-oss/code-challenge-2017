@@ -5,6 +5,7 @@ namespace AppBundle\Domain\Service\MovePlayer;
 use AppBundle\Domain\Entity\Game\Game;
 use AppBundle\Domain\Entity\Player\BotPlayer;
 use AppBundle\Domain\Entity\Player\Player;
+use AppBundle\Domain\Service\PlayerRequest\PlayerRequestInterface;
 
 /**
  * Class MoveBotPlayer
@@ -13,6 +14,18 @@ use AppBundle\Domain\Entity\Player\Player;
  */
 class MoveBotPlayer extends MovePlayer
 {
+    /** @var PlayerRequestInterface */
+    protected $playerRequest;
+
+    /**
+     * MoveBotPlayer constructor.
+     *
+     * @param PlayerRequestInterface $playerRequest
+     */
+    public function __construct(PlayerRequestInterface $playerRequest)
+    {
+        $this->playerRequest = $playerRequest;
+    }
 
     /**
      * Asks for the name of the player
@@ -44,7 +57,7 @@ class MoveBotPlayer extends MovePlayer
         }
 
         $command = $player->command();
-        $data = $this->createRequestData($player, $game);
+        $data = $this->playerRequest->create($player, $game);
 
         $handler = tmpfile();
         fwrite($handler, $data);

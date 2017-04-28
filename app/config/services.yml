@@ -26,28 +26,34 @@ services:
     app.game.engine.daemon:
         class: AppBundle\Service\GameEngine\GameEngineDaemon
 
-    app.player.move.api:
-        class: AppBundle\Domain\Service\MovePlayer\MoveApiPlayer
-        arguments:
-            - "@davamigo.http.client"
-            - "@app.logger"
-
-    app.player.move.bot:
-        class: AppBundle\Domain\Service\MovePlayer\MoveBotPlayer
-
-    app.ghost.move.random:
-        class: AppBundle\Domain\Service\MoveGhost\MoveGhostRandom
-
     app.player.move.factory:
         class: AppBundle\Domain\Service\MovePlayer\MovePlayerFactory
         arguments:
             - 1: "@app.player.move.api"
             - 2: "@app.player.move.bot"
 
+    app.player.move.api:
+        class: AppBundle\Domain\Service\MovePlayer\MoveApiPlayer
+        arguments:
+            - "@davamigo.http.client"
+            - "@app.player.request-data"
+            - "@app.logger"
+
+    app.player.move.bot:
+        class: AppBundle\Domain\Service\MovePlayer\MoveBotPlayer
+        arguments:
+            - "@app.player.request-data"
+
+    app.player.request-data:
+        class: AppBundle\Domain\Service\PlayerRequest\PlayerRequest
+
     app.ghost.move.factory:
         class: AppBundle\Domain\Service\MoveGhost\MoveGhostFactory
         arguments:
             - 1: "@app.ghost.move.random"
+
+    app.ghost.move.random:
+        class: AppBundle\Domain\Service\MoveGhost\MoveGhostRandom
 
     app.logger:
         class: AppBundle\Service\LoggerService\LoggerService

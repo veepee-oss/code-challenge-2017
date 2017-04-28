@@ -329,6 +329,9 @@ class GameController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
+        $logger = $this->get('app.logger');
+        $logger->clear($uuid);
+
         /** @var \AppBundle\Entity\Game $entity */
         $entity = $em->getRepository('AppBundle:Game')->findOneBy(array(
             'uuid' => $uuid

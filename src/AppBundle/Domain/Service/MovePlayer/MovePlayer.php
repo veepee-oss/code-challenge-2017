@@ -14,21 +14,19 @@ use AppBundle\Domain\Entity\Position\Position;
  *
  * @package AppBundle\Domain\Service\MovePlayer
  */
-abstract class MovePlayer implements MovePlayerInterface
+class MovePlayer implements MovePlayerInterface
 {
+    /** @var MovePlayerFactory */
+    protected $playerServiceFactory;
+
     /**
-     * Informs a player the game is starnign and asks his name
+     * MovePlayer constructor.
      *
-     * @param Player $player
-     * @param Game $game
-     * @return bool true=successs, false=error
-     * @throws MovePlayerException
+     * @param MovePlayerFactory $playerServiceFactory
      */
-    public function startGame(Player& $player, Game $game)
+    public function __construct(MovePlayerFactory $playerServiceFactory)
     {
-        $name = $this->getPlayerName($player, $game);
-        $player->setName($name);
-        return true;
+        $this->playerServiceFactory = $playerServiceFactory;
     }
 
     /**
@@ -36,13 +34,19 @@ abstract class MovePlayer implements MovePlayerInterface
      *
      * @param Player $player
      * @param Game $game
-     * @return bool true=successs, false=error
+     * @return bool true=success, false=error
      * @throws MovePlayerException
      */
     public function movePlayer(Player& $player, Game $game)
     {
+        /** @var AskNextMovementInterface $playerService */
+        $playerService = $this->playerServiceFactory->locate($player);
+
         // Reads the next movement of the player: "up", "down", "left" or "right".
-        $direction = $this->readNextMovement($player, $game);
+        $direction = $playerService->askNextMovement($player, $game);
+        if (!$direction) {
+            return false;
+        }
 
         // Computes the new position
         $position = $this->computeNewPosition($player->position(), $direction);
@@ -51,30 +55,8 @@ abstract class MovePlayer implements MovePlayerInterface
         }
 
         $player->move($position);
-
         return true;
     }
-
-    /**
-     * Asks for the name of the player
-     *
-     * @param Player $player
-     * @param Game $game
-     * @return string The player name
-     * @throws MovePlayerException
-     */
-    abstract protected function getPlayerName(Player $player, Game $game);
-
-    /**
-     * Reads the next movemento of the player: "up", "down", "left" or "right".
-     *
-     * @param Player $player
-     * @param Game $game
-     * @return string The next movement
-     * @throws MovePlayerException
-     */
-    abstract protected function readNextMovement(Player $player, Game $game);
-
 
     /**
      * Computes the new position for a movement

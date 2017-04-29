@@ -5,7 +5,6 @@ namespace AppBundle\Controller;
 use AppBundle\Domain\Entity\Game\Game;
 use AppBundle\Domain\Entity\Player\ApiPlayer;
 use AppBundle\Domain\Service\MazeRender\MazeHtmlRender;
-use AppBundle\Domain\Service\MovePlayer\MoveApiPlayer;
 use AppBundle\Form\CreateGame\GameEntity;
 use AppBundle\Form\CreateGame\GameForm;
 use AppBundle\Form\CreateGame\PlayerEntity;
@@ -13,6 +12,7 @@ use AppBundle\Service\GameEngine\GameEngineDaemon;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -91,31 +91,45 @@ class GameController extends Controller
                 $gameEntity->getWidth()
             );
 
+            $playerValidator = $this->get('app.player.validate.service');
+
             // Create players
+            $errors = false;
             $players = array();
             for ($pos = 0; $pos < $gameEntity->getPlayerNum(); $pos++) {
-                $players[] = new ApiPlayer($gameEntity->getPlayerAt($pos)->getUrl(), $maze->start());
+                $player = new ApiPlayer($gameEntity->getPlayerAt($pos)->getUrl(), $maze->start());
+                if ($playerValidator->validatePlayer($player, null)) {
+                    $players[] = $player;
+                } else {
+                    $form->get('players')->get($pos)->addError(new FormError('Invalid API'));
+                    $errors = true;
+                }
             }
 
-            // Create game
-            $game = new Game(
-                $maze,
-                $players,
-                array(),
-                $gameEntity->getGhostRate(),
-                $gameEntity->getMinGhosts()
-            );
+            // Create game if no errors
+            if (!$errors) {
+                $game = new Game(
+                    $maze,
+                    $players,
+                    array(),
+                    $gameEntity->getGhostRate(),
+                    $gameEntity->getMinGhosts()
+                );
 
-            // Save game datra in the database
-            $entity = new \AppBundle\Entity\Game($game);
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
+                // Save game data in the database
+                $entity = new \AppBundle\Entity\Game($game);
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($entity);
+                $em->flush();
 
-            // Show the game
-            return $this->redirectToRoute('game_view', array(
-                'uuid' => $game->uuid()
-            ));
+                // Show the game
+                return $this->redirectToRoute(
+                    'game_view',
+                    array(
+                        'uuid' => $game->uuid()
+                    )
+                );
+            }
         }
 
         return $this->render('game/create.html.twig', array(
@@ -241,12 +255,6 @@ class GameController extends Controller
 
         $game = $entity->toDomainEntity();
         $game->startPlaying();
-
-        /** @var MoveApiPlayer $service */
-        $service = $this->get('app.player.move.api');
-        foreach ($game->players() as $player) {
-            $service->startGame($player, $game);
-        }
 
         $entity->fromDomainEntity($game);
         $em = $this->getDoctrine()->getManager();

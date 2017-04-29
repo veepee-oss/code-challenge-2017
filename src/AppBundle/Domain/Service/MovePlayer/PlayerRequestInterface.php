@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Domain\Service\PlayerRequest;
+namespace AppBundle\Domain\Service\MovePlayer;
 
 use AppBundle\Domain\Entity\Game\Game;
 use AppBundle\Domain\Entity\Player\Player;
@@ -8,7 +8,7 @@ use AppBundle\Domain\Entity\Player\Player;
 /**
  * Class PlayerRequestInterface
  *
- * @package AppBundle\Domain\Service\PlayerRequest
+ * @package AppBundle\Domain\Service\MovePlayer
  */
 interface PlayerRequestInterface
 {

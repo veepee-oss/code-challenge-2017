@@ -1,21 +1,23 @@
 <?php
 
-namespace AppBundle\Domain\Service\MovePlayer;
+namespace AppBundle\Service\MovePlayer;
 
 use AppBundle\Domain\Entity\Game\Game;
-use AppBundle\Domain\Entity\Player\ApiPlayer;
 use AppBundle\Domain\Entity\Player\Player;
 use AppBundle\Domain\Service\LoggerService\LoggerServiceInterface;
-use AppBundle\Domain\Service\PlayerRequest\PlayerRequestInterface;
+use AppBundle\Domain\Service\MovePlayer\AskNextMovementInterface;
+use AppBundle\Domain\Service\MovePlayer\AskPlayerNameInterface;
+use AppBundle\Domain\Service\MovePlayer\MovePlayerException;
+use AppBundle\Domain\Service\MovePlayer\PlayerRequestInterface;
 use Davamigo\HttpClient\Domain\HttpClient;
 use Davamigo\HttpClient\Domain\HttpException;
 
 /**
- * Class MoveApiPlayer
+ * Class ApiPlayer
  *
- * @package AppBundle\Domain\Service\MovePlayer
+ * @package AppBundle\Service\MovePlayer
  */
-class MoveApiPlayer extends MovePlayer
+class ApiPlayer implements AskNextMovementInterface, AskPlayerNameInterface
 {
     /** @var HttpClient */
     protected $httpClient;
@@ -27,7 +29,7 @@ class MoveApiPlayer extends MovePlayer
     protected $logger;
 
     /**
-     * MoveApiPlayer constructor.
+     * ApiPlayer constructor.
      *
      * @param HttpClient $httpClient
      * @param PlayerRequestInterface $playerRequest
@@ -51,9 +53,9 @@ class MoveApiPlayer extends MovePlayer
      * @return string The player name
      * @throws MovePlayerException
      */
-    protected function getPlayerName(Player $player, Game $game)
+    public function askPlayerName(Player $player, Game $game = null)
     {
-        $responseData = $this->callToApi($player, $game, 'start');
+        $responseData = $this->callToApi($player, $game, 'name', null);
         if (!isset($responseData['name'])) {
             $message = 'Invalid API response! Player: ' . $player->name();
             throw new MovePlayerException($message);
@@ -71,9 +73,11 @@ class MoveApiPlayer extends MovePlayer
      * @return string The next movement
      * @throws MovePlayerException
      */
-    protected function readNextMovement(Player $player, Game $game)
+    public function askNextMovement(Player $player, Game $game = null)
     {
-        $responseData = $this->callToApi($player, $game, 'move');
+        $request = $this->playerRequest->create($player, $game);
+
+        $responseData = $this->callToApi($player, $game, 'move', $request);
         if (!isset($responseData['move'])) {
             $message = 'Invalid API response! Player: ' . $player->name();
             throw new MovePlayerException($message);
@@ -88,20 +92,24 @@ class MoveApiPlayer extends MovePlayer
      *
      * @param Player $player
      * @param Game $game
-     * @param $function
+     * @param string $function
+     * @param string $requestBody
      * @return array The read data
      * @throws MovePlayerException
      */
-    private function callToApi(Player $player, Game $game, $function)
+    private function callToApi(Player $player, Game $game = null, $function = null, $requestBody = null)
     {
-        if (!$player instanceof ApiPlayer) {
+        if (!$player instanceof \AppBundle\Domain\Entity\Player\ApiPlayer) {
             throw new MovePlayerException(
                 'The $player object must be an instance of \AppBundle\Domain\Entity\Player\ApiPlayer'
             );
         }
 
-        $requestUrl = $player->url() . '/' . $function;
-        $requestBody = $this->playerRequest->create($player, $game);
+        $requestUrl = $player->url();
+        if ($function) {
+            $requestUrl .= '/' . $function;;
+        }
+
         $requestHeaders = array(
             'Content-Type' => 'application/json; charset=UTF-8'
         );
@@ -110,13 +118,13 @@ class MoveApiPlayer extends MovePlayer
             $response = $this->httpClient->post($requestUrl, $requestHeaders, $requestBody)->send();
         } catch (HttpException $exc) {
             $this->logger->log(
-                $game->uuid(),
+                $game ? $game->uuid() : 'temp',
                 $player->uuid(),
                 array(
-                    'requestUrl'        => $requestUrl,
-                    'requestHeaders'    => $requestHeaders,
-                    'requestBody'       => $requestBody,
-                    'errorMessage'      => $exc->getMessage()
+                    'requestUrl' => $requestUrl,
+                    'requestHeaders' => $requestHeaders,
+                    'requestBody' => $requestBody,
+                    'errorMessage' => $exc->getMessage()
                 )
             );
             throw new MovePlayerException('An error occurred calling the player API.', 0, $exc);
@@ -129,31 +137,31 @@ class MoveApiPlayer extends MovePlayer
         if (null === $responseData || !is_array($responseData)) {
             $message = 'Invalid API response! Player: ' . $player->name();
             $this->logger->log(
-                $game->uuid(),
+                $game ? $game->uuid() : 'temp',
                 $player->uuid(),
                 array(
-                    'requestUrl'        => $requestUrl,
-                    'requestHeaders'    => $requestHeaders,
-                    'requestBody'       => $requestBody,
-                    'responseCode'      => $response->getStatusCode(),
-                    'responseHeaders'   => $response->getHeaderLines(),
-                    'responseBody'      => $responseBody,
-                    'errorMessage'      => $message
+                    'requestUrl' => $requestUrl,
+                    'requestHeaders' => $requestHeaders,
+                    'requestBody' => $requestBody,
+                    'responseCode' => $response->getStatusCode(),
+                    'responseHeaders' => $response->getHeaderLines(),
+                    'responseBody' => $responseBody,
+                    'errorMessage' => $message
                 )
             );
             throw new MovePlayerException($message);
         }
 
         $this->logger->log(
-            $game->uuid(),
+            $game ? $game->uuid() : 'temp',
             $player->uuid(),
             array(
-                'requestUrl'        => $requestUrl,
-                'requestHeaders'    => $requestHeaders,
-                'requestBody'       => $requestBody,
-                'responseCode'      => $response->getStatusCode(),
-                'responseHeaders'   => $response->getHeaderLines(),
-                'responseBody'      => $responseBody
+                'requestUrl' => $requestUrl,
+                'requestHeaders' => $requestHeaders,
+                'requestBody' => $requestBody,
+                'responseCode' => $response->getStatusCode(),
+                'responseHeaders' => $response->getHeaderLines(),
+                'responseBody' => $responseBody
             )
         );
 

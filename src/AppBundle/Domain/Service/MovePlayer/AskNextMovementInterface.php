@@ -6,19 +6,19 @@ use AppBundle\Domain\Entity\Game\Game;
 use AppBundle\Domain\Entity\Player\Player;
 
 /**
- * Interface MovePlayerInterface
+ * Interface AskNextMovementInterface
  *
  * @package AppBundle\Domain\Service\MovePlayer
  */
-interface MovePlayerInterface
+interface AskNextMovementInterface
 {
     /**
-     * Moves the player
+     * Reads the next movement of the player: "up", "down", "left" or "right".
      *
      * @param Player $player
      * @param Game $game
-     * @return bool true=success, false=error
+     * @return string The next movement
      * @throws MovePlayerException
      */
-    public function movePlayer(Player& $player, Game $game);
+    public function askNextMovement(Player $player, Game $game);
 }

@@ -9,6 +9,7 @@ use AppBundle\Domain\Entity\Player\Player;
 use AppBundle\Domain\Entity\Position\Position;
 use AppBundle\Domain\Service\MoveGhost\MoveGhostFactory;
 use AppBundle\Domain\Service\MovePlayer\MovePlayerFactory;
+use AppBundle\Domain\Service\MovePlayer\MovePlayerInterface;
 
 /**
  * Class GameEngine
@@ -17,21 +18,22 @@ use AppBundle\Domain\Service\MovePlayer\MovePlayerFactory;
  */
 class GameEngine
 {
-    /** @var  MovePlayerFactory */
-    protected $mpf;
+    /** @var  MovePlayerInterface */
+    protected $movePlayer;
 
     /** @var  MoveGhostFactory */
-    protected $mgf;
+    protected $moveGhostFactory;
 
     /**
      * GameEngine constructor.
      *
-     * @param MovePlayerFactory $mpf
+     * @param MovePlayerInterface $movePlayer
+     * @param MoveGhostFactory $moveGhostFactory
      */
-    public function __construct(MovePlayerFactory $mpf, MoveGhostFactory $mgf)
+    public function __construct(MovePlayerInterface $movePlayer, MoveGhostFactory $moveGhostFactory)
     {
-        $this->mpf = $mpf;
-        $this->mgf = $mgf;
+        $this->movePlayer = $movePlayer;
+        $this->moveGhostFactory = $moveGhostFactory;
     }
 
     /**
@@ -70,11 +72,9 @@ class GameEngine
 
         foreach ($players as $player) {
             if ($player->status() == Player::STATUS_PLAYING) {
-                $moverService = $this->mpf->locate($player);
-                if ($moverService->movePlayer($player, $game)) {
-                    if ($game->isGoalReached($player)) {
-                        $player->wins();
-                    }
+                $this->movePlayer->movePlayer($player, $game);
+                if ($game->isGoalReached($player)) {
+                    $player->wins();
                 }
             }
         }
@@ -96,7 +96,7 @@ class GameEngine
 
         foreach ($ghosts as $ghost) {
             if (!$this->checkGhostKill($ghost, $game)) {
-                $moverService = $this->mgf->locate($ghost);
+                $moverService = $this->moveGhostFactory->locate($ghost);
                 if ($moverService->moveGhost($ghost, $game)) {
                     $this->checkGhostKill($ghost, $game);
                 }

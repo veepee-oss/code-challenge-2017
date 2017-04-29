@@ -21,7 +21,7 @@ class ApiController extends Controller
     /**
      * Return the name of the API
      *
-     * @Route("/start", name="api_start")
+     * @Route("/name", name="api_start")
      * @return JsonResponse
      */
     public function startAction()

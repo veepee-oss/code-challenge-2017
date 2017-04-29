@@ -6,19 +6,19 @@ use AppBundle\Domain\Entity\Game\Game;
 use AppBundle\Domain\Entity\Player\Player;
 
 /**
- * Interface MovePlayerInterface
+ * Interface AskPlayerNameInterface
  *
  * @package AppBundle\Domain\Service\MovePlayer
  */
-interface MovePlayerInterface
+interface AskPlayerNameInterface
 {
     /**
-     * Moves the player
+     * Asks for the name of the player
      *
      * @param Player $player
      * @param Game $game
-     * @return bool true=success, false=error
+     * @return string The player name
      * @throws MovePlayerException
      */
-    public function movePlayer(Player& $player, Game $game);
+    public function askPlayerName(Player $player, Game $game = null);
 }

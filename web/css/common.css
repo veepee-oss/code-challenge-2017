@@ -31,8 +31,8 @@ body {
 }
 
 .x-maze td {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
 }
 
 /**********************************************************************************************************************/
@@ -91,7 +91,7 @@ body {
 }
 
 .x-maze .x-goal {
-    background: #008000 url("../images/maze-goal.png") no-repeat;
+    background: #000000 url("../images/maze-goal.png") no-repeat;
     background-size: 100%;
 }
 
@@ -106,7 +106,7 @@ body {
     content: "\1F3C6";
 }
 .x-maze .x-winner {
-    background: #008000 url("../images/maze-winner.png") no-repeat;
+    background: #000000 url("../images/maze-winner.png") no-repeat;
     background-size: 100%;
 }
 

@@ -32,15 +32,26 @@ class ApiController extends Controller
             'Han Solo',
             'Luke Skaywalker',
             'Leia Organa',
-            'Sauron',
-            'Aragorn',
+            'Yoda',
             'Bilbo Bolsón',
+            'Aragorn',
+            'Legolas',
+            'Gimly',
+            'Boromir',
+            'Saruman',
+            'Sauron',
             'Tyrion Lanister',
             'Jaime Lanister',
-            'Jon Snow',
+            'Cersei Lanister',
+            'Ned Stark',
             'Arya Stark',
             'Sansa Stark',
-            'Daenerys Targarian'
+            'Jon Snow',
+            'Daenerys Targarian',
+            'Robert Baratheon',
+            'Stanis Baratheon',
+            'The Hound',
+            'The Mountain'
         );
 
         return new JsonResponse(array(

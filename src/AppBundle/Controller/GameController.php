@@ -4,7 +4,6 @@ namespace AppBundle\Controller;
 
 use AppBundle\Domain\Entity\Game\Game;
 use AppBundle\Domain\Entity\Player\ApiPlayer;
-use AppBundle\Domain\Service\MazeRender\MazeHtmlRender;
 use AppBundle\Form\CreateGame\GameEntity;
 use AppBundle\Form\CreateGame\GameForm;
 use AppBundle\Form\CreateGame\PlayerEntity;
@@ -155,7 +154,7 @@ class GameController extends Controller
             'uuid' => $uuid
         ));
 
-        $renderer = new MazeHtmlRender();
+        $renderer = $this->get('app.maze.renderer');
         $game = $entity->toDomainEntity();
         $maze = $renderer->render($game);
 
@@ -183,7 +182,7 @@ class GameController extends Controller
             'uuid' => $uuid
         ));
 
-        $renderer = new MazeHtmlRender();
+        $renderer = $this->get('app.maze.renderer');
         $game = $entity->toDomainEntity();
         $maze = $renderer->render($game);
 
@@ -225,7 +224,7 @@ class GameController extends Controller
             'uuid' => $uuid
         ));
 
-        $renderer = new MazeHtmlRender();
+        $renderer = $this->get('app.maze.renderer');
         $game = $entity->toDomainEntity();
         $maze = $renderer->render($game);
 

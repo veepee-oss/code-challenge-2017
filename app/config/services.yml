@@ -15,7 +15,7 @@ services:
         class: AppBundle\Domain\Service\MazeBuilder\MazeBuilderRecursiveDivision
 
     app.maze.renderer:
-        class: AppBundle\Domain\Service\MazeRender\MazeHtmlRender
+        class: AppBundle\Domain\Service\MazeRender\MazeIconRender
 
     app.game.engine:
         class: AppBundle\Domain\Service\GameEngine\GameEngine

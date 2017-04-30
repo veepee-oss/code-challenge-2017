@@ -6,11 +6,11 @@ use AppBundle\Domain\Entity\Game\Game;
 use AppBundle\Domain\Entity\Maze\MazeCell;
 
 /**
- * Class MazeHtmlRender
+ * Class MazeIconRender
  *
  * @package AppBundle\Domain\Service\MazeRender
  */
-class MazeHtmlRender implements MazeRenderInterface
+class MazeIconRender implements MazeRenderInterface
 {
     /**
      * Renders the game's maze with all the players
@@ -21,7 +21,7 @@ class MazeHtmlRender implements MazeRenderInterface
     public function render(Game $game)
     {
         $maze = $game->maze();
-        $html = '<table class="maze">';
+        $html = '<table class="x-maze">';
 
         $rows = $maze->height();
         $cols = $maze->width();
@@ -34,9 +34,9 @@ class MazeHtmlRender implements MazeRenderInterface
             for ($col = 0; $col < $cols; ++$col) {
                 $cell = $maze[$row][$col]->getContent();
                 if ($cell == MazeCell::CELL_WALL) {
-                    $html .= '<td class="wall"></td>';
+                    $html .= '<td class="x-wall"></td>';
                 } elseif ($cell == MazeCell::CELL_START) {
-                    $html .= '<td class="start"></td>';
+                    $html .= '<td class="x-start"></td>';
                 } elseif ($cell == MazeCell::CELL_GOAL) {
                     $drawWinner = false;
                     $players = $game->players();
@@ -48,22 +48,24 @@ class MazeHtmlRender implements MazeRenderInterface
                     }
 
                     if (null != $drawWinner) {
-                        $html .= '<td class="winner"></td>';
+                        $html .= '<td class="x-winner"></td>';
                     } else {
-                        $html .= '<td class="goal"></td>';
+                        $html .= '<td class="x-goal"></td>';
                     }
                 } else {
+                    $direction = null;
                     $drawPlayer = null;
-                    $drawKilled = false;
+                    $drawKilled = null;
                     $drawGhost = false;
 
                     $players = $game->players();
                     foreach ($players as $index => $player) {
                         if ($player->position()->x() == $col && $player->position()->y() == $row) {
                             if ($player->dead()) {
-                                $drawKilled = true;
+                                $drawKilled = 1 + $index;
                             } else {
                                 $drawPlayer = 1 + $index;
+                                $direction = $player->direction();
                             }
                         }
                     }
@@ -76,13 +78,13 @@ class MazeHtmlRender implements MazeRenderInterface
                     }
 
                     if (null != $drawPlayer) {
-                        $html .= '<td class="player' . $drawPlayer . '"></td>';
+                        $html .= '<td class="x-player' . $drawPlayer . '-' . $direction . '"></td>';
                     } elseif ($drawKilled) {
-                        $html .= '<td class="killed"></td>';
+                        $html .= '<td class="x-killed' . $drawKilled . '"></td>';
                     } elseif ($drawGhost) {
-                        $html .= '<td class="ghost"></td>';
+                        $html .= '<td class="x-ghost"></td>';
                     } else {
-                        $html .= '<td class="empty"></td>';
+                        $html .= '<td class="x-empty"></td>';
                     }
                 }
             }

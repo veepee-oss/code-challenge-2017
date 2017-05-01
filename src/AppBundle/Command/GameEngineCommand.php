@@ -75,7 +75,7 @@ class GameEngineCommand extends ContainerAwareCommand
             }
         }
 
-        // Inifinite loop (daemom)
+        // Infinite loop (daemon)
         $idle = 0;
         while (1) {
             /** @var Game[] $games */

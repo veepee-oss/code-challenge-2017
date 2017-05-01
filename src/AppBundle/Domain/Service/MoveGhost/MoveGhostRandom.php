@@ -111,7 +111,9 @@ class MoveGhostRandom extends MoveGhost
                 return false;
         }
 
-        if ($maze[$y][$x]->getContent() == MazeCell::CELL_WALL) {
+        $content = $maze[$y][$x]->getContent();
+        if ($content == MazeCell::CELL_WALL
+            || $content == MazeCell::CELL_GOAL) {
             return false;
         }
 

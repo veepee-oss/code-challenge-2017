@@ -8,7 +8,6 @@ use AppBundle\Domain\Entity\Maze\MazeCell;
 use AppBundle\Domain\Entity\Player\Player;
 use AppBundle\Domain\Entity\Position\Position;
 use AppBundle\Domain\Service\MoveGhost\MoveGhostFactory;
-use AppBundle\Domain\Service\MovePlayer\MovePlayerFactory;
 use AppBundle\Domain\Service\MovePlayer\MovePlayerInterface;
 
 /**
@@ -115,7 +114,13 @@ class GameEngine
      */
     protected function checkGhostKill(Ghost $ghost, Game& $game)
     {
+        if ($ghost->isNeutralTime()) {
+            return false;
+        }
+
         $players = $game->players();
+        shuffle($players);
+
         foreach ($players as $player) {
             if ($player->position()->y() == $ghost->position()->y()
                 && $player->position()->x() == $ghost->position()->x()) {

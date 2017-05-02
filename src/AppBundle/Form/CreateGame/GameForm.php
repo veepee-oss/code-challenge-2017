@@ -98,6 +98,11 @@ class GameForm extends AbstractType
             'label' => 'app.createpage.form.ghost-rate'
         ));
 
+        $builder->add('name', '\Symfony\Component\Form\Extension\Core\Type\TextType', array(
+            'label' => 'app.createpage.form.name-optional',
+            'required' => false
+        ));
+
         $builder->add('save', '\Symfony\Component\Form\Extension\Core\Type\SubmitType', array(
             'label' => 'app.createpage.form.next'
         ));
@@ -117,6 +122,7 @@ class GameForm extends AbstractType
         $builder->add('playerNum', '\Symfony\Component\Form\Extension\Core\Type\HiddenType');
         $builder->add('minGhosts', '\Symfony\Component\Form\Extension\Core\Type\HiddenType');
         $builder->add('ghostRate', '\Symfony\Component\Form\Extension\Core\Type\HiddenType');
+        $builder->add('name', '\Symfony\Component\Form\Extension\Core\Type\HiddenType');
 
         $builder->add('players', '\Symfony\Component\Form\Extension\Core\Type\CollectionType', array(
             'entry_type' => '\AppBundle\Form\CreateGame\PlayerForm',

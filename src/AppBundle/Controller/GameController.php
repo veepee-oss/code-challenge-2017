@@ -100,7 +100,14 @@ class GameController extends Controller
                 if ($playerValidator->validatePlayer($player, null)) {
                     $players[] = $player;
                 } else {
-                    $form->get('players')->get($pos)->addError(new FormError('Invalid API'));
+                    $message = $this->get('translator')->trans(
+                        'app.form.game.player.invalid-url',
+                        array(
+                            '%url%' => $player->url()
+                        ),
+                        'validators'
+                    );
+                    $form->get('players')->addError(new FormError($message));
                     $errors = true;
                 }
             }
@@ -112,7 +119,11 @@ class GameController extends Controller
                     $players,
                     array(),
                     $gameEntity->getGhostRate(),
-                    $gameEntity->getMinGhosts()
+                    $gameEntity->getMinGhosts(),
+                    Game::STATUS_NOT_STARTED,
+                    0,
+                    null,
+                    $gameEntity->getName()
                 );
 
                 // Save game data in the database

@@ -42,6 +42,9 @@ class Game
     /** @var string */
     protected $uuid;
 
+    /** @var string */
+    protected $name;
+
     /**
      * Game constructor.
      *
@@ -53,6 +56,7 @@ class Game
      * @param int $status
      * @param int $moves
      * @param string $uuid
+     * @param string $name
      */
     public function __construct(
         Maze $maze,
@@ -62,7 +66,8 @@ class Game
         $minGhosts = 0,
         $status = self::STATUS_NOT_STARTED,
         $moves = 0,
-        $uuid = null
+        $uuid = null,
+        $name = null
     ) {
         $this->maze = $maze;
         $this->players = $players;
@@ -72,6 +77,7 @@ class Game
         $this->status = $status;
         $this->moves = $moves;
         $this->uuid = $uuid ?: Uuid::v4();
+        $this->name = $name ?: $this->uuid;
     }
 
     /**
@@ -152,6 +158,16 @@ class Game
     public function uuid()
     {
         return $this->uuid;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function name()
+    {
+        return $this->name;
     }
 
     /**

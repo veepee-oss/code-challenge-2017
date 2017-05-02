@@ -16,12 +16,21 @@
         <div class="row">
             <div class="col-sm-12 col-md-3">
                 <div class="well">
-                    <small class="text-primary">{{ 'app.adminpage.texts.process-id' | trans }}:</small><br>
-                    <strong class="lead">{{ processId | default('app.adminpage.texts.not-running' | trans) }}</strong>
+                    <p>
+                        <small class="text-primary">{{ 'app.adminpage.texts.process-id' | trans }}:</small>
+                    </p>
+                    <p>
+                        <strong class="lead">{{ processId | default('app.adminpage.texts.not-running' | trans) }}</strong>
+                    </p>
                 </div>
 
                 <div class="well">
-                    <small class="text-info">{{ 'app.adminpage.texts.actions' | trans }}:</small><br>
+                    <p>
+                        <small class="text-info">
+                            {{ 'app.adminpage.texts.daemon-actions' | trans }}:
+                        </small>
+                    </p>
+
                     <div class="btn-group-vertical">
                         <a  {% if processId %}
                                 disabled="disabled"
@@ -48,6 +57,23 @@
                             href="{{ url('admin_restart') }}">
                             <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
                             {{ 'app.adminpage.buttons.restart' | trans }}
+                        </a>
+                    </div>
+
+                    <br>
+                    <br>
+
+                    <p>
+                        <small class="text-info">
+                            {{ 'app.adminpage.texts.other-actions' | trans }}:
+                        </small>
+                    </p>
+
+                    <div class="btn-group-vertical">
+                        <a  class="btn btn-default"
+                            href="{{ url('game_create') }}">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                            {{ 'app.adminpage.buttons.create' | trans }}
                         </a>
                     </div>
                 </div>

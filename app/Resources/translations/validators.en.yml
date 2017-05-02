@@ -1,0 +1,6 @@
+# validators.en.yml
+app:
+    form:
+        game:
+            player:
+                invalid-url:      "Invalid API URL: %url%"

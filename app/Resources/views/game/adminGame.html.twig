@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-sm-6 col-xs-8">
-        <a href="{{ url('game_view', { 'uuid' : game.uuid }) }}">{{ game.uuid }}</a><br>
+        <a href="{{ url('game_view', { 'uuid' : game.uuid }) }}">{{ game.name }}</a><br>
     </div>
     <div class="col-sm-4 hidden-xs">
         {{ 'app.adminpage.texts.height' | trans({ '%height%': game.height}) }},

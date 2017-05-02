@@ -36,6 +36,13 @@ class Game
     private $uuid;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=48)
+     */
+    private $name;
+
+    /**
      * @var int
      *
      * @ORM\Column(name="status", type="integer")
@@ -136,6 +143,7 @@ class Game
         if (null === $source) {
             $this->id = null;
             $this->uuid = Uuid::v4();
+            $this->name = $this->uuid;
             $this->status = null;
             $this->width = null;
             $this->height = null;
@@ -152,6 +160,7 @@ class Game
         } elseif ($source instanceof Game) {
             $this->id = $source->getId();
             $this->uuid = $source->getUuid();
+            $this->name = $source->getName();
             $this->status = $source->getStatus();
             $this->width = $source->getWidth();
             $this->height = $source->getHeight();
@@ -212,7 +221,8 @@ class Game
             $this->minGhosts,
             $this->status,
             $this->moves,
-            $this->uuid
+            $this->uuid,
+            $this->name
         );
     }
 
@@ -225,6 +235,7 @@ class Game
     public function fromDomainEntity(DomainGame\Game $game)
     {
         $this->uuid = $game->uuid();
+        $this->name = $game->name();
         $this->status = $game->status();
         $this->setMaze($game->maze());
         $this->setPlayers($game->players());
@@ -265,6 +276,28 @@ class Game
     public function getUuid()
     {
         return $this->uuid;
+    }
+
+    /**
+     * Set game name
+     *
+     * @param string $name
+     * @return $this
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * Get game name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**

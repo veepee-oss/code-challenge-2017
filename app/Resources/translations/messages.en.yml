@@ -29,8 +29,9 @@ app:
             width:          "Width of the maze"
             player-num:     "Number of players (1 to 20)"
             min-ghosts:     "Minimum number of ghosts)"
-            ghost-rate:     "Movements to create a new ghost (0 for no ghosts)"
+            ghost-rate:     "Movements to create a new ghost (0 for no ghosts al all)"
             url:            "URL"
+            name-optional:  "Game name (optional)"
             next:           "Next step"
             create:         "Create game"
 
@@ -63,7 +64,8 @@ app:
         texts:
             process-id:     "Daemon process"
             not-running:    "Not running"
-            actions:        "Actions"
+            daemon-actions: "Daemon Actions"
+            other-actions:  "Other Actions"
             height:         "Height: %height%"
             width:          "Width: %width%"
             players:        "{0} No players|{1} One player|]1,Inf[ Players: %players%"
@@ -78,6 +80,7 @@ app:
             start:          "Start daemon"
             stop:           "Stop daemon"
             restart:        "Restart daemon"
+            create:         "Create game"
 
     credits:
         title:          "Credits and Attributions"

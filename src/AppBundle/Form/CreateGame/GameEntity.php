@@ -16,35 +16,41 @@ class GameEntity
      * @Assert\NotBlank()
      * @Assert\Range(min=10, max=1000)
      */
-    private $height = 40;
+    private $height = 25;
 
     /**
      * @var int
      * @Assert\NotBlank()
      * @Assert\Range(min=10, max=1000)
      */
-    private $width = 80;
+    private $width = 50;
 
     /**
      * @var int
      * @Assert\NotBlank()
      * @Assert\Range(min=1, max=20)
      */
-    private $playerNum = 1;
+    private $playerNum = 2;
 
     /**
      * @var int
      * @Assert\NotBlank()
      * @Assert\Range(min=0, max=100)
      */
-    private $minGhosts = 0;
+    private $minGhosts = 1;
 
     /**
      * @var int
      * @Assert\NotBlank()
-     * @Assert\Range(min=0, max=1000)
+     * @Assert\Range(min=0, max=200)
      */
-    private $ghostRate = 250;
+    private $ghostRate = 50;
+
+    /**
+     * @var string
+     * @Assert\Length(min=0, max=48)
+     */
+    private $name = null;
 
     /**
      * @var PlayerEntity[]
@@ -62,10 +68,12 @@ class GameEntity
 
     /**
      * @param int $height
+     * @return $this
      */
     public function setHeight($height)
     {
         $this->height = $height;
+        return $this;
     }
 
     /**
@@ -78,10 +86,12 @@ class GameEntity
 
     /**
      * @param int $width
+     * @return $this
      */
     public function setWidth($width)
     {
         $this->width = $width;
+        return $this;
     }
 
     /**
@@ -94,10 +104,12 @@ class GameEntity
 
     /**
      * @param int $playerNum
+     * @return $this
      */
     public function setPlayerNum($playerNum)
     {
         $this->playerNum = $playerNum;
+        return $this;
     }
 
     /**
@@ -110,10 +122,12 @@ class GameEntity
 
     /**
      * @param int $minGhosts
+     * @return $this
      */
     public function setMinGhosts($minGhosts)
     {
         $this->minGhosts = $minGhosts;
+        return $this;
     }
 
     /**
@@ -126,18 +140,40 @@ class GameEntity
 
     /**
      * @param int $ghostRate
+     * @return $this
      */
     public function setGhostRate($ghostRate)
     {
         $this->ghostRate = $ghostRate;
+        return $this;
+    }
+
+    /**
+     * @param string $name
+     * @return $this
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**
      * @param PlayerEntity[] $players
+     * @return $this
      */
     public function setPlayers($players)
     {
         $this->players = $players;
+        return $this;
     }
 
     /**
@@ -150,10 +186,12 @@ class GameEntity
 
     /**
      * @param PlayerEntity $player
+     * @return $this
      */
     public function addPlayer(PlayerEntity $player)
     {
         $this->players[] = $player;
+        return $this;
     }
 
     /**

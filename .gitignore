@@ -27,3 +27,4 @@
 /deploy
 !/deploy/deploy.sh
 !/deploy/remote/install.sh
+composer.phar

@@ -37,15 +37,9 @@
                 <nav class="navbar navbar-inverse navbar-fixed-top">
                     <div class="container">
                         <div class="navbar-header">
-                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                                <span class="sr-only">Toggle navigation</span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                            </button>
                             <a class="navbar-brand" href="{{ url('homepage') }}">{{ 'app.global.title' | trans }}</a>
                         </div>
-                        <div class="nav navbar-nav navbar-right">
+                        <div class="nav navbar-nav navbar-right hidden-xs">
                             <img class="img-responsive" src="{{ asset('images/privalia-logo-black.png') }}">
                         </div>
                     </div>
@@ -60,13 +54,13 @@
                 <div class="container">
                     <footer>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-sm-6">
                                 <img src="{{ asset('images/privalia.png') }}" alt="Privalia" title="Privalia">
                                 <br>
                                 Copyright &copy;
                                 <a href="http://www.privalia.com/">Privalia Venta Directa S.A.U.</a> 2006-2017
                             </div>
-                            <div class="col-md-6 text-right">
+                            <div class="col-sm-6 text-footer-right">
                                 <br>
                                 <a href="{{ url('rules') }}">{{ 'app.homepage.rules' | trans }}</a> |
                                 <a href="{{ url('credits') }}">{{ 'app.credits.title' | trans }}</a>

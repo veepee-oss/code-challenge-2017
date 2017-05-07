@@ -21,6 +21,9 @@ app:
         rules:          "See the rules"
         create:         "Create test game"
 
+    rulespage:
+        title:          "Rules"
+
     createpage:
         title:          "Create new game"
 

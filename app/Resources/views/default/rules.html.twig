@@ -1,0 +1,207 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'app.rulespage.title' | trans }} - {{ parent() }}{% endblock %}
+
+{% block content %}
+    <div class="bg-primary">
+        <div class="container text-justify">
+            <h1>
+                {{ 'app.rulespage.title' | trans }}
+                <small>
+                    {{ 'app.global.title' | trans }}
+                </small>
+            </h1>
+            <p class="lead">
+                The idea is quite simple: <strong>You have to create a REST API to escape from a labyrinth</strong>
+                before the other players escape. You will know the size of the labyrinth, the position of your
+                character and some other data, but you won't see the entire labyrinth. The game engine will call your
+                API, sending the current conditions, and your API will have to response with your next move:
+                <strong>up</strong>, <strong>down</strong>, <strong>left</strong> or <strong>right</strong>.
+            </p>
+        </div>
+    </div>
+
+    <div class="bg-info">
+        <div class="container text-justify">
+            <h2>
+                API Documentation
+            </h2>
+            <p>
+                Players are simple REST APIs with two endpoints:
+            </p>
+            <ul>
+                <li>
+                    <code>/name</code>:
+                    should provide basic information on a player.
+                    See <a href="#name-endpoint"><strong>Name Endpoint</strong></a> for more information.
+                </li>
+                <li>
+                    <code>/move</code>:
+                    will receive map information, and needs to reply with the then move for the player.
+                    See the <a href="#move-endpoint"><strong>Move Endpoint</strong></a> for more information.
+                </li>
+            </ul>
+            <h3 id="name-endpoint">
+                Name Endpoint
+            </h3>
+            <p>
+                Your <code>/name</code> URL API will receive a POST request without body.
+                Reply with JSON format indicating the <strong>name</strong> of the player or team and the contact
+                <strong>email</strong>.
+            </p>
+            <h4>
+                Response format
+            </h4>
+            <pre>{
+    "name": string,         // The player or team name
+    "email": string         // The contact email
+}</pre>
+            <h3 id="move-endpoint">
+                Move Endpoint
+            </h3>
+            <p>
+                Your <code>/move</code> URL API will receive a POST request with the information about the visible
+                part of the map in JSON format, and you need to reply with the next movement also in JSON format.
+            </p>
+            <h4>
+                Request format
+            </h4>
+            <pre>{
+    "game": {               // Object - game data
+        "id": uuid          // Unified unique ID of the game
+    },
+    "player": {             // Object - player data
+        "id": uuid,         // Unified unique ID of the game
+        "name": string,     // The name ob the player or team
+        "position": {       // Object - current position of the player
+            "y": int,
+            "x": int
+        },
+        "previous": {       // Object - previous positions of the player
+            "y": int,
+            "x": int
+        },
+        "area": {           // Object - visible area for the player
+            "y1": int,
+            "x1": int,
+            "y2": int,
+            "x2": int
+        }
+    },
+    "maze": {               // Object - maze data
+        "size": {           // Object - Total size of the maze
+            "height": int,
+            "width": int
+        },
+        "goal": {           // Object - goal position
+            "y": int,
+            "x": int
+        },
+        "walls": [          // Array - visible walls
+            {               // Object - wall position
+                "y": int,
+                "x": int
+            },
+        ]
+    },
+    "ghosts": [             // Array - ghosts position
+        {                   // Object - ghost position
+            "y": int,
+            "x": int
+        }
+    ]
+}</pre>
+            <h4>
+                Response format
+            </h4>
+            <pre>{
+    "move": string          // up, down, left or right
+}</pre>
+        </div>
+
+        <div class="bg-warning">
+            <div class="container text-justify">
+                <h2>
+                    Visible area
+                </h2>
+                <p>
+                    The labyrinth is a 0-based matrix, where [0, 0] is the upper left corner.
+                    The height and width are sent in the <code>maze.size.height</code> and <code>maze.size.width</code>
+                    vars of the request body in the <a href="#move-endpoint">Move endpoint</a>.
+                    Each player has its own <strong>visible area</strong> based on its current position
+                    (see <a href="#figure-1">Figure 1</a>).
+                    The visible area is sent in the <code>player.area</code> var which is an object with four vars
+                    <code>y1</code>, <code>x1</code>, <code>y2</code> and <code>x2</code>.
+                    The information sent in <code>maze.walls</code> and <code>ghosts</code> vars depends on the visible area.
+                </p>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6">
+                        <img class="img-responsive" src="{{ asset('images/full-maze02.png') }}">
+                        <div class="text-center small" id="figure-1">
+                            <i>Figure 1: Visible area</i>
+                        </div>
+                    </div>
+                </div>
+                <h3>
+                    Example of request
+                </h3>
+                <pre>{
+    "game": {
+      "id": "ccea91e9-fc06-49f3-b077-679877350c7f"
+    },
+    "player": {
+        "id": "3ad32117-bba6-42dd-8546-174296b2372a",
+        "name": "Test player",
+        "position": { "y": 7, "x": 2 },
+        "previous": { "y": 8, "x": 2 },
+        "area": { "y1": 2, "x1": 0, "y2": 12, "x2": 10 }
+    },
+    "maze": {
+        "size": { "height": 15, "width": 25 },
+        "goal": { "y": 3, "x": 24 },
+        "walls": [
+            { "y": 2, "x": 0 },
+            { "y": 3, "x": 0 },
+            { "y": 3, "x": 4 },
+            { "y": 4, "x": 0 },
+            { "y": 4, "x": 4 },
+            { "y": 4, "x": 5 },
+            { "y": 4, "x": 7 },
+            { "y": 4, "x": 8 },
+            { "y": 4, "x": 9 },
+            { "y": 4, "x": 10 },
+            { "y": 5, "x": 0 },
+            { "y": 5, "x": 4 },
+            { "y": 6, "x": 0 },
+            { "y": 6, "x": 4 },
+            { "y": 7, "x": 0 },
+            { "y": 7, "x": 4 },
+            { "y": 8, "x": 0 },
+            { "y": 8, "x": 4 },
+            { "y": 9, "x": 0 },
+            { "y": 9, "x": 4 },
+            { "y": 10, "x": 0 },
+            { "y": 10, "x": 1 },
+            { "y": 10, "x": 3 },
+            { "y": 10, "x": 4 },
+            { "y": 10, "x": 6 },
+            { "y": 10, "x": 7 },
+            { "y": 10, "x": 8 },
+            { "y": 10, "x": 9 },
+            { "y": 10, "x": 10 },
+            { "y": 11, "x": 0 },
+            { "y": 11, "x": 4 },
+            { "y": 11, "x": 8 },
+            { "y": 12, "x": 0 },
+            { "y": 12, "x": 4 }
+        ]
+    },
+    "ghosts": [
+        { "y": 5, "x": 7 }
+    ]
+}</pre>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

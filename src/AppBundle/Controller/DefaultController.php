@@ -28,8 +28,7 @@ class DefaultController extends Controller
      */
     public function rulesAction()
     {
-        echo 'RULES page';
-        exit;
+        return $this->render('default/rules.html.twig');
     }
 
     /**

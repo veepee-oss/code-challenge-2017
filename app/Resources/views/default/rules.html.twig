@@ -12,7 +12,8 @@
                 </small>
             </h1>
             <p class="lead">
-                The idea is quite simple: <strong>You have to create a REST API to escape from a labyrinth</strong>
+                The idea is quite simple: <strong>You have to create a <a href="#api-documentation">REST API</a>
+                to escape from a labyrinth</strong>
                 before the other players escape. You will know the size of the labyrinth, the position of your
                 character and some other data, but you won't see the entire labyrinth. The game engine will call your
                 API, sending the current conditions, and your API will have to response with your next move:
@@ -21,9 +22,106 @@
         </div>
     </div>
 
-    <div class="bg-info">
+    <div class="bg-success">
         <div class="container text-justify">
             <h2>
+                The game
+            </h2>
+            <div class="row">
+                <div class="col-sm-12 col-md-6">
+                    <p>
+                        <img class="img-responsive" src="{{ asset('images/full-maze01.png') }}">
+                    </p>
+                </div>
+                <div class="col-sm-12 col-md-6">
+                    <div class="row">
+                        <div class="col-xs-2">
+                            <p>
+                                <img class="img-responsive" src="{{ asset('images/maze-player1-right.png') }}">
+                            </p>
+                        </div>
+                        <div class="col-xs-10">
+                            <p>
+                                The <strong>Player</strong>, also named <strong>Pacman</strong> is the character moved
+                                by the <a href="#api-documentation">player's API REST</a>. The game can manage up to 20
+                                players concurrently.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-2">
+                            <p>
+                                <img class="img-responsive" src="{{ asset('images/maze-ghost.png') }}">
+                            </p>
+                        </div>
+                        <div class="col-xs-10">
+                            <p>
+                                A <strong>ghost</strong> can kill a player. The ghosts move randomly by the maze.
+                                The number of ghosts in the game and the spawn frequency can be configured and changes
+                                from game to game.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-2">
+                            <p>
+                                <img class="img-responsive" src="{{ asset('images/maze-ghost-neutral.png') }}">
+                            </p>
+                        </div>
+                        <div class="col-xs-10">
+                            <p>
+                                When a new ghost is born, he is a <strong>neutral ghost</strong> for 5 movements.
+                                A neutral ghost can't kill a players. After 5 movements a neutral ghost becomes a
+                                normal ghost.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-2">
+                            <p>
+                                <img class="img-responsive" src="{{ asset('images/maze-killed1.png') }}">
+                            </p>
+                        </div>
+                        <div class="col-xs-10">
+                            <p>
+                                When a player is killed, it's <strong>tombstone</strong> ramains in the place where
+                                he was when killed..
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-2">
+                            <p>
+                                <img class="img-responsive" src="{{ asset('images/maze-start.png') }}">
+                            </p>
+                        </div>
+                        <div class="col-xs-10">
+                            <p>
+                                All the players begin from the same <strong>starting point</strong>.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-2">
+                            <p>
+                                <img class="img-responsive" src="{{ asset('images/maze-goal.png') }}">
+                            </p>
+                        </div>
+                        <div class="col-xs-10">
+                            <p>
+                                When a player reaches the <strong>goal</strong>, he wins the game.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p></p>
+        </div>
+    </div>
+
+    <div class="bg-info">
+        <div class="container text-justify">
+            <h2 id="api-documentation">
                 API Documentation
             </h2>
             <p>
@@ -41,6 +139,7 @@
                     See the <a href="#move-endpoint"><strong>Move Endpoint</strong></a> for more information.
                 </li>
             </ul>
+
             <h3 id="name-endpoint">
                 Name Endpoint
             </h3>
@@ -49,79 +148,35 @@
                 Reply with JSON format indicating the <strong>name</strong> of the player or team and the contact
                 <strong>email</strong>.
             </p>
+
             <h4>
                 Response format
             </h4>
-            <pre>{
-    "name": string,         // The player or team name
-    "email": string         // The contact email
-}</pre>
+            <pre>{% include 'default/rulesEndpointNameResponse.html.twig' %}</pre>
+
             <h3 id="move-endpoint">
                 Move Endpoint
             </h3>
             <p>
                 Your <code>/move</code> URL API will receive a POST request with the information about the visible
                 part of the map in JSON format, and you need to reply with the next movement also in JSON format.
+                See <a href="#visible-area">visible area</a> section for more information.
             </p>
+
             <h4>
                 Request format
             </h4>
-            <pre>{
-    "game": {               // Object - game data
-        "id": uuid          // Unified unique ID of the game
-    },
-    "player": {             // Object - player data
-        "id": uuid,         // Unified unique ID of the game
-        "name": string,     // The name ob the player or team
-        "position": {       // Object - current position of the player
-            "y": int,
-            "x": int
-        },
-        "previous": {       // Object - previous positions of the player
-            "y": int,
-            "x": int
-        },
-        "area": {           // Object - visible area for the player
-            "y1": int,
-            "x1": int,
-            "y2": int,
-            "x2": int
-        }
-    },
-    "maze": {               // Object - maze data
-        "size": {           // Object - Total size of the maze
-            "height": int,
-            "width": int
-        },
-        "goal": {           // Object - goal position
-            "y": int,
-            "x": int
-        },
-        "walls": [          // Array - visible walls
-            {               // Object - wall position
-                "y": int,
-                "x": int
-            },
-        ]
-    },
-    "ghosts": [             // Array - ghosts position
-        {                   // Object - ghost position
-            "y": int,
-            "x": int
-        }
-    ]
-}</pre>
+            <pre>{% include 'default/rulesEndpointMoveRequest.html.twig' %}</pre>
+
             <h4>
                 Response format
             </h4>
-            <pre>{
-    "move": string          // up, down, left or right
-}</pre>
+            <pre>{% include 'default/rulesEndpointMoveResponse.html.twig' %}</pre>
         </div>
 
         <div class="bg-warning">
             <div class="container text-justify">
-                <h2>
+                <h2 id="visible-area">
                     Visible area
                 </h2>
                 <p>
@@ -145,61 +200,7 @@
                 <h3>
                     Example of request
                 </h3>
-                <pre>{
-    "game": {
-      "id": "ccea91e9-fc06-49f3-b077-679877350c7f"
-    },
-    "player": {
-        "id": "3ad32117-bba6-42dd-8546-174296b2372a",
-        "name": "Test player",
-        "position": { "y": 7, "x": 2 },
-        "previous": { "y": 8, "x": 2 },
-        "area": { "y1": 2, "x1": 0, "y2": 12, "x2": 10 }
-    },
-    "maze": {
-        "size": { "height": 15, "width": 25 },
-        "goal": { "y": 3, "x": 24 },
-        "walls": [
-            { "y": 2, "x": 0 },
-            { "y": 3, "x": 0 },
-            { "y": 3, "x": 4 },
-            { "y": 4, "x": 0 },
-            { "y": 4, "x": 4 },
-            { "y": 4, "x": 5 },
-            { "y": 4, "x": 7 },
-            { "y": 4, "x": 8 },
-            { "y": 4, "x": 9 },
-            { "y": 4, "x": 10 },
-            { "y": 5, "x": 0 },
-            { "y": 5, "x": 4 },
-            { "y": 6, "x": 0 },
-            { "y": 6, "x": 4 },
-            { "y": 7, "x": 0 },
-            { "y": 7, "x": 4 },
-            { "y": 8, "x": 0 },
-            { "y": 8, "x": 4 },
-            { "y": 9, "x": 0 },
-            { "y": 9, "x": 4 },
-            { "y": 10, "x": 0 },
-            { "y": 10, "x": 1 },
-            { "y": 10, "x": 3 },
-            { "y": 10, "x": 4 },
-            { "y": 10, "x": 6 },
-            { "y": 10, "x": 7 },
-            { "y": 10, "x": 8 },
-            { "y": 10, "x": 9 },
-            { "y": 10, "x": 10 },
-            { "y": 11, "x": 0 },
-            { "y": 11, "x": 4 },
-            { "y": 11, "x": 8 },
-            { "y": 12, "x": 0 },
-            { "y": 12, "x": 4 }
-        ]
-    },
-    "ghosts": [
-        { "y": 5, "x": 7 }
-    ]
-}</pre>
+                <pre>{% include 'default/rulesEndpointMoveRequestExample.html.twig' %}</pre>
             </div>
         </div>
 

@@ -8,6 +8,14 @@ body {
     color: #CCCCCC;
 }
 
+.bg-primary a {
+    color: #FFFFFF;
+}
+
+.bg-primary a:hover {
+    color: #CCCCCC;
+}
+
 /**********************************************************************************************************************/
 
 footer .text-footer-right {

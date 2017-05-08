@@ -1,0 +1,45 @@
+{
+    "<span class="text-danger">game</span>": {              <i class="text-muted">// Object - game data</i>
+        "<span class="text-danger">id</span>": uuid         <i class="text-muted">// Unified unique ID of the game</i>
+    },
+    "<span class="text-danger">player</span>": {            <i class="text-muted">// Object - player data</i>
+        "<span class="text-danger">id</span>": uuid,        <i class="text-muted">// Unified unique ID of the game</i>
+        "<span class="text-danger">name</span>": string,    <i class="text-muted">// The name ob the player or team</i>
+        "<span class="text-danger">position</span>": {      <i class="text-muted">// Object - current position of the player</i>
+            "<span class="text-danger">y</span>": int,
+            "<span class="text-danger">x</span>": int
+        },
+        "<span class="text-danger">previous</span>": {      <i class="text-muted">// Object - previous positions of the player</i>
+            "<span class="text-danger">y</span>": int,
+            "<span class="text-danger">x</span>": int
+        },
+        "<span class="text-danger">area</span>": {          <i class="text-muted">// Object - visible area for the player</i>
+            "<span class="text-danger">y1</span>": int,
+            "<span class="text-danger">x1</span>": int,
+            "<span class="text-danger">y2</span>": int,
+            "<span class="text-danger">x2</span>": int
+        }
+    },
+    "<span class="text-danger">maze</span>": {              <i class="text-muted">// Object - maze data</i>
+        "<span class="text-danger">size</span>": {          <i class="text-muted">// Object - Total size of the maze</i>
+            "<span class="text-danger">height</span>": int,
+            "<span class="text-danger">width</span>": int
+        },
+        "<span class="text-danger">goal</span>": {          <i class="text-muted">// Object - goal position</i>
+            "<span class="text-danger">y</span>": int,
+            "<span class="text-danger">x</span>": int
+        },
+        "<span class="text-danger">walls</span>": [         <i class="text-muted">// Array - visible walls</i>
+            {              <i class="text-muted">// Object - wall position</i>
+                "<span class="text-danger">y</span>": int,
+                "<span class="text-danger">x</span>": int
+            },
+        ]
+    },
+    "<span class="text-danger">ghosts</span>": [            <i class="text-muted">// Array - ghosts position</i>
+        {                  <i class="text-muted">// Object - ghost position</i>
+            "<span class="text-danger">y</span>": int,
+            "<span class="text-danger">x</span>": int
+        }
+    ]
+}

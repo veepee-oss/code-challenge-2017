@@ -71,12 +71,12 @@ class Ghost extends MazeObject
      */
     public function move(Position $position)
     {
-        $result = parent::move($position);
+        parent::move($position);
         if ($this->isNeutralTime()) {
             $this->neutralTime++;
         }
 
-        return $result;
+        return $this;
     }
 
     /**

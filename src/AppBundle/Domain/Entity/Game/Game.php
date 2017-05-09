@@ -357,4 +357,20 @@ class Game
         });
         return $players;
     }
+
+    /**
+     * Get the player number
+     *
+     * @param Player $player
+     * @return int
+     */
+    public function playerNum(Player $player)
+    {
+        foreach ($this->players as $index => $p) {
+            if ($player->uuid() == $p->uuid()) {
+                return 1 + $index;
+            }
+        }
+        return -1;
+    }
 }

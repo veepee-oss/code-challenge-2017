@@ -4,22 +4,28 @@
             <div class="panel panel-primary">
                 <div class="panel-body">
                     <p>
-                        {{ 'app.mazepage.texts.status' | trans }}: <strong class="text-info">{{ 'app.mazepage.texts.status-text' | transchoice(game.status) }}</strong>
+                        {{ 'app.mazepage.texts.status' | trans }}:
+                        <strong class="text-info">{{ 'app.mazepage.texts.status-text' | transchoice(game.status) }}</strong>
                     </p>
                     <p>
-                        {{ 'app.mazepage.texts.moves' | trans }}: <strong class="text-info">{{ game.moves }}</strong>
+                        {{ 'app.mazepage.texts.moves' | trans }}:
+                        <strong class="text-info">{{ game.moves }}</strong>
                     </p>
                     <p>
-                        {{ 'app.mazepage.texts.players' | trans }}: <strong class="text-info">{{ game.players | length }}</strong>
+                        {{ 'app.mazepage.texts.players' | trans }}:
+                        <strong class="text-info">{{ game.players | length }}</strong>
                     </p>
                     <p>
-                        {{ 'app.mazepage.texts.ghosts' | trans }}: <strong class="text-info">{{ game.ghosts | length }}</strong>
+                        {{ 'app.mazepage.texts.ghosts' | trans }}:
+                        <strong class="text-info">{{ game.ghosts | length }}</strong>
                     </p>
                     <p>
-                        {{ 'app.mazepage.texts.min-ghosts' | trans }}: <strong class="text-info">{{ game.minGhosts }}</strong>
+                        {{ 'app.mazepage.texts.min-ghosts' | trans }}:
+                        <strong class="text-info">{{ game.minGhosts }}</strong>
                     </p>
                     <p>
-                        {{ 'app.mazepage.texts.ghosts-rate' | trans }}: <strong class="text-info">{{ game.ghostRate }}</strong>
+                        {{ 'app.mazepage.texts.ghosts-rate' | trans }}:
+                        <strong class="text-info">{{ game.ghostRate }}</strong>
                     </p>
                 </div>
             </div>
@@ -34,7 +40,7 @@
                 <div class="panel-body">
                     {% for player in game.classification if player.winner %}
                         <p>
-                            {{ loop.index }}.
+                            {{ game.playerNum(player) }}.-
                             <span class="text-success">
                                 {{ player.name }}
                             </span>
@@ -53,9 +59,9 @@
                     </h3>
                 </div>
                 <div class="panel-body">
-                    {% for player in game.classification if player.dead %}
+                    {% for player in game.classification | reverse if player.dead %}
                         <p>
-                            {{ loop.index }}.
+                            {{ game.playerNum(player) }}.-
                             <span class="text-danger">
                                 {{ player.name }}
                             </span>
@@ -76,7 +82,7 @@
                 <div class="panel-body">
                     {% for player in game.classification if not player.winner and not player.dead %}
                         <p>
-                            {{ loop.index }}.
+                            {{ game.playerNum(player) }}.-
                             <span class="text-info">
                                 {{ player.name }}
                             </span>

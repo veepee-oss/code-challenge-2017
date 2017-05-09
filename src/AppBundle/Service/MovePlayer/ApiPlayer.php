@@ -115,7 +115,11 @@ class ApiPlayer implements AskNextMovementInterface, AskPlayerNameInterface
         );
 
         try {
-            $response = $this->httpClient->post($requestUrl, $requestHeaders, $requestBody)->send();
+            $options = array(
+                CURLOPT_CONNECTTIMEOUT  => 3,
+                CURLOPT_TIMEOUT         => 5
+            );
+            $response = $this->httpClient->post($requestUrl, $requestHeaders, $requestBody, $options)->send();
         } catch (HttpException $exc) {
             $this->logger->log(
                 $game ? $game->uuid() : 'temp',

@@ -66,6 +66,9 @@
                         $btnStart.attr('disabled', 'disabled');
                         $btnStop.attr('disabled', null);
                         refreshMaze();
+                    })
+                    .fail(function(jqXHR, textStatus, errorMessage) {
+                        alert('An error occurred on the server. ' + errorMessage);
                     });
             };
 
@@ -78,6 +81,9 @@
                         $btnStart.attr('disabled', null);
                         $btnStop.attr('disabled', 'disabled');
                         refreshMaze();
+                    })
+                    .fail(function(jqXHR, textStatus, errorMessage) {
+                        alert('An error occurred on the server. ' + errorMessage);
                     });
             };
 
@@ -90,6 +96,9 @@
                         $btnStart.attr('disabled', null);
                         $btnStop.attr('disabled', 'disabled');
                         refreshMaze();
+                    })
+                    .fail(function(jqXHR, textStatus, errorMessage) {
+                        alert('An error occurred on the server. ' + errorMessage);
                     });
             };
 
@@ -119,6 +128,10 @@
                                 $btnStart.attr('disabled', 'disabled');
                             }
                         }
+                    })
+                    .fail(function(jqXHR, textStatus, errorMessage) {
+                        alert('An error occurred refreshing the window. ' + errorMessage);
+                        location.reload();
                     });
             };
 

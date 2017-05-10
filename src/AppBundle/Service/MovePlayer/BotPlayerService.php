@@ -10,17 +10,17 @@ use AppBundle\Domain\Service\MovePlayer\MovePlayerException;
 use AppBundle\Domain\Service\MovePlayer\PlayerRequestInterface;
 
 /**
- * Class BotPlayer
+ * Class BotPlayerService
  *
  * @package AppBundle\Service\MovePlayer
  */
-class BotPlayer implements AskPlayerNameInterface, AskNextMovementInterface
+class BotPlayerService implements AskPlayerNameInterface, AskNextMovementInterface
 {
     /** @var PlayerRequestInterface */
     protected $playerRequest;
 
     /**
-     * BotPlayer constructor.
+     * BotPlayerService constructor.
      *
      * @param PlayerRequestInterface $playerRequest
      */
@@ -34,13 +34,13 @@ class BotPlayer implements AskPlayerNameInterface, AskNextMovementInterface
      *
      * @param Player $player
      * @param Game $game
-     * @return string The player name
+     * @return array['name', 'email'] The player name and email
      * @throws MovePlayerException
      */
     public function askPlayerName(Player $player, Game $game = null)
     {
         // TODO
-        return false;
+        return null;
     }
 
     /**

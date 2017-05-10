@@ -27,35 +27,50 @@ class ApiController extends Controller
     public function startAction()
     {
         $candidates = array(
-            'Darth Vader',
-            'Boba Feet',
-            'Han Solo',
-            'Luke Skaywalker',
-            'Leia Organa',
-            'Yoda',
-            'Bilbo Bolsón',
-            'Aragorn',
-            'Legolas',
-            'Gimly',
-            'Boromir',
-            'Saruman',
-            'Sauron',
-            'Tyrion Lanister',
-            'Jaime Lanister',
-            'Cersei Lanister',
-            'Ned Stark',
-            'Arya Stark',
-            'Sansa Stark',
-            'Jon Snow',
-            'Daenerys Targarian',
-            'Robert Baratheon',
-            'Stanis Baratheon',
-            'The Hound',
-            'The Mountain'
+            'Tyrion Lanister'       => 'the.imp@ifraktal.com',
+            'Jaime Lanister'        => 'kingslayer@ifraktal.com',
+            'Cersei Lanister'       => 'the.queen@ifraktal.com',
+            'Ned Stark'             => 'eddard.stark@ifraktal.com',
+            'Robb Stark'            => 'the-king-in-the-north@ifraktal.com',
+            'Sansa Stark'           => 'sansa.stark@ifraktal.com',
+            'Arya Stark'            => 'no-one@ifraktal.com',
+            'Brandon Stark'         => 'bran.stark@ifraktal.com',
+            'Rickon Stark'          => 'rickon.stark@ifraktal.com',
+            'Jon Snow'              => 'jon.snow@ifraktal.com',
+            'Daenerys Targarian'    => 'daenerys.targarian@ifraktal.com',
+            'Robert Baratheon'      => 'robert.the.king@ifraktal.com',
+            'Stanis Baratheon'      => 'stanis.baratheon@ifraktal.com',
+            'Joffrey Baratheon'     => 'joffreey.baratheon@ifraktal.com',
+            'Myrcella Baratheon'    => 'myrcella.baratheon@ifraktal.com',
+            'Tommem Baratheon'      => 'tommem.baratheon@ifraktal.com',
+            'Margaery Tyrell'       => 'i-want-to-be-the-queen@ifraktal.com',
+            'Loras Tyrell'          => 'the-night-of-the-flowers@ifraktal.com',
+            'Brienne of Tarth'      => 'brienne@ifraktal.com',
+            'Petyr Baelish'         => 'little-finger@ifraktal.com',
+            'Varys'                 => 'little-birds@ifraktal.com',
+            'Theon Grayjoy'         => 'thon.greyjoy@ifraktal.com',
+            'Ramsay Bolton'         => 'ramsay.snow@ifraktal.com',
+            'Sandor Clegane'        => 'the.hound@ifraktal.com',
+            'Gregor Clegane'        => 'the.mountain@ifraktal.com',
+            'Khal Drogo'            => 'khal.drogo@ifraktal.com',
+            'Hodor'                 => 'hodor@ifraktal.com',
+            'Bronn'                 => 'mercenary@ifraktal.com',
+            'Jorah Mormond'         => 'jorah.mormond@ifraktal.com',
+            'Grey Worm'             => 'grey.work@ifraktal.com',
+            'Lady Melisandre'       => 'melisandre@ifraktal.com',
+            'Davos Seaworth'        => 'davos.seaworth@ifraktal.com',
+            'Ygritte'               => 'ygritte@ifraktal.com',
+            'Mance Raider'          => 'the-king-beyond-the-wall@ifraktal.com'
         );
 
+        $names = array_keys($candidates);
+        $index = rand(0, count($candidates) - 1);
+        $name = $names[$index];
+        $email = $candidates[$name];
+
         return new JsonResponse(array(
-            'name' => $candidates[rand(0, count($candidates) - 1)]
+            'name'  => $name,
+            'email' => $email
         ));
     }
 

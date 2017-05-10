@@ -43,14 +43,15 @@ services:
             - 2: "@app.player.move.bot"
 
     app.player.move.api:
-        class: AppBundle\Service\MovePlayer\ApiPlayer
+        class: AppBundle\Service\MovePlayer\ApiPlayerService
         arguments:
             - "@davamigo.http.client"
             - "@app.player.request_data"
+            - "@validator"
             - "@app.logger"
 
     app.player.move.bot:
-        class: AppBundle\Service\MovePlayer\BotPlayer
+        class: AppBundle\Service\MovePlayer\BotPlayerService
         arguments:
             - "@app.player.request_data"
 

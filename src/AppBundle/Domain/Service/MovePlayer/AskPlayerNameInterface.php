@@ -17,7 +17,7 @@ interface AskPlayerNameInterface
      *
      * @param Player $player
      * @param Game $game
-     * @return string The player name
+     * @return array['name', 'email'] The player name and email
      * @throws MovePlayerException
      */
     public function askPlayerName(Player $player, Game $game = null);

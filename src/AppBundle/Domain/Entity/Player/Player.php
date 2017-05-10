@@ -37,6 +37,9 @@ class Player extends MazeObject
     /** @var string */
     protected $name;
 
+    /** @var string */
+    protected $email;
+
     /**
      * Player constructor.
      *
@@ -47,6 +50,7 @@ class Player extends MazeObject
      * @param \DateTime $timestamp
      * @param string $uuid
      * @param string $name
+     * @param string $email
      */
     public function __construct(
         $type,
@@ -55,7 +59,8 @@ class Player extends MazeObject
         $status = null,
         \DateTime $timestamp = null,
         $uuid = null,
-        $name = null
+        $name = null,
+        $email = null
     ) {
         parent::__construct($position, $previous);
         $this->type = $type;
@@ -63,6 +68,7 @@ class Player extends MazeObject
         $this->timestamp = $timestamp ?: new \DateTime();
         $this->uuid = $uuid ?: Uuid::v4();
         $this->name = $name ?: $this->uuid;
+        $this->email = $email;
     }
 
     /**
@@ -114,14 +120,24 @@ class Player extends MazeObject
     }
 
     /**
+     * @return string
+     */
+    public function email()
+    {
+        return $this->email;
+    }
+
+    /**
      * Sets the name of the player
      *
      * @param string $name
+     * @param string $email
      * @return $this
      */
-    public function setName($name)
+    public function setPlayerIds($name, $email)
     {
         $this->name = $name;
+        $this->email = $email;
         return $this;
     }
 
@@ -198,7 +214,8 @@ class Player extends MazeObject
             'status' => $this->status(),
             'timestamp' => $this->timestamp()->format('YmdHisu'),
             'uuid' => $this->uuid(),
-            'name' => $this->name()
+            'name' => $this->name(),
+            'email' => $this->email()
         );
     }
 
@@ -217,7 +234,8 @@ class Player extends MazeObject
             isset($data['status']) ? $data['status'] : null,
             isset($data['timestamp']) ? \DateTime::createFromFormat('YmdHisu', $data['timestamp']) : null,
             isset($data['uuid']) ? $data['uuid'] : null,
-            isset($data['name']) ? $data['name'] : null
+            isset($data['name']) ? $data['name'] : null,
+            isset($data['email']) ? $data['email'] : null
         );
     }
 }

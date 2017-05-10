@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Domain\Entity\Game\Game;
 use AppBundle\Domain\Entity\Player\ApiPlayer;
+use AppBundle\Domain\Service\MovePlayer\MovePlayerException;
 use AppBundle\Form\CreateGame\GameEntity;
 use AppBundle\Form\CreateGame\GameForm;
 use AppBundle\Form\CreateGame\PlayerEntity;
@@ -96,18 +97,23 @@ class GameController extends Controller
             $errors = false;
             $players = array();
             for ($pos = 0; $pos < $gameEntity->getPlayerNum(); $pos++) {
-                $player = new ApiPlayer($gameEntity->getPlayerAt($pos)->getUrl(), $maze->start());
-                if ($playerValidator->validatePlayer($player, null)) {
-                    $players[] = $player;
-                } else {
-                    $message = $this->get('translator')->trans(
-                        'app.form.game.player.invalid-url',
-                        array(
-                            '%url%' => $player->url()
-                        ),
-                        'validators'
-                    );
-                    $form->get('players')->addError(new FormError($message));
+                try {
+                    $player = new ApiPlayer($gameEntity->getPlayerAt($pos)->getUrl(), $maze->start());
+                    if ($playerValidator->validatePlayer($player, null)) {
+                        $players[] = $player;
+                    } else {
+                        $message = $this->get('translator')->trans(
+                            'app.form.game.player.invalid-url',
+                            array(
+                                '%url%' => $player->url()
+                            ),
+                            'validators'
+                        );
+                        $form->get('players')->addError(new FormError($message));
+                        $errors = true;
+                    }
+                } catch (MovePlayerException $exc) {
+                    $form->get('players')->addError(new FormError($exc->getMessage()));
                     $errors = true;
                 }
             }

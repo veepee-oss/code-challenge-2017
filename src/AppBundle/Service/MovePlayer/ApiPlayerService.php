@@ -3,6 +3,7 @@
 namespace AppBundle\Service\MovePlayer;
 
 use AppBundle\Domain\Entity\Game\Game;
+use AppBundle\Domain\Entity\Player\ApiPlayer;
 use AppBundle\Domain\Entity\Player\Player;
 use AppBundle\Domain\Service\LoggerService\LoggerServiceInterface;
 use AppBundle\Domain\Service\MovePlayer\AskNextMovementInterface;
@@ -11,13 +12,15 @@ use AppBundle\Domain\Service\MovePlayer\MovePlayerException;
 use AppBundle\Domain\Service\MovePlayer\PlayerRequestInterface;
 use Davamigo\HttpClient\Domain\HttpClient;
 use Davamigo\HttpClient\Domain\HttpException;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
- * Class ApiPlayer
+ * Class ApiPlayerService
  *
  * @package AppBundle\Service\MovePlayer
  */
-class ApiPlayer implements AskNextMovementInterface, AskPlayerNameInterface
+class ApiPlayerService implements AskNextMovementInterface, AskPlayerNameInterface
 {
     /** @var HttpClient */
     protected $httpClient;
@@ -25,11 +28,14 @@ class ApiPlayer implements AskNextMovementInterface, AskPlayerNameInterface
     /** @var PlayerRequestInterface */
     protected $playerRequest;
 
+    /** @var ValidatorInterface */
+    protected $validator;
+
     /** @var LoggerServiceInterface */
     protected $logger;
 
     /**
-     * ApiPlayer constructor.
+     * ApiPlayerService constructor.
      *
      * @param HttpClient $httpClient
      * @param PlayerRequestInterface $playerRequest
@@ -38,10 +44,12 @@ class ApiPlayer implements AskNextMovementInterface, AskPlayerNameInterface
     public function __construct(
         HttpClient $httpClient,
         PlayerRequestInterface $playerRequest,
+        ValidatorInterface $validator,
         LoggerServiceInterface $logger
     ) {
         $this->httpClient = $httpClient;
         $this->playerRequest = $playerRequest;
+        $this->validator = $validator;
         $this->logger = $logger;
     }
 
@@ -50,19 +58,56 @@ class ApiPlayer implements AskNextMovementInterface, AskPlayerNameInterface
      *
      * @param Player $player
      * @param Game $game
-     * @return string The player name
+     * @return array['name', 'email'] The player name and email
      * @throws MovePlayerException
      */
     public function askPlayerName(Player $player, Game $game = null)
     {
+        if (!$player instanceof ApiPlayer) {
+            throw new MovePlayerException(
+                'The $player object must be an instance of \AppBundle\Domain\Entity\Player\ApiPlayer'
+            );
+        }
+
+        // Call to the REST API
         $responseData = $this->callToApi($player, $game, 'name', null);
-        if (!isset($responseData['name'])) {
-            $message = 'Invalid API response! Player: ' . $player->name();
+        if (!$responseData['name'] || !isset($responseData['name'])) {
+            $message = 'Invalid API response! ';
+            $message .= PHP_EOL . 'Message: Empty response.';
+            $message .= PHP_EOL . 'URL: ' . $player->url();
             throw new MovePlayerException($message);
         }
 
-        $name = $responseData['name'];
-        return $name;
+        // Extract the data from the response
+        $name = isset($responseData['name']) ? $responseData['name'] : null;
+        $email = isset($responseData['email']) ? $responseData['email'] : null;
+
+        // Constraints definition
+        $notBlankConstraint = new Assert\NotBlank();
+        $emailConstraint = new Assert\Email();
+
+        // Use the validator to validate the name
+        $errorList = $this->validator->validate($name, $notBlankConstraint);
+        if (0 !== count($errorList)) {
+            $message = 'Invalid API response! ';
+            $message .= PHP_EOL . 'Message: Name is required.';
+            $message .= PHP_EOL . 'URL: ' . $player->url();
+            throw new MovePlayerException($message);
+        }
+
+        // Use the validator to validate the email
+        $errorList = $this->validator->validate($email, array($notBlankConstraint, $emailConstraint));
+        if (0 !== count($errorList)) {
+            $message = 'Invalid API response! ';
+            $message .= PHP_EOL . 'Message: Valid email is required.';
+            $message .= PHP_EOL . 'URL: ' . $player->url();
+            throw new MovePlayerException($message);
+        }
+
+        return array(
+            'name' => $responseData['name'],
+            'email' => $responseData['email']
+        );
     }
 
     /**
@@ -75,6 +120,12 @@ class ApiPlayer implements AskNextMovementInterface, AskPlayerNameInterface
      */
     public function askNextMovement(Player $player, Game $game = null)
     {
+        if (!$player instanceof ApiPlayer) {
+            throw new MovePlayerException(
+                'The $player object must be an instance of \AppBundle\Domain\Entity\Player\ApiPlayer'
+            );
+        }
+
         $request = $this->playerRequest->create($player, $game);
 
         $responseData = $this->callToApi($player, $game, 'move', $request);
@@ -90,21 +141,15 @@ class ApiPlayer implements AskNextMovementInterface, AskPlayerNameInterface
     /**
      * Calls to the API
      *
-     * @param Player $player
+     * @param ApiPlayer $player
      * @param Game $game
      * @param string $function
      * @param string $requestBody
      * @return array The read data
      * @throws MovePlayerException
      */
-    private function callToApi(Player $player, Game $game = null, $function = null, $requestBody = null)
+    private function callToApi(ApiPlayer $player, Game $game = null, $function = null, $requestBody = null)
     {
-        if (!$player instanceof \AppBundle\Domain\Entity\Player\ApiPlayer) {
-            throw new MovePlayerException(
-                'The $player object must be an instance of \AppBundle\Domain\Entity\Player\ApiPlayer'
-            );
-        }
-
         $requestUrl = $player->url();
         if ($function) {
             $requestUrl .= '/' . $function;;

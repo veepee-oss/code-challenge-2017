@@ -154,7 +154,7 @@ class GameController extends Controller
     }
 
     /**
-     * View Game
+     * View Game (Maze & Panels)
      *
      * @Route("/{uuid}/view", name="game_view",
      *     requirements={"uuid": "[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}"})
@@ -176,6 +176,62 @@ class GameController extends Controller
         $maze = $renderer->render($game);
 
         return $this->render(':game:view.html.twig', array(
+            'game' => $game,
+            'maze' => $maze
+        ));
+    }
+
+    /**
+     * View Game Maze
+     *
+     * @Route("/{uuid}/view/maze", name="game_view_maze",
+     *     requirements={"uuid": "[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}"})
+     *
+     * @param string $uuid
+     * @return Response
+     */
+    public function viewMazeAction($uuid)
+    {
+        $this->checkDaemon();
+
+        /** @var \AppBundle\Entity\Game $entity */
+        $entity = $this->getDoctrine()->getRepository('AppBundle:Game')->findOneBy(array(
+            'uuid' => $uuid
+        ));
+
+        $renderer = $this->get('app.maze.renderer');
+        $game = $entity->toDomainEntity();
+        $maze = $renderer->render($game);
+
+        return $this->render(':game:maze.html.twig', array(
+            'game' => $game,
+            'maze' => $maze
+        ));
+    }
+
+    /**
+     * View Game Panels
+     *
+     * @Route("/{uuid}/view/panels", name="game_view_panels",
+     *     requirements={"uuid": "[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}"})
+     *
+     * @param string $uuid
+     * @return Response
+     */
+    public function viewPanelsAction($uuid)
+    {
+        $this->checkDaemon();
+
+        /** @var \AppBundle\Entity\Game $entity */
+        $entity = $this->getDoctrine()->getRepository('AppBundle:Game')->findOneBy(array(
+            'uuid' => $uuid
+        ));
+
+        $renderer = $this->get('app.maze.renderer');
+        $game = $entity->toDomainEntity();
+        $maze = $renderer->render($game);
+
+        return $this->render(':game:panels.html.twig', array(
             'game' => $game,
             'maze' => $maze
         ));

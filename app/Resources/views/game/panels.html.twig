@@ -3,20 +3,14 @@
 {% block content %}
     <div class="js-game" data-url="{{ url('game_refresh', { 'uuid': game.uuid }) }}">
 
-        <div class="js-maze">
-            {% include ':game:viewMaze.html.twig' with { 'game': game, 'maze': maze } %}
-        </div>
-
-        <hr>
-
-        <div class="js-buttons">
-            {% include ':game:viewButtons.html.twig' with { 'game': game } %}
-        </div>
-
-        <hr>
+        <p></p>
 
         <div class="js-panels">
             {% include ':game:viewPanels.html.twig' with { 'game': game, 'maze': maze } %}
+        </div>
+
+        <div class="hidden js-buttons">
+            {% include ':game:viewButtons.html.twig' with { 'game': game } %}
         </div>
 
     </div>

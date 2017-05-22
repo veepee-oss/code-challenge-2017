@@ -25,6 +25,7 @@ class ApiPlayer extends Player
      * @param \DateTime $timestamp
      * @param string $uuid
      * @param string $name
+     * @param string $email
      */
     public function __construct(
         $url,
@@ -33,9 +34,10 @@ class ApiPlayer extends Player
         $status = null,
         \DateTime $timestamp = null,
         $uuid = null,
-        $name = null
+        $name = null,
+        $email = null
     ) {
-        parent::__construct(parent::TYPE_API, $position, $previous, $status, $timestamp, $uuid, $name);
+        parent::__construct(parent::TYPE_API, $position, $previous, $status, $timestamp, $uuid, $name, $email);
         $this->url = $url;
     }
 
@@ -76,7 +78,8 @@ class ApiPlayer extends Player
             isset($data['status']) ? $data['status'] : null,
             isset($data['timestamp']) ? \DateTime::createFromFormat('YmdHisu', $data['timestamp']) : null,
             isset($data['uuid']) ? $data['uuid'] : null,
-            isset($data['name']) ? $data['name'] : null
+            isset($data['name']) ? $data['name'] : null,
+            isset($data['email']) ? $data['email'] : null
         );
     }
 }

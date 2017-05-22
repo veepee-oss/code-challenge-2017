@@ -8,6 +8,11 @@
         {{ 'app.adminpage.texts.players' | transchoice(game.players | length, { '%players%' : game.players | length }) }}
     </div>
     <div class="col-sm-2 col-xs-4 text-right">
+        <a
+            class="btn btn-xs btn-info js-btn-show"
+            href="{{ url('game_view_details', { 'uuid': game.uuid }) }}">
+            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+        </a>
         <button
             class="btn btn-xs btn-danger js-btn-remove"
             data-url="{{ url('game_remove', { 'uuid': game.uuid }) }}"

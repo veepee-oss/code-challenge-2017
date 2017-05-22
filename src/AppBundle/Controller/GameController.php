@@ -238,6 +238,29 @@ class GameController extends Controller
     }
 
     /**
+     * View Game Details
+     *
+     * @Route("/{uuid}/view/details", name="game_view_details",
+     *     requirements={"uuid": "[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}"})
+     *
+     * @param string $uuid
+     * @return Response
+     */
+    public function viewDetailsAction($uuid)
+    {
+        /** @var \AppBundle\Entity\Game $entity */
+        $entity = $this->getDoctrine()->getRepository('AppBundle:Game')->findOneBy(array(
+            'uuid' => $uuid
+        ));
+
+        $game = $entity->toDomainEntity();
+
+        return $this->render(':game:details.html.twig', array(
+            'game' => $game
+        ));
+    }
+
+    /**
      * View only maze
      *
      * @Route("/{uuid}/refresh", name="game_refresh",
@@ -277,34 +300,6 @@ class GameController extends Controller
         );
 
         return new JsonResponse($data);
-    }
-
-    /**
-     * Shows game panels
-     *
-     * @Route("/{uuid}/panels", name="game_panels",
-     *     requirements={"uuid": "[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}"})
-     *
-     * @param string $uuid
-     * @return Response
-     */
-    public function panelsAction($uuid)
-    {
-        $this->checkDaemon();
-
-        /** @var \AppBundle\Entity\Game $entity */
-        $entity = $this->getDoctrine()->getRepository('AppBundle:Game')->findOneBy(array(
-            'uuid' => $uuid
-        ));
-
-        $renderer = $this->get('app.maze.renderer');
-        $game = $entity->toDomainEntity();
-        $maze = $renderer->render($game);
-
-        return $this->render(':game:viewPanels.html.twig', array(
-            'game' => $game,
-            'maze' => $maze
-        ));
     }
 
     /**

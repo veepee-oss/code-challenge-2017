@@ -1,0 +1,94 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'app.adminpage.title' | trans }} - {{ parent() }}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="page-header">
+            <h1>
+                {{ 'app.detailspage.title' | trans }}
+                <small>
+                    {{ 'app.global.title' | trans }}
+                </small>
+            </h1>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-6">
+                <dl>
+                    <dt class="small">UUID:</dt>
+                    <dd class="text-info">{{ game.uuid }}</dd>
+
+                    <dt class="small">Name:</dt>
+                    <dd class="text-info">{{ game.name }}</dd>
+
+                    <dt class="small">Size:</dt>
+                    <dd class="text-info">{{ game.height }} x {{ game.width }}</dd>
+
+                    <dt class="small">Players:</dt>
+                    <dd class="text-info">{{ game.players | length }}</dd>
+
+                    <dt class="small">Ghosts:</dt>
+                    <dd class="text-info">{{ game.ghosts | length }}</dd>
+
+                    <dt class="small">Ghost rate:</dt>
+                    <dd class="text-info">{{ game.ghostRate }}</dd>
+
+                    <dt class="small">Min. ghost:</dt>
+                    <dd class="text-info">{{ game.minGhosts }}</dd>
+
+                    <dt class="small">Moves:</dt>
+                    <dd class="text-info">{{ game.moves }}</dd>
+
+                    <dt class="small">Status:</dt>
+                    <dd class="text-info">{{ 'app.mazepage.texts.status-text' | transchoice(game.status) }}</dd>
+                </dl>
+            </div>
+            <div class="col-xs-6">
+                {% for player in game.players %}
+                    <dl>
+                        <dt class="small">Num:</dt>
+                        <dd class="text-info">{{ game.playerNum(player) }}</dd>
+
+                        <dt class="small">Id:</dt>
+                        <dd class="text-info">{{ player.uuid }}</dd>
+
+                        <dt class="small">Name:</dt>
+                        <dd class="text-info">{{ player.name }}</dd>
+
+                        <dt class="small">E-mail:</dt>
+                        <dd class="text-info">
+                            {% if player.email is empty %}
+                                &ndash;
+                            {% else %}
+                                <a href="mailto: {{ player.email }}">
+                                    {{ player.email }}
+                                </a>
+                            {% endif %}
+                        </dd>
+
+                        <dt class="small">Endpoint (URL):</dt>
+                        <dd class="text-info">
+                            <a target="_blank" href="{{ player.url }}/name">
+                                {{ player.url }}
+                            </a>
+                        </dd>
+
+                        <dt class="small">Status:</dt>
+                        <dd>
+                            {% if player.winner %}
+                                <span class="text-success">Winner</span>
+                            {% elseif player.dead %}
+                                <span class="text-danger">Dead</span>
+                            {% else %}
+                                <span class="text-info">Playing</span>
+                            {% endif %}
+                        </dd>
+                    </dl>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

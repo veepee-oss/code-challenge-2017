@@ -85,5 +85,8 @@ app:
             restart:        "Restart daemon"
             create:         "Create game"
 
+    detailspage:
+        title:          "Game Details"
+
     credits:
         title:          "Credits and Attributions"

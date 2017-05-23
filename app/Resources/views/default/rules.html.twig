@@ -125,7 +125,7 @@
                 API Documentation
             </h2>
             <p>
-                Players are simple REST APIs with two endpoints:
+                Players are simple REST APIs with <strong>two endpoints</strong>:
             </p>
             <ul>
                 <li>
@@ -144,10 +144,15 @@
                 Name Endpoint
             </h3>
             <p>
-                Your <code>/name</code> URL API will receive a POST request without body.
+                Your <code>/name</code> URL API will receive a <strong>POST</strong> request without body.
                 Reply with JSON format indicating the <strong>name</strong> of the player or team and the contact
                 <strong>email</strong>.
             </p>
+
+            <h4>
+                Request format
+            </h4>
+            <pre>{% include 'default/rulesEndpointNameRequest.html.twig' %}</pre>
 
             <h4>
                 Response format
@@ -201,6 +206,10 @@
                     Example of request
                 </h3>
                 <pre>{% include 'default/rulesEndpointMoveRequestExample.html.twig' %}</pre>
+                <h3>
+                    Example of response
+                </h3>
+                <pre>{% include 'default/rulesEndpointMoveResponseExample.html.twig' %}</pre>
             </div>
         </div>
 

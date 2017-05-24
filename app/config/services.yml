@@ -7,3 +7,66 @@ services:
 #    service_name:
 #        class: AppBundle\Directory\ClassName
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+
+    davamigo.http.client:
+        class: Davamigo\HttpClient\CurlHttpClient\CurlHttpClient
+
+    app.maze.builder:
+        class: AppBundle\Domain\Service\MazeBuilder\MazeBuilderRecursiveDivision
+
+    app.maze.renderer:
+        class: AppBundle\Domain\Service\MazeRender\MazeIconRender
+
+    app.game.engine:
+        class: AppBundle\Domain\Service\GameEngine\GameEngine
+        arguments:
+            - "@app.player.move.service"
+            - "@app.ghost.move.factory"
+
+    app.game.engine.daemon:
+        class: AppBundle\Service\GameEngine\GameEngineDaemon
+
+    app.player.move.service:
+        class: AppBundle\Domain\Service\MovePlayer\MovePlayer
+        arguments:
+            - "@app.player.move.factory"
+
+    app.player.validate.service:
+        class: AppBundle\Domain\Service\MovePlayer\ValidatePlayer
+        arguments:
+            - "@app.player.move.factory"
+
+    app.player.move.factory:
+        class: AppBundle\Domain\Service\MovePlayer\MovePlayerFactory
+        arguments:
+            - 1: "@app.player.move.api"
+            - 2: "@app.player.move.bot"
+
+    app.player.move.api:
+        class: AppBundle\Service\MovePlayer\ApiPlayerService
+        arguments:
+            - "@davamigo.http.client"
+            - "@app.player.request_data"
+            - "@validator"
+            - "@app.logger"
+
+    app.player.move.bot:
+        class: AppBundle\Service\MovePlayer\BotPlayerService
+        arguments:
+            - "@app.player.request_data"
+
+    app.player.request_data:
+        class: AppBundle\Domain\Service\MovePlayer\PlayerRequest
+
+    app.ghost.move.factory:
+        class: AppBundle\Domain\Service\MoveGhost\MoveGhostFactory
+        arguments:
+            - 1: "@app.ghost.move.random"
+
+    app.ghost.move.random:
+        class: AppBundle\Domain\Service\MoveGhost\MoveGhostRandom
+
+    app.logger:
+        class: AppBundle\Service\LoggerService\LoggerService
+        arguments:
+            - "@doctrine.orm.entity_manager"

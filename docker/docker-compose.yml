@@ -2,23 +2,52 @@ version: '2'
 services:
 
     # See: docker/Dockerfile
-    code_challenge_service:
+    code_challenge_server:
         build: .
 
-        container_name: docker_code_challenge_service
+        restart: always
+
+        container_name: docker_code_challenge_server
 
         environment:
-            # XDEBUG_CONFIG: remote_host={{ HOST_IP }}
-            APP_ENV: dev
+            APACHE_RUN_USER: david
+            APACHE_RUN_GROUP: david
 
         ports:
             - "8080:80"
-            - "2222:22"
 
         volumes:
-            - ../.:/var/www
+            - "../.:/var/www/html"
 
-        extra_hosts:
-            - "toran.privalia.pin:172.16.50.64"
+        networks:
+            - code_challenge_network
 
-        network_mode: "bridge"
+        links:
+            - code_challenge_mysql
+
+    # See: https://hub.docker.com/_/mysql
+    code_challenge_mysql:
+        image: mysql:5.7
+
+        restart: always
+
+        container_name: docker_code_challenge_mysql
+
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: code_challenge_db
+            MYSQL_USER: code_challenge_user
+            MYSQL_PASSWORD: code_challenge_pass
+
+        ports:
+            - "3307:3306"
+
+        volumes:
+            - "../var/docker/mysql:/var/lib/mysql"
+
+        networks:
+            - code_challenge_network
+
+networks:
+    code_challenge_network:
+        driver: bridge

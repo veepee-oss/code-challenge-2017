@@ -1,0 +1,62 @@
+<div class="container">
+    <div class="maze-buttons">
+        <button
+            type="button"
+            {% if game.status != constant('AppBundle\\Domain\\Entity\\Game\\Game::STATUS_NOT_STARTED') %}
+                disabled="disabled"
+            {% endif %}
+            class="btn btn-success js-btn-start"
+            data-url="{{ url('game_start', { 'uuid': game.uuid }) }}">
+            <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+            {{ 'app.gamepage.buttons.start' | trans }}
+        </button>
+
+        &nbsp;
+
+        <button
+            type="button"
+            {% if game.status != constant('AppBundle\\Domain\\Entity\\Game\\Game::STATUS_RUNNING') %}
+                disabled="disabled"
+            {% endif %}
+            class="btn btn-danger js-btn-stop"
+            data-url="{{ url('game_stop', { 'uuid': game.uuid }) }}">
+            <span class="glyphicon glyphicon-stop" aria-hidden="true"></span>
+            {{ 'app.gamepage.buttons.stop' | trans }}
+        </button>
+
+        &nbsp;
+
+        <button
+            type="button"
+            class="btn btn-warning js-btn-reset"
+            data-url="{{ url('game_reset', { 'uuid': game.uuid }) }}">
+            <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span>
+            {{ 'app.gamepage.buttons.reset' | trans }}
+        </button>
+
+        &nbsp;
+
+        <div class="btn-group">
+            <button
+                type="button"
+                class="btn btn-default dropdown-toggle"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false">
+                <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                {{ 'app.gamepage.buttons.download' | trans }}
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                {% for player in game.players %}
+                    <li>
+                        <a href="{{ url('player_download', {'guuid': game.uuid, 'puuid': player.uuid }) }}">
+                            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                            {{ player.name }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,92 @@
+# messages.en.yml
+app:
+    global:
+        name:           "Maze Escape"
+        title:          "Privalia Code Challenge 2017"
+        description:    "Maze Escape is the title of the Privalia Code Challenge 2017"
+        author:         "david.amigo@privalia.com"
+
+    homepage:
+        title:          "Homepage"
+
+        upper-text:
+            1:              "The 2017 event of the <strong>Privalia Code Challenge</strong> is called <strong>Maze Escape Code Challenge</strong>!"
+            2:              "The goal is easy: You have to create a bot to <strong>escape from a labyrinth</strong>."
+
+        lower-text:
+            1:              "Your bot will be trapped in a maze and is expected to find its way out competing with the other player bots in a real time challenge."
+            2:              "All the bots will start at the same random position and they won't be visible to each other."
+            3:              "The first bot to find its way out of the maze wins the game."
+
+        rules:          "See the rules"
+        create:         "Create test game"
+
+    rulespage:
+        title:          "Rules"
+
+    createpage:
+        title:          "Create new game"
+
+        form:
+            height:         "Height of the maze"
+            width:          "Width of the maze"
+            player-num:     "Number of players (1 to 20)"
+            min-ghosts:     "Minimum number of ghosts)"
+            ghost-rate:     "Movements to create a new ghost (0 for no ghosts al all)"
+            url:            "URL"
+            name-optional:  "Game name (optional)"
+            next:           "Next step"
+            create:         "Create game"
+
+    gamepage:
+        buttons:
+            start:          "Start game"
+            stop:           "Stop game"
+            reset:          "Reset game"
+            download:       "Download log"
+
+    mazepage:
+        texts:
+            status:         "Status"
+            moves:          "Moves"
+            players:        "Players"
+            ghosts:         "Ghosts"
+            min-ghosts:     "Min. ghosts"
+            ghosts-rate:    "Ghost rate"
+            status-text:    "{0} Not started|{1} Playing|{9}Finished"
+            winners:        "Winners"
+            dead:           "Dead players"
+            player-list:    "Player list"
+            no-winners:     "No winners yet!"
+            no-dead:        "No dead players yet!"
+            no-players:     "No remaining players!"
+
+    adminpage:
+        title:          "Game administration"
+
+        texts:
+            process-id:     "Daemon process"
+            not-running:    "Not running"
+            daemon-actions: "Daemon Actions"
+            other-actions:  "Other Actions"
+            height:         "Height: %height%"
+            width:          "Width: %width%"
+            players:        "{0} No players|{1} One player|]1,Inf[ Players: %players%"
+            ask-remove:     "Remove %uuid%?"
+            games:
+                not-started:    "Not started games"
+                running:        "Running games"
+                finished:       "Finished games"
+                none:           "No games found!"
+
+        buttons:
+            start:          "Start daemon"
+            stop:           "Stop daemon"
+            restart:        "Restart daemon"
+            create:         "Create game"
+
+    detailspage:
+        title:          "Game Details"
+
+    credits:
+        title:          "Credits and Attributions"

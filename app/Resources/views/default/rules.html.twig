@@ -1,0 +1,309 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'app.rulespage.title' | trans }} - {{ parent() }}{% endblock %}
+
+{% block content %}
+    <div class="bg-primary">
+        <div class="container text-justify">
+            <h1>
+                {{ 'app.rulespage.title' | trans }}
+                <small>
+                    {{ 'app.global.title' | trans }}
+                </small>
+            </h1>
+            <p class="lead">
+                The idea is quite simple: <strong>You have to create a <a href="#api-documentation">REST API</a>
+                to escape from a labyrinth</strong> before the other players escape. You will know the size of the
+                labyrinth, the position of your character and some other data, but you won't see the entire labyrinth.
+                The game engine will call your API, sending the current conditions, and your API will have to response
+                with your next move: <strong>up</strong>, <strong>down</strong>, <strong>left</strong> or
+                <strong>right</strong>.
+            </p>
+        </div>
+    </div>
+
+    <div class="bg-success">
+        <div class="container text-justify">
+            <h2>
+                The game
+            </h2>
+            <div class="row">
+                <div class="col-sm-12 col-md-6">
+                    <p>
+                        <img class="img-responsive" src="{{ asset('images/full-maze01.png') }}">
+                    </p>
+                </div>
+                <div class="col-sm-12 col-md-6">
+                    <div class="row">
+                        <div class="col-xs-2">
+                            <p>
+                                <img class="img-responsive" src="{{ asset('images/maze-player1-right.png') }}">
+                            </p>
+                        </div>
+                        <div class="col-xs-10">
+                            <p>
+                                The <strong>Player</strong>, also named <strong>Pacman</strong> is the character moved
+                                by the <a href="#api-documentation">player's API REST</a>. The game can manage up to 20
+                                players concurrently.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-2">
+                            <p>
+                                <img class="img-responsive" src="{{ asset('images/maze-ghost.png') }}">
+                            </p>
+                        </div>
+                        <div class="col-xs-10">
+                            <p>
+                                A <strong>ghost</strong> can kill a player. The ghosts move randomly by the maze.
+                                The number of ghosts in the game and the spawn frequency can be configured and changes
+                                from game to game.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-2">
+                            <p>
+                                <img class="img-responsive" src="{{ asset('images/maze-ghost-neutral.png') }}">
+                            </p>
+                        </div>
+                        <div class="col-xs-10">
+                            <p>
+                                When a new ghost is born, he is a <strong>neutral ghost</strong> for 5 movements.
+                                A neutral ghost can't kill a players. After 5 movements a neutral ghost becomes a
+                                normal ghost.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-2">
+                            <p>
+                                <img class="img-responsive" src="{{ asset('images/maze-killed1.png') }}">
+                            </p>
+                        </div>
+                        <div class="col-xs-10">
+                            <p>
+                                When a player is killed, it's <strong>tombstone</strong> remains in the place where
+                                he was killed.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-2">
+                            <p>
+                                <img class="img-responsive" src="{{ asset('images/maze-start.png') }}">
+                            </p>
+                        </div>
+                        <div class="col-xs-10">
+                            <p>
+                                All the players begin from the same <strong>starting point</strong>.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-2">
+                            <p>
+                                <img class="img-responsive" src="{{ asset('images/maze-goal.png') }}">
+                            </p>
+                        </div>
+                        <div class="col-xs-10">
+                            <p>
+                                When a player reaches the <strong>goal</strong>, he wins the game.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-danger">
+        <div class="container text-justify">
+            <div class="row">
+                <div class="col-xm-12 col-md-8">
+                    <h2>
+                        Rules
+                    </h2>
+                    <h3>
+                        Basics
+                    </h3>
+                    <ul>
+                        <li>
+                            The <strong>Code Challenge 2107</strong> is a programming competition.
+                        </li>
+                        <li>
+                            It's opened to <strong>all Privalia employees</strong> particularly those ones in the IT department.
+                        </li>
+                        <li>
+                            The required <strong>programming level</strong> to participate is high.
+                        </li>
+                    </ul>
+                    <h3>
+                        Join
+                    </h3>
+                    <ul>
+                        <li>
+                            To join the challenge you'll need to <strong>upload your API to your own Internet server</strong>.
+                        </li>
+                        <li>
+                            Your API have to be <strong>acesible</strong> from the game server throught an URL or IP address.
+                        </li>
+                        <li>
+                            No support will be given to create the API or upload to a server.
+                        </li>
+                        <li>
+                            Then you'll have to <strong>send your API URL</strong> to
+                            <a href="mailto:david.amigo@privalia.com">david.amigo@privalia.com</a>.
+                        </li>
+                    </ul>
+                    <h3>
+                        Dates
+                    </h3>
+                    <ul>
+                        <li>
+                            <strong>May 26<sup>th</sup></strong> to <strong>June 8<sup>th</sup></strong>: Develop you APIs.
+                        </li>
+                        <li>
+                            <strong>June 9<sup>th</sup></strong> Competition at Privalia office (upstairs).
+                        </li>
+                    </ul>
+                    <h3>
+                        Prizes
+                    </h3>
+                    <ul>
+                        <li>
+                            A t-shirt for all participants who send a valid API.
+                        </li>
+                        <li>
+                            Three special prizes for the bests.
+                        </li>
+                    </ul>
+                    <h3>
+                        Competition format
+                    </h3>
+                    <ul>
+                        <li>
+                            The Competition format will depend on <strong>the number of participants</strong>.
+                        </li>
+                        <li>
+                            The idea is to do some semifinals to discard non-optimized APIs and then a
+                            <strong>big final</strong>.
+                        </li>
+                        <li>
+                            The game parameters (size of the labyrinth, number of ghosts, ...) will be decided
+                            <strong>before June 9<sup>th</sup></strong>.
+                        </li>
+                    </ul>
+                    <p></p>
+                </div>
+                <div class="col-xs-12 col-md-4 center-block">
+                    <p></p>
+                    <img
+                        src="{{ asset('images/labyrinth.png') }}"
+                        alt="{{ 'app.global.name' | trans }}"
+                        title="{{ 'app.global.name' | trans }}"
+                        class="img-responsive"
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-info">
+        <div class="container text-justify">
+            <h2 id="api-documentation">
+                API Documentation
+            </h2>
+            <p>
+                Players are simple REST APIs with <strong>two endpoints</strong>:
+            </p>
+            <ul>
+                <li>
+                    <code>/name</code>:
+                    should provide basic information on a player.
+                    See <a href="#name-endpoint"><strong>Name Endpoint</strong></a> for more information.
+                </li>
+                <li>
+                    <code>/move</code>:
+                    will receive map information, and needs to reply with the next move for the player.
+                    See the <a href="#move-endpoint"><strong>Move Endpoint</strong></a> for more information.
+                </li>
+            </ul>
+
+            <h3 id="name-endpoint">
+                Name Endpoint
+            </h3>
+            <p>
+                Your <code>/name</code> URL API will receive a <strong>POST</strong> request without body.
+                Reply with JSON format indicating the <strong>name</strong> of the player or team and the contact
+                <strong>email</strong>.
+            </p>
+
+            <h4>
+                Request format
+            </h4>
+            <pre>{% include 'default/rulesEndpointNameRequest.html.twig' %}</pre>
+
+            <h4>
+                Response format
+            </h4>
+            <pre>{% include 'default/rulesEndpointNameResponse.html.twig' %}</pre>
+
+            <h3 id="move-endpoint">
+                Move Endpoint
+            </h3>
+            <p>
+                Your <code>/move</code> URL API will receive a POST request with the information about the visible
+                part of the map in JSON format, and you need to reply with the next movement also in JSON format.
+                See <a href="#visible-area">visible area</a> section for more information.
+            </p>
+
+            <h4>
+                Request format
+            </h4>
+            <pre>{% include 'default/rulesEndpointMoveRequest.html.twig' %}</pre>
+
+            <h4>
+                Response format
+            </h4>
+            <pre>{% include 'default/rulesEndpointMoveResponse.html.twig' %}</pre>
+        </div>
+
+        <div class="bg-warning">
+            <div class="container text-justify">
+                <h2 id="visible-area">
+                    Visible area
+                </h2>
+                <p>
+                    The labyrinth is a 0-based matrix, where [0, 0] is the upper left corner.
+                    The height and width are sent in the <code>maze.size.height</code> and <code>maze.size.width</code>
+                    vars of the request body in the <a href="#move-endpoint">Move endpoint</a>.
+                    Each player has its own <strong>visible area</strong> based on its current position
+                    (see <a href="#figure-1">Figure 1</a>).
+                    The visible area is sent in the <code>player.area</code> var which is an object with four vars
+                    <code>y1</code>, <code>x1</code>, <code>y2</code> and <code>x2</code>.
+                    The information sent in <code>maze.walls</code> and <code>ghosts</code> vars depends on the visible
+                    area.
+                </p>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6">
+                        <img class="img-responsive" src="{{ asset('images/full-maze02.png') }}">
+                        <div class="text-center small" id="figure-1">
+                            <i>Figure 1: Visible area</i>
+                        </div>
+                    </div>
+                </div>
+                <h3>
+                    Example of request
+                </h3>
+                <pre>{% include 'default/rulesEndpointMoveRequestExample.html.twig' %}</pre>
+                <h3>
+                    Example of response
+                </h3>
+                <pre>{% include 'default/rulesEndpointMoveResponseExample.html.twig' %}</pre>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

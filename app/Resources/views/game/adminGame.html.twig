@@ -1,0 +1,24 @@
+<div class="row">
+    <div class="col-sm-6 col-xs-8">
+        <a href="{{ url('game_view', { 'uuid' : game.uuid }) }}">{{ game.name }}</a><br>
+    </div>
+    <div class="col-sm-4 hidden-xs">
+        {{ 'app.adminpage.texts.height' | trans({ '%height%': game.height}) }},
+        {{ 'app.adminpage.texts.width' | trans({ '%width%': game.width }) }},
+        {{ 'app.adminpage.texts.players' | transchoice(game.players | length, { '%players%' : game.players | length }) }}
+    </div>
+    <div class="col-sm-2 col-xs-4 text-right">
+        <a
+            class="btn btn-xs btn-info js-btn-show"
+            href="{{ url('game_view_details', { 'uuid': game.uuid }) }}">
+            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+        </a>
+        <button
+            class="btn btn-xs btn-danger js-btn-remove"
+            data-url="{{ url('game_remove', { 'uuid': game.uuid }) }}"
+            data-question="{{ 'app.adminpage.texts.ask-remove' | trans({ '%uuid%' : game.uuid }) }}">
+            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+        </button>
+    </div>
+</div>
+

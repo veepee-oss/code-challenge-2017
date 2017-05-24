@@ -28,13 +28,19 @@
         "sensio/distribution-bundle": "^5.0",
         "sensio/framework-extra-bundle": "^3.0.2",
         "incenteev/composer-parameter-handler": "^2.0",
-        "twig/twig": "^1.0||^2.0"
+        "twig/twig": "^1.0||^2.0",
+        "j20/php-uuid": "dev-master",
+        "davamigo/simple-http-client": "~1"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",
         "symfony/phpunit-bridge": "^3.0",
         "phpunit/phpunit": "^5.7"
     },
+    "repositories": [{
+        "type": "vcs",
+        "url":  "git@github.com:davamigo/simple-http-client.git"
+    }],
     "scripts": {
         "symfony-scripts": [
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",

@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <div class="js-game" data-url="{{ url('game_refresh', { 'uuid': game.uuid }) }}">
+
+        <div class="js-maze">
+            {% include ':game:viewMaze.html.twig' with { 'game': game, 'maze': maze } %}
+        </div>
+
+        <div class="hidden js-buttons">
+            {% include ':game:viewButtons.html.twig' with { 'game': game } %}
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block more_javascripts %}
+    <script src="{{ asset('js/refresh.js') }}"></script>
+{% endblock %}

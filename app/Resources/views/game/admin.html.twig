@@ -83,7 +83,7 @@
                     <div class="panel-heading">
                         {{ 'app.adminpage.texts.games.not-started' | trans }}
                     </div>
-                    <div class="panel-body">
+                    <div class="panel-body panel-list-striped">
                         {% for game in games if not game.playing and not game.finished %}
                             {% include ':game:adminGame.html.twig' with { 'game' : game }  %}
                         {% else %}
@@ -95,7 +95,7 @@
                     <div class="panel-heading">
                         {{ 'app.adminpage.texts.games.running' | trans }}
                     </div>
-                    <div class="panel-body">
+                    <div class="panel-body panel-list-striped">
                         {% for game in games if game.playing %}
                             {% include ':game:adminGame.html.twig' with { 'game' : game }  %}
                         {% else %}
@@ -107,7 +107,7 @@
                     <div class="panel-heading">
                         {{ 'app.adminpage.texts.games.finished' | trans }}
                     </div>
-                    <div class="panel-body">
+                    <div class="panel-body panel-list-striped">
                         {% for game in games if game.finished %}
                             {% include ':game:adminGame.html.twig' with { 'game' : game }  %}
                         {% else %}

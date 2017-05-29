@@ -73,6 +73,8 @@ app:
             width:          "Width: %width%"
             players:        "{0} No players|{1} One player|]1,Inf[ Players: %players%"
             ask-remove:     "Remove %uuid%?"
+            last-updated:   "Last updated:"
+            unknown:        "Unknown"
             games:
                 not-started:    "Not started games"
                 running:        "Running games"
@@ -84,6 +86,10 @@ app:
             stop:           "Stop daemon"
             restart:        "Restart daemon"
             create:         "Create game"
+            view-details:   "View game details"
+            view-maze:      "View game maze"
+            view-panels:    "View game panels"
+            remove:         "Remove game"
 
     detailspage:
         title:          "Game Details"

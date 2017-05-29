@@ -937,3 +937,7 @@ footer .text-footer-right {
 
 }
 
+.panel-list-striped > div:nth-of-type(even) {
+    background-color: #f0f0f0 !important;
+}
+

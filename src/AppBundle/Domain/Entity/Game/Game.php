@@ -262,6 +262,23 @@ class Game
     }
 
     /**
+     * Get the last update date
+     *
+     * @return \DateTime
+     */
+    public function lastUpdatedAt()
+    {
+        $datetime = null;
+        foreach ($this->players as $player) {
+            $timestamp = $player->timestamp();
+            if (null === $datetime || $timestamp > $datetime) {
+                $datetime = $timestamp;
+            }
+        }
+        return $datetime;
+    }
+
+    /**
      * Increments the moves counter
      *
      * @return $this

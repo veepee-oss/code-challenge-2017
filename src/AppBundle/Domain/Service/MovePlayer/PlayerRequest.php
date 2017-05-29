@@ -130,7 +130,7 @@ class PlayerRequest implements PlayerRequestInterface
 
         $data = array(
             'game'      => array(
-                'id'        => $game->uuid()
+                'id'        => $player->uuid()
             ),
             'player'    => array(
                 'id'        => $player->uuid(),

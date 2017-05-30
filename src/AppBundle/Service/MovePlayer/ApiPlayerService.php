@@ -162,7 +162,7 @@ class ApiPlayerService implements AskNextMovementInterface, AskPlayerNameInterfa
         try {
             $options = array(
                 CURLOPT_CONNECTTIMEOUT  => 3,
-                CURLOPT_TIMEOUT         => 5
+                CURLOPT_TIMEOUT         => 3
             );
             $response = $this->httpClient->post($requestUrl, $requestHeaders, $requestBody, $options)->send();
         } catch (HttpException $exc) {

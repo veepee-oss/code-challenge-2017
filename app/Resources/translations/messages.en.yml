@@ -86,6 +86,7 @@ app:
             stop:           "Stop daemon"
             restart:        "Restart daemon"
             create:         "Create game"
+            view:           "View game"
             view-details:   "View game details"
             view-maze:      "View game maze"
             view-panels:    "View game panels"

@@ -12,7 +12,7 @@ use AppBundle\Domain\Entity\Player\Player;
  */
 interface PlayerRequestInterface
 {
-    const DEFAULT_VIEW_RANGE = 5;
+    const DEFAULT_VIEW_RANGE = 4;
 
     /**
      * Creates the request data to send to the player bot or api. The request data will be a json object.

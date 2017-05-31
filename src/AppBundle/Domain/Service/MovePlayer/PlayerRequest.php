@@ -87,18 +87,18 @@ class PlayerRequest implements PlayerRequestInterface
         $x2 = $pos->x() + $viewRange;
 
         if ($y1 < 0) {
-            $y2 -= $y1;
+//            $y2 -= $y1;
             $y1 = 0;
         } elseif ($y2 >= $height) {
-            $y1 -= ($pos->y() - $height + 1);
+//            $y1 -= ($pos->y() - $height + 1);
             $y2 = $height - 1;
         }
 
         if ($x1 < 0) {
-            $x2 -= $x1;
+//            $x2 -= $x1;
             $x1 = 0;
         } elseif ($x2 >= $width) {
-            $x1 -= ($pos->x() - $width + 1);
+//            $x1 -= ($pos->x() - $width + 1);
             $x2 = $width - 1;
         }
 

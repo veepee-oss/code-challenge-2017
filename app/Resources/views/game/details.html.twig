@@ -42,9 +42,44 @@
                     <dt class="small">Moves:</dt>
                     <dd class="text-info">{{ game.moves }}</dd>
 
+                    <dt class="small">Last updated:</dt>
+                    <dd class="text-info">
+                        {{ game.lastUpdatedAt | date }} ({{ game.lastUpdatedAt | ago }})
+                    </dd>
+
                     <dt class="small">Status:</dt>
                     <dd class="text-info">{{ 'app.mazepage.texts.status-text' | transchoice(game.status) }}</dd>
                 </dl>
+
+                <div class="btn-group-vertical">
+                    <a  class="btn btn-default js-btn-view"
+                        title="{{ 'app.adminpage.buttons.view' | trans }}"
+                        href="{{ url('game_view', { 'uuid': game.uuid }) }}">
+                        <span class="glyphicon glyphicon-expand" aria-hidden="true"></span>
+                        {{ 'app.adminpage.buttons.view' | trans }}
+                    </a>
+                    <a  class="btn btn-info js-btn-view-maze"
+                        title="{{ 'app.adminpage.buttons.view-maze' | trans }}"
+                        href="{{ url('game_view_maze', { 'uuid': game.uuid }) }}">
+                        <span class="glyphicon glyphicon-tower" aria-hidden="true"></span>
+                        {{ 'app.adminpage.buttons.view-maze' | trans }}
+                    </a>
+                    <a  class="btn btn-info js-btn-view-panels"
+                        title="{{ 'app.adminpage.buttons.view-panels' | trans }}"
+                        href="{{ url('game_view_panels', { 'uuid': game.uuid }) }}">
+                        <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
+                        {{ 'app.adminpage.buttons.view-panels' | trans }}
+                    </a>
+                    <button
+                        class="btn btn-danger js-btn-remove"
+                        data-url="{{ url('game_remove', { 'uuid': game.uuid }) }}"
+                        data-refresh="{{ url('admin_view') }}"
+                        title="{{ 'app.adminpage.buttons.remove' | trans }}"
+                        data-question="{{ 'app.adminpage.texts.ask-remove' | trans({ '%uuid%' : game.uuid }) }}">
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                        {{ 'app.adminpage.buttons.remove' | trans }}
+                    </button>
+                </div>
             </div>
             <div class="col-xs-6">
                 {% for player in game.players %}
@@ -76,6 +111,11 @@
                             </a>
                         </dd>
 
+                        <dt class="small">Last updated:</dt>
+                        <dd class="text-info">
+                            {{ player.timestamp | date }} ({{ player.timestamp | ago }})
+                        </dd>
+
                         <dt class="small">Status:</dt>
                         <dd>
                             {% if player.winner %}
@@ -91,4 +131,8 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block more_javascripts %}
+    <script src="{{ asset('js/remove.js') }}"></script>
 {% endblock %}

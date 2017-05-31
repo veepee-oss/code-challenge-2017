@@ -78,6 +78,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="col-sm-12 col-md-9">
                 <div class="panel panel-info">
                     <div class="panel-heading">
@@ -121,46 +122,5 @@
 {% endblock %}
 
 {% block more_javascripts %}
-    <script language="JavaScript">
-
-        (function (win, $) {
-
-            'use strict';
-
-            /**
-             * init()
-             */
-            var init = function() {
-                $('.js-btn-remove').each(function () {
-                    var $this = $(this),
-                        url = $this.data('url'),
-                        question = $this.data('question');
-
-                    $this.click(function(ev) {
-                        ev.preventDefault();
-                        if (win.confirm(question)) {
-                            $.post(url)
-                            .done(function() {
-                                win.location.reload(true);
-                            });
-                        }
-                    });
-                });
-
-
-
-
-            };
-
-            /**
-             * Main process
-             */
-            init();
-
-            return {
-                init: init
-            };
-
-        }(window, jQuery));
-    </script>
+    <script src="{{ asset('js/remove.js') }}"></script>
 {% endblock %}

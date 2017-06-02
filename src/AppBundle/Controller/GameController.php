@@ -16,6 +16,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class GameController
@@ -171,6 +172,10 @@ class GameController extends Controller
             'uuid' => $uuid
         ));
 
+        if (!$entity) {
+            throw new NotFoundHttpException();
+        }
+
         $renderer = $this->get('app.maze.renderer');
         $game = $entity->toDomainEntity();
         $maze = $renderer->render($game);
@@ -198,6 +203,10 @@ class GameController extends Controller
         $entity = $this->getDoctrine()->getRepository('AppBundle:Game')->findOneBy(array(
             'uuid' => $uuid
         ));
+
+        if (!$entity) {
+            throw new NotFoundHttpException();
+        }
 
         $renderer = $this->get('app.maze.renderer');
         $game = $entity->toDomainEntity();
@@ -227,6 +236,10 @@ class GameController extends Controller
             'uuid' => $uuid
         ));
 
+        if (!$entity) {
+            throw new NotFoundHttpException();
+        }
+
         $renderer = $this->get('app.maze.renderer');
         $game = $entity->toDomainEntity();
         $maze = $renderer->render($game);
@@ -253,6 +266,10 @@ class GameController extends Controller
             'uuid' => $uuid
         ));
 
+        if (!$entity) {
+            throw new NotFoundHttpException();
+        }
+
         $game = $entity->toDomainEntity();
 
         return $this->render(':game:details.html.twig', array(
@@ -277,6 +294,10 @@ class GameController extends Controller
         $entity = $this->getDoctrine()->getRepository('AppBundle:Game')->findOneBy(array(
             'uuid' => $uuid
         ));
+
+        if (!$entity) {
+            throw new NotFoundHttpException();
+        }
 
         $renderer = $this->get('app.maze.renderer');
         $game = $entity->toDomainEntity();
@@ -320,6 +341,10 @@ class GameController extends Controller
             'uuid' => $uuid
         ));
 
+        if (!$entity) {
+            throw new NotFoundHttpException();
+        }
+
         $game = $entity->toDomainEntity();
         $game->startPlaying();
 
@@ -349,6 +374,10 @@ class GameController extends Controller
             'uuid' => $uuid
         ));
 
+        if (!$entity) {
+            throw new NotFoundHttpException();
+        }
+
         $game = $entity->toDomainEntity();
         $game->stopPlaying();
 
@@ -371,13 +400,17 @@ class GameController extends Controller
      */
     public function resetAction($uuid)
     {
-        $logger = $this->get('app.logger');
-        $logger->clear($uuid);
-
         /** @var \AppBundle\Entity\Game $entity */
         $entity = $this->getDoctrine()->getRepository('AppBundle:Game')->findOneBy(array(
             'uuid' => $uuid
         ));
+
+        if (!$entity) {
+            throw new NotFoundHttpException();
+        }
+
+        $logger = $this->get('app.logger');
+        $logger->clear($uuid);
 
         $game = $entity->toDomainEntity();
         $game->resetPlaying();
@@ -404,13 +437,17 @@ class GameController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $logger = $this->get('app.logger');
-        $logger->clear($uuid);
-
         /** @var \AppBundle\Entity\Game $entity */
         $entity = $em->getRepository('AppBundle:Game')->findOneBy(array(
             'uuid' => $uuid
         ));
+
+        if (!$entity) {
+            throw new NotFoundHttpException();
+        }
+
+        $logger = $this->get('app.logger');
+        $logger->clear($uuid);
 
         $em->remove($entity);
         $em->flush();
@@ -485,14 +522,26 @@ class GameController extends Controller
             )
         );
 
-        $games = array();
+        $playingGames = array();
+        $finishedGames = array();
+        $stoppedGames = array();
+
         foreach ($entities as $entity) {
-            $games[] = $entity->toDomainEntity();
+            $game = $entity->toDomainEntity();
+            if ($game->playing()) {
+                $playingGames[] = $game;
+            } elseif ($game->finished()) {
+                $finishedGames[] = $game;
+            } else {
+                $stoppedGames[] = $game;
+            }
         }
 
         return $this->render('game/admin.html.twig', array(
-            'processId' => $processId,
-            'games'     => $games
+            'processId'     => $processId,
+            'playingGames'  => $playingGames,
+            'finishedGames' => $finishedGames,
+            'stoppedGames'  => $stoppedGames
         ));
     }
 

@@ -7,8 +7,11 @@ use AppBundle\Domain\Entity\Ghost\Ghost;
 use AppBundle\Domain\Entity\Maze\MazeCell;
 use AppBundle\Domain\Entity\Player\Player;
 use AppBundle\Domain\Entity\Position\Position;
+use AppBundle\Domain\Service\MoveGhost\MoveGhostException;
 use AppBundle\Domain\Service\MoveGhost\MoveGhostFactory;
+use AppBundle\Domain\Service\MovePlayer\MovePlayerException;
 use AppBundle\Domain\Service\MovePlayer\MovePlayerInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class GameEngine
@@ -23,16 +26,20 @@ class GameEngine
     /** @var  MoveGhostFactory */
     protected $moveGhostFactory;
 
+    /** @var LoggerInterface */
+    protected $logger;
+
     /**
      * GameEngine constructor.
      *
      * @param MovePlayerInterface $movePlayer
      * @param MoveGhostFactory $moveGhostFactory
      */
-    public function __construct(MovePlayerInterface $movePlayer, MoveGhostFactory $moveGhostFactory)
+    public function __construct(MovePlayerInterface $movePlayer, MoveGhostFactory $moveGhostFactory, LoggerInterface $logger)
     {
         $this->movePlayer = $movePlayer;
         $this->moveGhostFactory = $moveGhostFactory;
+        $this->logger = $logger;
     }
 
     /**
@@ -71,9 +78,14 @@ class GameEngine
 
         foreach ($players as $player) {
             if ($player->status() == Player::STATUS_PLAYING) {
-                $this->movePlayer->movePlayer($player, $game);
-                if ($game->isGoalReached($player)) {
-                    $player->wins();
+                try {
+                    $this->movePlayer->movePlayer($player, $game);
+                    if ($game->isGoalReached($player)) {
+                        $player->wins();
+                    }
+                } catch (MovePlayerException $exc) {
+                    $this->logger->error('Error moving player ' . $player->uuid());
+                    $this->logger->error($exc);
                 }
             }
         }
@@ -95,9 +107,14 @@ class GameEngine
 
         foreach ($ghosts as $ghost) {
             if (!$this->checkGhostKill($ghost, $game)) {
-                $moverService = $this->moveGhostFactory->locate($ghost);
-                if ($moverService->moveGhost($ghost, $game)) {
-                    $this->checkGhostKill($ghost, $game);
+                try {
+                    $moverService = $this->moveGhostFactory->locate($ghost);
+                    if ($moverService->moveGhost($ghost, $game)) {
+                        $this->checkGhostKill($ghost, $game);
+                    }
+                } catch (MoveGhostException $exc) {
+                    $this->logger->error('Error moving ghost.');
+                    $this->logger->error($exc);
                 }
             }
         }

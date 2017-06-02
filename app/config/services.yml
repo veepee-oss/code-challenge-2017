@@ -22,6 +22,7 @@ services:
         arguments:
             - "@app.player.move.service"
             - "@app.ghost.move.factory"
+            - "@logger"
 
     app.game.engine.daemon:
         class: AppBundle\Service\GameEngine\GameEngineDaemon

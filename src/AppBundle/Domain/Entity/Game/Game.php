@@ -390,4 +390,19 @@ class Game
         }
         return -1;
     }
+
+    /**
+     * Return if is killing time. Killing time occurs after a number of movements and changes the behabiour of the
+     * ghosts. Before killing time the ghosts move ramdomly; In killing time the ghosts pursue the players.
+     *
+     * @return bool
+     */
+    public function isKillingTime()
+    {
+        $limit = $this->height() * $this->width() / 20;
+        if ($this->moves() > $limit) {
+            return true;
+        }
+        return false;
+    }
 }

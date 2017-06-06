@@ -4,7 +4,7 @@ namespace AppBundle\Domain\Service\MoveGhost;
 
 use AppBundle\Domain\Entity\Game\Game;
 use AppBundle\Domain\Entity\Ghost\Ghost;
-use AppBundle\Domain\Entity\Maze\MazeObject;
+use AppBundle\Domain\Entity\Position\Direction;
 use AppBundle\Domain\Entity\Position\Position;
 
 /**
@@ -32,19 +32,19 @@ abstract class MoveGhost implements MoveGhostInterface
         $y = $position->y();
         $x = $position->x();
         switch ($direction) {
-            case MazeObject::DIRECTION_UP:
+            case Direction::UP:
                 $y--;
                 break;
 
-            case MazeObject::DIRECTION_DOWN:
+            case Direction::DOWN:
                 $y++;
                 break;
 
-            case MazeObject::DIRECTION_LEFT:
+            case Direction::LEFT:
                 $x--;
                 break;
 
-            case MazeObject::DIRECTION_RIGHT:
+            case Direction::RIGHT:
                 $x++;
                 break;
         }

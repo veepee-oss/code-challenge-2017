@@ -34,6 +34,9 @@ class ApiPlayerService implements AskNextMovementInterface, AskPlayerNameInterfa
     /** @var LoggerServiceInterface */
     protected $logger;
 
+    /** @var int */
+    protected $timeout;
+
     /**
      * ApiPlayerService constructor.
      *
@@ -45,12 +48,14 @@ class ApiPlayerService implements AskNextMovementInterface, AskPlayerNameInterfa
         HttpClient $httpClient,
         PlayerRequestInterface $playerRequest,
         ValidatorInterface $validator,
-        LoggerServiceInterface $logger
+        LoggerServiceInterface $logger,
+        $timeout = 3
     ) {
         $this->httpClient = $httpClient;
         $this->playerRequest = $playerRequest;
         $this->validator = $validator;
         $this->logger = $logger;
+        $this->timeout = $timeout;
     }
 
     /**
@@ -161,8 +166,8 @@ class ApiPlayerService implements AskNextMovementInterface, AskPlayerNameInterfa
 
         try {
             $options = array(
-                CURLOPT_CONNECTTIMEOUT  => 3,
-                CURLOPT_TIMEOUT         => 3
+                CURLOPT_CONNECTTIMEOUT  => $this->timeout,
+                CURLOPT_TIMEOUT         => $this->timeout
             );
             $response = $this->httpClient->post($requestUrl, $requestHeaders, $requestBody, $options)->send();
         } catch (HttpException $exc) {

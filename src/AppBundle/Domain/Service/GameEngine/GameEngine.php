@@ -106,6 +106,10 @@ class GameEngine
         shuffle($ghosts);
 
         foreach ($ghosts as $ghost) {
+            if ($game->isKillingTime()) {
+                $ghost->changeType(Ghost::TYPE_KILLING);
+            }
+
             if (!$this->checkGhostKill($ghost, $game)) {
                 try {
                     $moverService = $this->moveGhostFactory->locate($ghost);
@@ -123,11 +127,11 @@ class GameEngine
     }
 
     /**
-     * Chacks if a ghost killed a player
+     * Chacks if a ghost killed a player. If a player is killed the ghost also dies.
      *
      * @param Ghost $ghost
-     * @param Game $game
-     * @return bool
+     * @param Game  $game
+     * @return bool true if the ghost still alive, false in other case
      */
     protected function checkGhostKill(Ghost $ghost, Game& $game)
     {
@@ -139,8 +143,7 @@ class GameEngine
         shuffle($players);
 
         foreach ($players as $player) {
-            if ($player->position()->y() == $ghost->position()->y()
-                && $player->position()->x() == $ghost->position()->x()) {
+            if ($player->alive() && $player->position()->equals($ghost->position())) {
                 $game->removeGhost($ghost);
                 $player->dies();
                 return true;
@@ -157,11 +160,13 @@ class GameEngine
      */
     protected function createGhosts(Game &$game)
     {
-        if ($game->ghostRate() > 0 && $game->moves() % $game->ghostRate() == 0) {
-            $this->createNewGhost($game);
+        $extraGhosts = 0;
+        if ($game->ghostRate() > 0) {
+            $extraGhosts = $game->moves() / $game->ghostRate();
         }
 
-        while (count($game->ghosts()) < $game->minGhosts()) {
+        $minGhosts = $game->minGhosts() + $extraGhosts;
+        while (count($game->ghosts()) < $minGhosts) {
             $this->createNewGhost($game);
         }
 
@@ -174,7 +179,7 @@ class GameEngine
      * @param Game $game
      * @return $this
      */
-    protected function createNewGhost(Game &$game, $type = Ghost::TYPE_SIMPLE)
+    protected function createNewGhost(Game &$game, $type = Ghost::TYPE_RANDOM)
     {
         $maze = $game->maze();
         do {

@@ -4,6 +4,7 @@ namespace AppBundle\Domain\Service\MazeRender;
 
 use AppBundle\Domain\Entity\Game\Game;
 use AppBundle\Domain\Entity\Maze\MazeCell;
+use AppBundle\Domain\Entity\Position\Direction;
 
 /**
  * Class MazeIconRender
@@ -32,68 +33,56 @@ class MazeIconRender implements MazeRenderInterface
 
             // For each column...
             for ($col = 0; $col < $cols; ++$col) {
+                $class = 'x-empty';
+
                 $cell = $maze[$row][$col]->getContent();
                 if ($cell == MazeCell::CELL_WALL) {
-                    $html .= '<td class="x-wall"></td>';
+                    $class = 'x-wall';
                 } elseif ($cell == MazeCell::CELL_START) {
-                    $html .= '<td class="x-start"></td>';
-                } elseif ($cell == MazeCell::CELL_GOAL) {
-                    $drawWinner = false;
-                    $players = $game->players();
-                    foreach ($players as $index => $player) {
-                        if ($player->winner()
-                            && $player->position()->x() == $col && $player->position()->y() == $row) {
-                            $drawWinner = true;
-                        }
-                    }
+                    $class = 'x-start';
+                }
 
-                    if (null != $drawWinner) {
-                        $html .= '<td class="x-winner"></td>';
-                    } else {
-                        $html .= '<td class="x-goal"></td>';
-                    }
-                } else {
-                    $direction = null;
-                    $drawPlayer = null;
-                    $drawKilled = null;
-                    $drawGhost = false;
-                    $drawNeutral = false;
-
-                    $players = $game->players();
-                    foreach ($players as $index => $player) {
-                        if ($player->position()->x() == $col && $player->position()->y() == $row) {
-                            if ($player->dead()) {
-                                $drawKilled = 1 + $index;
-                            } else {
-                                $drawPlayer = 1 + $index;
-                                $direction = $player->direction();
+                foreach ($game->players() as $index => $player) {
+                    if ($player->position()->x() == $col
+                        && $player->position()->y() == $row) {
+                        if ($player->dead()) {
+                            $class = 'x-killed' . (1 + $index);
+                        } else {
+                            $direction = $player->direction();
+                            if (!$direction) {
+                                $direction = Direction::RIGHT;
                             }
+                            $class = 'x-player' . (1 + $index) . '-' . $direction;
                         }
-                    }
-
-                    $ghosts = $game->ghosts();
-                    foreach ($ghosts as $index => $ghost) {
-                        if ($ghost->position()->x() == $col && $ghost->position()->y() == $row) {
-                            if ($ghost->isNeutralTime()) {
-                                $drawNeutral = true;
-                            } else {
-                                $drawGhost = true;
-                            }
-                        }
-                    }
-
-                    if (null != $drawPlayer) {
-                        $html .= '<td class="x-player' . $drawPlayer . '-' . $direction . '"></td>';
-                    } elseif ($drawKilled) {
-                        $html .= '<td class="x-killed' . $drawKilled . '"></td>';
-                    } elseif ($drawGhost) {
-                        $html .= '<td class="x-ghost"></td>';
-                    } elseif ($drawNeutral) {
-                        $html .= '<td class="x-ghost-neutral"></td>';
-                    } else {
-                        $html .= '<td class="x-empty"></td>';
                     }
                 }
+
+                foreach ($game->ghosts() as $index => $ghost) {
+                    if ($ghost->position()->x() == $col
+                        && $ghost->position()->y() == $row) {
+                        if ($ghost->isNeutralTime()) {
+                            $class = 'x-ghost-neutral';
+                        } elseif ($game->isKillingTime()) {
+                            $class = 'x-ghost-bad';
+                        } else {
+                            $class = 'x-ghost';
+                        }
+                    }
+                }
+
+                if ($cell == MazeCell::CELL_GOAL) {
+                    $class = 'x-goal';
+                    foreach ($game->players() as $player) {
+                        if ($player->winner()
+                            && $player->position()->x() == $col
+                            && $player->position()->y() == $row) {
+                            $class = 'x-winner';
+                            break;
+                        }
+                    }
+                }
+
+                $html .= '<td class="' . $class . '"></td>';
             }
             $html .= '</tr>';
         }

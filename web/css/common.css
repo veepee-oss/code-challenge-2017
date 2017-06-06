@@ -278,6 +278,20 @@ footer .text-footer-right {
     background-size: 100%;
 }
 
+.maze .ghost-bad {
+    background-color: #000000;
+    color: #800000;
+}
+
+.maze .ghost-bad:after {
+    content: "\2B1F";
+}
+
+.x-maze .x-ghost-bad {
+    background: #000000 url("../images/maze-ghost-bad.png") no-repeat;
+    background-size: 100%;
+}
+
 /**********************************************************************************************************************/
 
 .maze .player {

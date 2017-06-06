@@ -2,7 +2,7 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Domain\Entity\Maze\MazeObject;
+use AppBundle\Domain\Entity\Position\Direction;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -103,15 +103,15 @@ class ApiController extends Controller
         // Compute current direction
         $dir = null;
         if ($pos->y < $prev->y) {
-            $dir = MazeObject::DIRECTION_UP;
+            $dir = Direction::UP;
         } elseif ($pos->y > $prev->y) {
-            $dir = MazeObject::DIRECTION_DOWN;
+            $dir = Direction::DOWN;
         } elseif ($pos->x < $prev->x) {
-            $dir = MazeObject::DIRECTION_LEFT;
+            $dir = Direction::LEFT;
         } elseif ($pos->x > $prev->x) {
-            $dir = MazeObject::DIRECTION_RIGHT;
+            $dir = Direction::RIGHT;
         } else {
-            $dir = MazeObject::DIRECTION_UP;
+            $dir = Direction::UP;
         }
 
         $iter = 1;
@@ -198,12 +198,7 @@ class ApiController extends Controller
     private function findNextMove($maze, $pos, $dir, $goal)
     {
         // Array of movements
-        $moves = array(
-            MazeObject::DIRECTION_UP,
-            MazeObject::DIRECTION_RIGHT,
-            MazeObject::DIRECTION_DOWN,
-            MazeObject::DIRECTION_LEFT
-        );
+        $moves = Direction::directions();
 
         $rightDir = $moves[(array_search($dir, $moves) + 1) % 4];
         $leftDir = $moves[(array_search($dir, $moves) + 3) % 4];
@@ -294,19 +289,19 @@ class ApiController extends Controller
     {
         $new = clone $pos;
         switch ($dir) {
-            case MazeObject::DIRECTION_UP:
+            case Direction::UP:
                 --$new->y;
                 break;
 
-            case MazeObject::DIRECTION_DOWN:
+            case Direction::DOWN:
                 ++$new->y;
                 break;
 
-            case MazeObject::DIRECTION_LEFT:
+            case Direction::LEFT:
                 --$new->x;
                 break;
 
-            case MazeObject::DIRECTION_RIGHT:
+            case Direction::RIGHT:
                 ++$new->x;
                 break;
         }

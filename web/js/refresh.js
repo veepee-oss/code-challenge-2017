@@ -8,6 +8,7 @@
         $btnStart = $('.js-btn-start'),
         $btnStop = $('.js-btn-stop'),
         $btnReset = $('.js-btn-reset'),
+        timeout = $game.data('timeout'),
         refreshUrl = $game.data('url'),
         startUrl = $btnStart.data('url'),
         stopUrl = $btnStop.data('url'),
@@ -94,7 +95,7 @@
         $.ajax({
             'type': 'GET',
             'url': refreshUrl,
-            'timeout': 3000
+            'timeout': timeout
         })
         .done(function(data) {
             $maze.html(data.mazeHtml);

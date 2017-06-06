@@ -41,7 +41,7 @@ twig:
 
     globals:
         default_email: "%default_email%"
-        default_time_limit: "%default_time_limit%"
+        default_timeout: "%default_timeout%"
 
 # Doctrine Configuration
 doctrine:

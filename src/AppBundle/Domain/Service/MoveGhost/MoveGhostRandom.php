@@ -6,7 +6,7 @@ use AppBundle\Domain\Entity\Game\Game;
 use AppBundle\Domain\Entity\Ghost\Ghost;
 use AppBundle\Domain\Entity\Maze\Maze;
 use AppBundle\Domain\Entity\Maze\MazeCell;
-use AppBundle\Domain\Entity\Maze\MazeObject;
+use AppBundle\Domain\Entity\Position\Direction;
 use AppBundle\Domain\Entity\Position\Position;
 
 /**
@@ -34,15 +34,10 @@ class MoveGhostRandom extends MoveGhost
         $dir = $ghost->direction();
 
         // Available moves
-        $moves = array(
-            MazeObject::DIRECTION_UP,
-            MazeObject::DIRECTION_RIGHT,
-            MazeObject::DIRECTION_DOWN,
-            MazeObject::DIRECTION_LEFT
-        );
+        $moves = Direction::directions();
 
         // If not stopped
-        if ($dir != MazeObject::DIRECTION_STOP) {
+        if ($dir != Direction::STOPPED) {
             // 20% probability of turning right or left
             $turn = (rand(0, 9) < 2);
             if ($turn) {
@@ -83,25 +78,25 @@ class MoveGhostRandom extends MoveGhost
         $y = $pos->y();
         $x = $pos->x();
         switch ($dir) {
-            case MazeObject::DIRECTION_UP:
+            case Direction::UP:
                 if (--$y < 0) {
                     return false;
                 }
                 break;
 
-            case MazeObject::DIRECTION_DOWN:
+            case Direction::DOWN:
                 if (++$y >= $height) {
                     return false;
                 }
                 break;
 
-            case MazeObject::DIRECTION_LEFT:
+            case Direction::LEFT:
                 if (--$x < 0) {
                     return false;
                 }
                 break;
 
-            case MazeObject::DIRECTION_RIGHT:
+            case Direction::RIGHT:
                 if (++$x >= $width) {
                     return false;
                 }

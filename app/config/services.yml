@@ -41,7 +41,7 @@ services:
         class: AppBundle\Domain\Service\MovePlayer\MovePlayerFactory
         arguments:
             - 1: "@app.player.move.api"
-            - 2: "@app.player.move.bot"
+              2: "@app.player.move.bot"
 
     app.player.move.api:
         class: AppBundle\Service\MovePlayer\ApiPlayerService
@@ -50,6 +50,7 @@ services:
             - "@app.player.request_data"
             - "@validator"
             - "@app.logger"
+            - "%default_timeout%"
 
     app.player.move.bot:
         class: AppBundle\Service\MovePlayer\BotPlayerService
@@ -63,9 +64,13 @@ services:
         class: AppBundle\Domain\Service\MoveGhost\MoveGhostFactory
         arguments:
             - 1: "@app.ghost.move.random"
+              2: "@app.ghost.move.killing"
 
     app.ghost.move.random:
         class: AppBundle\Domain\Service\MoveGhost\MoveGhostRandom
+
+    app.ghost.move.killing:
+        class: AppBundle\Domain\Service\MoveGhost\MoveGhostKilling
 
     app.logger:
         class: AppBundle\Service\LoggerService\LoggerService

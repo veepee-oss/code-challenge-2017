@@ -13,7 +13,8 @@ use AppBundle\Domain\Entity\Position\Position;
 class Ghost extends MazeObject
 {
     /** Ghost types */
-    const TYPE_SIMPLE = 1;
+    const TYPE_RANDOM = 1;
+    const TYPE_KILLING = 2;
 
     /** @var int */
     protected $type;
@@ -61,6 +62,16 @@ class Ghost extends MazeObject
     public function isNeutralTime()
     {
         return $this->neutralTime < static::DEFAULT_NEUTRAL_TIME;
+    }
+
+    /**
+     * Set new ghost type
+     *
+     * @param $newType
+     */
+    public function changeType($newType)
+    {
+        $this->type = $newType;
     }
 
     /**

@@ -35,6 +35,19 @@ class GameController extends Controller
      */
     public function createAction(Request $request)
     {
+        $now = new \DateTime('now');
+        $limit = \DateTime::createFromFormat(
+            $this->getParameter('default_time_format'),
+            $this->getParameter('default_time_limit')
+        );
+        $admin = $request->query->get('admin', false);
+
+        if ($now >= $limit && !$admin) {
+            return $this->render('game/gameOver.html.twig', array(
+                'time_limit' => $limit
+            ));
+        }
+
         // Create game data entity
         $gameEntity = new GameEntity();
 

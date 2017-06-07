@@ -3,6 +3,12 @@
         <div class="col-sm-3">
             <div class="panel panel-primary">
                 <div class="panel-body">
+                    {% if game.name is not empty and game.name != game.uuid %}
+                        <p>
+                            {{ 'app.mazepage.texts.game' | trans }}:
+                            <strong class="text-info">{{ game.name }}</strong>
+                        </p>
+                    {% endif %}
                     <p>
                         {{ 'app.mazepage.texts.status' | trans }}:
                         <strong class="text-info">{{ 'app.mazepage.texts.status-text' | transchoice(game.status) }}</strong>
@@ -42,7 +48,13 @@
                         <p>
                             {{ game.playerNum(player) }}.-
                             <span class="text-success">
-                                {{ player.name }}
+                                {% if player.email is empty %}
+                                    {{ player.name }}
+                                {% else %}
+                                    <span title="{{ player.email }}">
+                                        {{ player.name }}
+                                    </span>
+                                {% endif %}
                             </span>
                         </p>
                     {% else %}
@@ -63,7 +75,13 @@
                         <p>
                             {{ game.playerNum(player) }}.-
                             <span class="text-danger">
-                                {{ player.name }}
+                                {% if player.email is empty %}
+                                    {{ player.name }}
+                                {% else %}
+                                    <span title="{{ player.email }}">
+                                        {{ player.name }}
+                                    </span>
+                                {% endif %}
                             </span>
                         </p>
                     {% else %}
@@ -84,7 +102,13 @@
                         <p>
                             {{ game.playerNum(player) }}.-
                             <span class="text-info">
-                                {{ player.name }}
+                                {% if player.email is empty %}
+                                    {{ player.name }}
+                                {% else %}
+                                    <span title="{{ player.email }}">
+                                        {{ player.name }}
+                                    </span>
+                                {% endif %}
                             </span>
                         </p>
                     {% else %}

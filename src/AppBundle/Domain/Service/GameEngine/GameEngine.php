@@ -43,6 +43,19 @@ class GameEngine
     }
 
     /**
+     * Resets the game
+     *
+     * @param Game $game
+     * @return $this
+     */
+    public function reset(Game &$game)
+    {
+        $game->resetPlaying();
+        $this->createGhosts($game);
+        return $this;
+    }
+
+    /**
      * Move all the players and ghosts of a game
      *
      * @param Game $game
@@ -55,6 +68,7 @@ class GameEngine
         $this->movePlayers($game);
         $this->moveGhosts($game);
         $this->createGhosts($game);
+        $this->checkKillingTime($game);
 
         if (!$game->arePlayersAlive()) {
             $game->endGame();
@@ -106,10 +120,6 @@ class GameEngine
         shuffle($ghosts);
 
         foreach ($ghosts as $ghost) {
-            if ($game->isKillingTime()) {
-                $ghost->changeType(Ghost::TYPE_KILLING);
-            }
-
             if (!$this->checkGhostKill($ghost, $game)) {
                 try {
                     $moverService = $this->moveGhostFactory->locate($ghost);
@@ -160,14 +170,24 @@ class GameEngine
      */
     protected function createGhosts(Game &$game)
     {
-        $extraGhosts = 0;
-        if ($game->ghostRate() > 0) {
-            $extraGhosts = $game->moves() / $game->ghostRate();
+        $minGhosts = $game->minGhosts();
+        if ($game->isKillingTime()) {
+            if ($minGhosts < 5) {
+                $minGhosts = 10;
+            } else {
+                $minGhosts *= 2;
+            }
         }
 
-        $minGhosts = $game->minGhosts() + $extraGhosts;
-        while (count($game->ghosts()) < $minGhosts) {
+        $ghostRate = $game->ghostRate();
+        if ($ghostRate > 0) {
+            $minGhosts += (int)($game->moves() / $ghostRate);
+        }
+
+        $ghostCount = count($game->ghosts());
+        while ($ghostCount < $minGhosts) {
             $this->createNewGhost($game);
+            $ghostCount++;
         }
 
         return $this;
@@ -187,6 +207,24 @@ class GameEngine
             $x = rand(1, $maze->width() - 2);
         } while ($maze[$y][$x]->getContent() != MazeCell::CELL_EMPTY);
         $game->addGhost(new Ghost($type, new Position($y, $x)));
+        return $this;
+    }
+
+    /**
+     * Check if kelling time reached
+     *
+     * @param Game $game
+     * @return $this
+     */
+    protected function checkKillingTime(Game &$game)
+    {
+        if ($game->isKillingTime()) {
+            /** @var Ghost[] $ghosts */
+            $ghosts = $game->ghosts();
+            foreach ($ghosts as $ghost) {
+                $ghost->changeType(Ghost::TYPE_KILLING);
+            }
+        }
         return $this;
     }
 }

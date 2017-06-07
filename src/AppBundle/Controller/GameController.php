@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Domain\Entity\Game\Game;
 use AppBundle\Domain\Entity\Player\ApiPlayer;
+use AppBundle\Domain\Service\GameEngine\GameEngine;
 use AppBundle\Domain\Service\MovePlayer\MovePlayerException;
 use AppBundle\Form\CreateGame\GameEntity;
 use AppBundle\Form\CreateGame\GameForm;
@@ -422,11 +423,14 @@ class GameController extends Controller
             throw new NotFoundHttpException();
         }
 
+        $game = $entity->toDomainEntity();
+
         $logger = $this->get('app.logger');
         $logger->clear($uuid);
 
-        $game = $entity->toDomainEntity();
-        $game->resetPlaying();
+        /** @var GameEngine $engine */
+        $engine = $this->get('app.game.engine');
+        $engine->reset($game);
 
         $entity->fromDomainEntity($game);
         $em = $this->getDoctrine()->getManager();

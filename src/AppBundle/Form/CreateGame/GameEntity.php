@@ -14,14 +14,14 @@ class GameEntity
     /**
      * @var int
      * @Assert\NotBlank()
-     * @Assert\Range(min=10, max=1000)
+     * @Assert\Range(min=10, max=100)
      */
     private $height = 25;
 
     /**
      * @var int
      * @Assert\NotBlank()
-     * @Assert\Range(min=10, max=1000)
+     * @Assert\Range(min=10, max=100)
      */
     private $width = 50;
 

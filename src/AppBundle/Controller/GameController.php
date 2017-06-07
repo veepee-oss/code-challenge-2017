@@ -113,15 +113,14 @@ class GameController extends Controller
             $players = array();
             for ($pos = 0; $pos < $gameEntity->getPlayerNum(); $pos++) {
                 try {
-                    $player = new ApiPlayer($gameEntity->getPlayerAt($pos)->getUrl(), $maze->start());
+                    $url = $gameEntity->getPlayerAt($pos)->getUrl();
+                    $player = new ApiPlayer($url, $maze->start());
                     if ($playerValidator->validatePlayer($player, null)) {
                         $players[] = $player;
                     } else {
                         $message = $this->get('translator')->trans(
                             'app.form.game.player.invalid-url',
-                            array(
-                                '%url%' => $player->url()
-                            ),
+                            array( '%url%' => $url ),
                             'validators'
                         );
                         $form->get('players')->addError(new FormError($message));

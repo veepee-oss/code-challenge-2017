@@ -1,7 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-    <div class="js-game" data-url="{{ url('game_refresh', { 'uuid': game.uuid }) }}">
+    <div class="js-game"
+         data-timeout="{{ 1000 * default_timeout }}"
+         data-url="{{ url('game_refresh', { 'uuid': game.uuid }) }}">
 
         <p></p>
 

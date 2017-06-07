@@ -85,7 +85,12 @@
     var startTimer = function () {
         if ($btnStop.attr('disabled') != 'disabled') {
             win.setTimeout(refreshMaze, 500);
+        } else {
+            win.setTimeout(function () {
+                location.reload();
+            }, 30000);
         }
+
     };
 
     /**
@@ -102,13 +107,13 @@
             $panels.html(data.panelsHtml);
             if (data.playing) {
                 $btnStop.attr('disabled', null);
-                startTimer();
             } else {
                 $btnStop.attr('disabled', 'disabled');
                 if (data.finished) {
                     $btnStart.attr('disabled', 'disabled');
                 }
             }
+            startTimer();
         })
         .fail(function(jqXHR, textStatus, errorMessage) {
             location.reload();

@@ -142,6 +142,16 @@ class Player extends MazeObject
     }
 
     /**
+     * Get if player is alive (and not winner)
+     *
+     * @return bool
+     */
+    public function alive()
+    {
+        return static::STATUS_PLAYING == $this->status;
+    }
+
+    /**
      * The player wins the game
      *
      * @return $this

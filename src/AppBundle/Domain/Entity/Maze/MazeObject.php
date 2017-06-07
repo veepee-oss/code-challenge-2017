@@ -2,6 +2,7 @@
 
 namespace AppBundle\Domain\Entity\Maze;
 
+use AppBundle\Domain\Entity\Position\Direction;
 use AppBundle\Domain\Entity\Position\Position;
 
 /**
@@ -11,13 +12,6 @@ use AppBundle\Domain\Entity\Position\Position;
  */
 class MazeObject
 {
-    /** Directions */
-    const DIRECTION_STOP = '';
-    const DIRECTION_UP = 'up';
-    const DIRECTION_DOWN = 'down';
-    const DIRECTION_LEFT = 'left';
-    const DIRECTION_RIGHT = 'right';
-
     /** @var Position */
     protected $position;
 
@@ -32,8 +26,12 @@ class MazeObject
      */
     public function __construct(Position $position, Position $previous = null)
     {
-        $this->position = $position;
-        $this->previous = $previous ?: $position;
+        $this->position = clone $position;
+        if ($previous) {
+            $this->previous = clone $previous;
+        } else {
+            $this->previous = clone $position;
+        }
     }
 
     /**
@@ -64,26 +62,13 @@ class MazeObject
     public function direction()
     {
         if (null == $this->position || null == $this->previous) {
-            return static::DIRECTION_STOP;
+            return Direction::STOPPED;
         }
 
-        if ($this->position->y() < $this->previous->y()) {
-            return static::DIRECTION_UP;
-        }
-
-        if ($this->position->y() > $this->previous->y()) {
-            return static::DIRECTION_DOWN;
-        }
-
-        if ($this->position->x() < $this->previous->x()) {
-            return static::DIRECTION_LEFT;
-        }
-
-        if ($this->position->x() > $this->previous->x()) {
-            return static::DIRECTION_RIGHT;
-        }
-
-        return static::DIRECTION_STOP;
+        return Direction::direction(
+            $this->position,
+            $this->previous
+        );
     }
 
     /**

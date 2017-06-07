@@ -57,6 +57,7 @@ class MazeHtmlRender implements MazeRenderInterface
                     $drawKilled = false;
                     $drawGhost = false;
                     $drawNeutral = false;
+                    $drawBadGhost = false;
 
                     $players = $game->players();
                     foreach ($players as $index => $player) {
@@ -74,8 +75,10 @@ class MazeHtmlRender implements MazeRenderInterface
                         if ($ghost->position()->x() == $col && $ghost->position()->y() == $row) {
                             if ($ghost->isNeutralTime()) {
                                 $drawNeutral = true;
-                            } else {
+                            } elseif (!$game->isKillingTime()) {
                                 $drawGhost = true;
+                            } else {
+                                $drawBadGhost = true;
                             }
                         }
                     }
@@ -88,6 +91,8 @@ class MazeHtmlRender implements MazeRenderInterface
                         $html .= '<td class="ghost"></td>';
                     } elseif ($drawNeutral) {
                         $html .= '<td class="ghost-neutral"></td>';
+                    } elseif ($drawBadGhost) {
+                        $html .= '<td class="ghost-bad"></td>';
                     } else {
                         $html .= '<td class="empty"></td>';
                     }

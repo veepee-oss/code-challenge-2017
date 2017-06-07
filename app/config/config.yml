@@ -39,6 +39,10 @@ twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
 
+    globals:
+        default_email: "%default_email%"
+        default_timeout: "%default_timeout%"
+
 # Doctrine Configuration
 doctrine:
     dbal:

@@ -61,6 +61,14 @@ app:
             no-dead:        "No dead players yet!"
             no-players:     "No remaining players!"
 
+    gameover:
+        title:          "Game over"
+        texts:
+            1:              "The <strong>Code Challenge 2017</strong> is over. You can't create more games since <strong>%date%</strong>."
+            2:              "Please send your API <strong>URL</strong> or <strong>IP</strong> address to <strong>%email%</strong> if you didn't do before."
+        buttons:
+            back:           "Go Back"
+
     adminpage:
         title:          "Game administration"
 

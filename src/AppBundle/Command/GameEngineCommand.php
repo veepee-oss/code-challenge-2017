@@ -3,12 +3,11 @@
 namespace AppBundle\Command;
 
 use AppBundle\Domain\Entity\Game as DomainGame;
-use AppBundle\Domain\Entity\Maze as DomainMaze;
-use AppBundle\Domain\Entity\Player as DomainPlayer;
 use AppBundle\Domain\Service\GameEngine\GameEngine;
 use AppBundle\Entity\Game;
 use AppBundle\Repository\GameRepository;
 use Doctrine\ORM\EntityManager;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Exception\LogicException;
 use Symfony\Component\Console\Input\InputInterface;
@@ -28,8 +27,8 @@ class GameEngineCommand extends ContainerAwareCommand
     // Max idle time: 15 min * 60 sec * 4 (1/4 sec)
     const MAX_IDLE = 3600;
 
-    // Memory usage limit: 95%
-    const MEMORY_LIMIT = 0.95;
+    // Memory usage limit: 90%
+    const MEMORY_LIMIT = 0.90;
 
     /**
      * Configures the current command.
@@ -65,6 +64,9 @@ class GameEngineCommand extends ContainerAwareCommand
         /** @var GameEngine $engine */
         $engine = $container->get('app.game.engine');
 
+        /** @var LoggerInterface $logger */
+        $logger = $container->get('logger');
+
         // Get memory limit
         $memoryLimit = ini_get('memory_limit');
         if (preg_match('/^(\d+)\s*(.)/', $memoryLimit, $matches)) {
@@ -89,8 +91,9 @@ class GameEngineCommand extends ContainerAwareCommand
 
                 // Kill the process if it's idle many time
                 if (++$idle > static::MAX_IDLE) {
-                    // TODO Log this
-                    $output->writeln('<info>Max idle time reached.</info>');
+                    $errorMessage = 'Max idle time reached. Process kills itself!';
+                    $logger->emergency($errorMessage);
+                    $output->writeln('<info>' . $errorMessage . '</info>');
                     return 1;
                 }
             } else {
@@ -102,7 +105,8 @@ class GameEngineCommand extends ContainerAwareCommand
                         $game = $gameEntity->toDomainEntity();
                         $engine->move($game);
                     } catch (\Exception $exc) {
-                        // TODO log the exception
+                        $logger->error('Error occurred in the game engine.');
+                        $logger->error($exc);
                         $output->writeln('<error>' . $exc->getMessage() . '</error>');
                         if ($output->getVerbosity() > OutputInterface::VERBOSITY_VERY_VERBOSE) {
                             $output->writeln($exc->getFile() . ': ' . $exc->getLine());
@@ -128,11 +132,12 @@ class GameEngineCommand extends ContainerAwareCommand
                 $memoryUsage = memory_get_usage(true);
                 $percent = ((float) $memoryUsage) / ((float) $memoryLimit);
                 if ($percent > static::MEMORY_LIMIT) {
-                    // TODO Log this
-                    $output->writeln(sprintf(
+                    $errorMessage = sprintf(
                         '<info>Memory usage excedes %d%%.</info>',
                         (int)(100 * static::MEMORY_LIMIT)
-                    ));
+                    );
+                    $logger->emergency($errorMessage);
+                    $output->writeln($errorMessage);
                     return 2;
                 }
 

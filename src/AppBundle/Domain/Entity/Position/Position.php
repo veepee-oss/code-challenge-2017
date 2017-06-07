@@ -48,6 +48,59 @@ class Position
     }
 
     /**
+     * Moves a position in a direction
+     *
+     * @param string $dir
+     * @return $this
+     */
+    public function moveTo($dir)
+    {
+        switch ($dir) {
+            case Direction::UP:
+                --$this->y;
+                break;
+
+            case Direction::DOWN:
+                ++$this->y;
+                break;
+
+            case Direction::LEFT:
+                --$this->x;
+                break;
+
+            case Direction::RIGHT:
+                ++$this->x;
+                break;
+        }
+        return $this;
+    }
+
+    /**
+     * Moves a position in a direction, returning a new object.
+     *
+     * @param Position $pos
+     * @param int $dir
+     * @return Position
+     */
+    public static function move(Position $pos, $dir)
+    {
+        $new = clone $pos;
+        return $new->moveTo($dir);
+    }
+
+    /**
+     * Return if tis the same position
+     *
+     * @param Position $pos
+     * @return bool
+     */
+    public function equals(Position $pos)
+    {
+        return ($this->y() == $pos->y()
+            && $this->x() == $pos->x());
+    }
+
+    /**
      * Serialize the object into an array
      *
      * @return array

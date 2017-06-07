@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'app.gameover.title' | trans }} - {{ parent() }}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="page-header">
+            <h1>
+                {{ 'app.gameover.title' | trans }}
+                <small>
+                    {{ 'app.global.title' | trans }}
+                </small>
+            </h1>
+        </div>
+
+        <p class="lead">
+            {{ 'app.gameover.texts.1' | trans({ '%date%': time_limit | date }) | raw }}
+            {{ 'app.gameover.texts.2' | trans({ '%email%': '<a href="mailto:' ~ default_email ~ '">' ~ default_email ~'</a>' }) | raw }}
+        </p>
+
+        <p>
+            <a class="btn btn-default" href="{{ url('homepage') }}">{{ 'app.gameover.buttons.back' | trans }}</a>
+        </p>
+    </div>
+{% endblock %}

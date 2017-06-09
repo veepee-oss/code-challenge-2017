@@ -52,9 +52,16 @@ class GameController extends Controller
         // Create game data entity
         $gameEntity = new GameEntity();
 
+        $params = array();
+        if ($admin) {
+            $params = array(
+                'admin' => 1
+            );
+        }
+
         // Create the game data form (step 1)
         $form = $this->createForm('\AppBundle\Form\CreateGame\GameForm', $gameEntity, array(
-            'action'    => $this->generateUrl('game_create'),
+            'action'    => $this->generateUrl('game_create', $params),
             'form_type' => GameForm::TYPE_GAME_DATA
         ));
 
@@ -113,15 +120,14 @@ class GameController extends Controller
             $players = array();
             for ($pos = 0; $pos < $gameEntity->getPlayerNum(); $pos++) {
                 try {
-                    $player = new ApiPlayer($gameEntity->getPlayerAt($pos)->getUrl(), $maze->start());
+                    $url = $gameEntity->getPlayerAt($pos)->getUrl();
+                    $player = new ApiPlayer($url, $maze->start());
                     if ($playerValidator->validatePlayer($player, null)) {
                         $players[] = $player;
                     } else {
                         $message = $this->get('translator')->trans(
                             'app.form.game.player.invalid-url',
-                            array(
-                                '%url%' => $player->url()
-                            ),
+                            array( '%url%' => $url ),
                             'validators'
                         );
                         $form->get('players')->addError(new FormError($message));

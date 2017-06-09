@@ -38,9 +38,13 @@ class ValidatePlayer implements ValidatePlayerInterface
         /** @var AskPlayerNameInterface $playerService */
         $playerService = $this->playerServiceFactory->locate($player);
 
-        // Asks for the name and email of the player
-        $data = $playerService->askPlayerName($player, $game);
-        if (!$data) {
+        try {
+            // Asks for the name and email of the player
+            $data = $playerService->askPlayerName($player, $game);
+            if (!$data) {
+                return false;
+            }
+        } catch (MovePlayerException $exc) {
             return false;
         }
 

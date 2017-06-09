@@ -47,6 +47,7 @@ app:
 
     mazepage:
         texts:
+            game:           "Game"
             status:         "Status"
             moves:          "Moves"
             players:        "Players"

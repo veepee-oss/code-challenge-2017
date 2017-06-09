@@ -52,9 +52,16 @@ class GameController extends Controller
         // Create game data entity
         $gameEntity = new GameEntity();
 
+        $params = array();
+        if ($admin) {
+            $params = array(
+                'admin' => 1
+            );
+        }
+
         // Create the game data form (step 1)
         $form = $this->createForm('\AppBundle\Form\CreateGame\GameForm', $gameEntity, array(
-            'action'    => $this->generateUrl('game_create'),
+            'action'    => $this->generateUrl('game_create', $params),
             'form_type' => GameForm::TYPE_GAME_DATA
         ));
 

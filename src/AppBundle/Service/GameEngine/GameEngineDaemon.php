@@ -17,6 +17,8 @@ class GameEngineDaemon implements GameEngineDaemonInterface
     /**
      * Starts the game engine daemon
      *
+     * $ nohup php app/console app:code-challenge:engine > /dev/null 2> /dev/null &
+     *
      * @param bool $force
      * @return void
      */
@@ -70,6 +72,8 @@ class GameEngineDaemon implements GameEngineDaemonInterface
 
     /**
      * Finds the process status and return the process ID
+     *
+     * $ ps ax -w | grep app:code-challenge:engine | grep -v 'grep' | awk '{print $1}'
      *
      * @return string|false
      */

@@ -399,7 +399,7 @@ class Game
      */
     public function isKillingTime()
     {
-        $limit = $this->height() * $this->width() / 2;
+        $limit = $this->height() * $this->width() / 5;
         if ($this->moves() > $limit) {
             return true;
         }

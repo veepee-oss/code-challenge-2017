@@ -1,30 +1,49 @@
-/app/bootstrap.php.cache
-/app/config/parameters.yml
+# Symfony: Cache, logs & sessions
 /app/cache/*
 !app/cache/.gitkeep
+
 /app/logs/*
 !app/logs/.gitkeep
-/app/phpunit.xml
-/build/
-/bin/
-/web/bundles/
-/vendor/
-/composer.phar
-/phpunit.xml
-/var/*
-!/var/cache
+
 /var/cache/*
+!/var/cache
 !var/cache/.gitkeep
-!/var/logs
+
 /var/logs/*
+!/var/logs
 !var/logs/.gitkeep
-!/var/sessions
+
 /var/sessions/*
+!/var/sessions
 !var/sessions/.gitkeep
+
+# Parameters
+/app/config/parameters.yml
+
+# Managed by Composer
+composer.phar
+/app/bootstrap.php.cache
+/var/bootstrap.php.cache
+/bin/*
+!bin/console
+!bin/symfony_requirements
+/var/*
 !var/SymfonyRequirements.php
-/supervisord*
-/.idea
+/vendor/
+
+# Assets and user uploads
+/web/bundles/
+
+# PHPUnit
+/app/phpunit.xml
+/phpunit.xml
+
+# Deploy
 /deploy
 !/deploy/deploy.sh
 !/deploy/remote/install.sh
-composer.phar
+
+# Other
+/.idea
+/supervisord*
+

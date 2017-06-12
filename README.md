@@ -5,6 +5,36 @@ The 2017 event of the **Privalia Code Challenge** is called **Maze Escape**! The
 
 Your bot will be trapped in a maze and is expected to find its way out competing with the other player bots in a real time challenge. All the bots will start at the same random position and they won't be visible to each other. The first bot to find its way out of the maze wins the game.
 
+## Configuration
+
+This repo constains the server used for the **Privalia Code Challenge 2017**.
+It's a [PHP](http://php.net/) project which uses the [Symfony 3](https://symfony.com/) framework and a [MySQL](https://www.mysql.com/) database.
+It has been developed using **PHP7.1** and **MySQL5.7** and [docker](https://www.docker.com/) technologies.
+The `docker` folder constains the particular images used in the development environment and some [bash](https://www.gnu.org/software/bash/) commands with helps configurating the environment.
+
+- `docker/build.sh` - Build the docker images.
+- `docker/start.sh` - Start all the project containers.
+- `docker/stop.sh` - Stop all the project containers.
+- `docker/composer.sh` - Execute composer inside the container (params are allowed). The containers must be started before run this script.
+- `docker/console.sh` - Execute a console command inside the container (params are allowed). The containers must be started before run this script.
+- `docker/phpunit.sh` - Execute phpunit unit tests inside the container (params are allowed). The containers must be started before run this script.
+- `docker/bash.sh` - Access bash shell of the API container. The containers must be started before run this script.
+- `docker/su.sh` - Access bash shell of the API container with the `root`user. The containers must be started before run this script.
+
+NOTE: All these scripts asume there is an user `david` in the host. You can change it for your usere name to avoid  permission problems.
+
+### Installation
+
+```
+$ git clone git@github.com:PrivaliaTech/code-challenge-2017.git
+$ cd code-challenge-2017
+$ docker/build.sh
+$ docker/start.sh
+$ docker/composer.sh install
+$ docker/console.sh doctrine:database:create
+$ docker/console.sh doctrine:schema:create
+```
+
 ## Documentation
 
 ### Maze generation

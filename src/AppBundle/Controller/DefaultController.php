@@ -19,6 +19,7 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
+        $this->get('logger')->info('DefaultController::indexAction()');
         return $this->render('default/index.html.twig');
     }
 
@@ -28,6 +29,7 @@ class DefaultController extends Controller
      */
     public function rulesAction()
     {
+        $this->get('logger')->info('DefaultController::rulesAction()');
         return $this->render('default/rules.html.twig');
     }
 
@@ -37,6 +39,7 @@ class DefaultController extends Controller
      */
     public function creditsAction()
     {
+        $this->get('logger')->info('DefaultController::creditsAction()');
         return $this->render('default/credits.html.twig');
     }
 }

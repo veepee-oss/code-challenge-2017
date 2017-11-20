@@ -17,7 +17,7 @@ monolog:
             type:         rotating_file
             path:         "%kernel.logs_dir%/%kernel.environment%.log"
             level:        debug
-            channels:     [!event]
+            channels:     [!event, !doctrine]
             max_files:    10
         console:
             type:         console

@@ -1,0 +1,21 @@
+.x-maze.x-mas .x-mas-wall {
+    background: #000000 url("../images/xmas-snowflake.png") no-repeat;
+    background-size: 100%;
+}
+/**********************************************************************************************************************/
+
+.x-maze.x-mas .x-ghost-regular {
+    background: #000000 url("../images/xmas-snowman-regular.png") no-repeat;
+    background-size: 100%;
+}
+
+
+.x-maze.x-mas .x-ghost-neutral {
+    background: #000000 url("../images/xmas-snowman-neutral.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze.x-mas .x-ghost-angry {
+    background: #000000 url("../images/xmas-snowman-bad.png") no-repeat;
+    background-size: 100%;
+}

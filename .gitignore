@@ -44,6 +44,7 @@ composer.phar
 !/deploy/remote/install.sh
 
 # Other
-/.idea
 /supervisord*
+.idea/
+.DS_Store
 

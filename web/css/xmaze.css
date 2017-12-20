@@ -1,0 +1,629 @@
+.x-maze {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/**********************************************************************************************************************/
+
+.x-maze td {
+    width: 24px;
+    height: 24px;
+    /*border: #FFFFFF dashed 1px;*/
+}
+
+/**********************************************************************************************************************/
+
+.x-maze .x-empty {
+    background-color: #000000;
+}
+
+/**********************************************************************************************************************/
+
+.x-maze .x-wall {
+    background: #808080 url("../images/maze-wall.png") no-repeat;
+    background-size: 100%;
+}
+
+/**********************************************************************************************************************/
+
+.x-maze .x-start {
+    background: #000000 url("../images/maze-start.png") no-repeat;
+    background-size: 100%;
+}
+
+/**********************************************************************************************************************/
+
+.x-maze .x-goal {
+    background: #000000 url("../images/maze-goal.png") no-repeat;
+    background-size: 100%;
+}
+
+/**********************************************************************************************************************/
+
+.x-maze .x-winner {
+    background: #000000 url("../images/maze-winner.png") no-repeat;
+    background-size: 100%;
+}
+
+/**********************************************************************************************************************/
+
+.x-maze .x-killed1 {
+    background: #000000 url("../images/maze-killed1.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-killed2 {
+    background: #000000 url("../images/maze-killed2.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-killed3 {
+    background: #000000 url("../images/maze-killed3.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-killed4 {
+    background: #000000 url("../images/maze-killed4.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-killed5 {
+    background: #000000 url("../images/maze-killed5.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-killed6 {
+    background: #000000 url("../images/maze-killed6.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-killed7 {
+    background: #000000 url("../images/maze-killed7.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-killed8 {
+    background: #000000 url("../images/maze-killed8.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-killed9 {
+    background: #000000 url("../images/maze-killed9.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-killed10 {
+    background: #000000 url("../images/maze-killed10.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-killed11 {
+    background: #000000 url("../images/maze-killed11.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-killed12 {
+    background: #000000 url("../images/maze-killed12.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-killed13 {
+    background: #000000 url("../images/maze-killed13.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-killed14 {
+    background: #000000 url("../images/maze-killed14.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-killed15 {
+    background: #000000 url("../images/maze-killed15.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-killed16 {
+    background: #000000 url("../images/maze-killed16.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-killed17 {
+    background: #000000 url("../images/maze-killed17.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-killed18 {
+    background: #000000 url("../images/maze-killed18.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-killed19 {
+    background: #000000 url("../images/maze-killed19.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-killed20 {
+    background: #000000 url("../images/maze-killed20.png") no-repeat;
+    background-size: 100%;
+}
+
+/**********************************************************************************************************************/
+
+.x-maze .x-ghost {
+    background: #000000 url("../images/maze-ghost.png") no-repeat;
+    background-size: 100%;
+}
+
+
+.x-maze .x-ghost-neutral {
+    background: #000000 url("../images/maze-ghost-neutral.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-ghost-bad {
+    background: #000000 url("../images/maze-ghost-bad.png") no-repeat;
+    background-size: 100%;
+}
+
+/**********************************************************************************************************************/
+
+.x-maze .x-player1-right {
+    background: #000000 url("../images/maze-player1-right.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player1-left {
+    background: #000000 url("../images/maze-player1-left.png") no-repeat;
+    background-size: 100%;
+    content: "\2776";
+}
+
+.x-maze .x-player1-up {
+    background: #000000 url("../images/maze-player1-up.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player1-down {
+    background: #000000 url("../images/maze-player1-down.png") no-repeat;
+    background-size: 100%;
+}
+
+/**********************************************************************************************************************/
+
+.x-maze .x-player2-right {
+    background: #000000 url("../images/maze-player2-right.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player2-left {
+    background: #000000 url("../images/maze-player2-left.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player2-up {
+    background: #000000 url("../images/maze-player2-up.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player2-down {
+    background: #000000 url("../images/maze-player2-down.png") no-repeat;
+    background-size: 100%;
+}
+
+/**********************************************************************************************************************/
+
+.x-maze .x-player3-right {
+    background: #000000 url("../images/maze-player3-right.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player3-left {
+    background: #000000 url("../images/maze-player3-left.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player3-up {
+    background: #000000 url("../images/maze-player3-up.png") no-repeat;
+    background-size: 100%;
+}
+
+
+.x-maze .x-player3-down {
+    background: #000000 url("../images/maze-player3-down.png") no-repeat;
+    background-size: 100%;
+}
+
+/**********************************************************************************************************************/
+
+.x-maze .x-player4-right {
+    background: #000000 url("../images/maze-player4-right.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player4-left {
+    background: #000000 url("../images/maze-player4-left.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player4-up {
+    background: #000000 url("../images/maze-player4-up.png") no-repeat;
+    background-size: 100%;
+}
+
+
+.x-maze .x-player4-down {
+    background: #000000 url("../images/maze-player4-down.png") no-repeat;
+    background-size: 100%;
+}
+
+/**********************************************************************************************************************/
+
+.x-maze .x-player5-right {
+    background: #000000 url("../images/maze-player5-right.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player5-left {
+    background: #000000 url("../images/maze-player5-left.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player5-up {
+    background: #000000 url("../images/maze-player5-up.png") no-repeat;
+    background-size: 100%;
+}
+
+
+.x-maze .x-player5-down {
+    background: #000000 url("../images/maze-player5-down.png") no-repeat;
+    background-size: 100%;
+}
+
+/**********************************************************************************************************************/
+
+.x-maze .x-player6-right {
+    background: #000000 url("../images/maze-player6-right.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player6-left {
+    background: #000000 url("../images/maze-player6-left.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player6-up {
+    background: #000000 url("../images/maze-player6-up.png") no-repeat;
+    background-size: 100%;
+}
+
+
+.x-maze .x-player6-down {
+    background: #000000 url("../images/maze-player6-down.png") no-repeat;
+    background-size: 100%;
+}
+
+/**********************************************************************************************************************/
+
+.x-maze .x-player7-right {
+    background: #000000 url("../images/maze-player7-right.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player7-left {
+    background: #000000 url("../images/maze-player7-left.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player7-up {
+    background: #000000 url("../images/maze-player7-up.png") no-repeat;
+    background-size: 100%;
+}
+
+
+.x-maze .x-player7-down {
+    background: #000000 url("../images/maze-player7-down.png") no-repeat;
+    background-size: 100%;
+}
+
+/**********************************************************************************************************************/
+
+.x-maze .x-player8-right {
+    background: #000000 url("../images/maze-player8-right.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player8-left {
+    background: #000000 url("../images/maze-player8-left.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player8-up {
+    background: #000000 url("../images/maze-player8-up.png") no-repeat;
+    background-size: 100%;
+}
+
+
+.x-maze .x-player8-down {
+    background: #000000 url("../images/maze-player8-down.png") no-repeat;
+    background-size: 100%;
+}
+
+/**********************************************************************************************************************/
+
+.x-maze .x-player9-right {
+    background: #000000 url("../images/maze-player9-right.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player9-left {
+    background: #000000 url("../images/maze-player9-left.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player9-up {
+    background: #000000 url("../images/maze-player9-up.png") no-repeat;
+    background-size: 100%;
+}
+
+
+.x-maze .x-player9-down {
+    background: #000000 url("../images/maze-player9-down.png") no-repeat;
+    background-size: 100%;
+}
+
+/**********************************************************************************************************************/
+
+.x-maze .x-player10-right {
+    background: #000000 url("../images/maze-player10-right.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player10-left {
+    background: #000000 url("../images/maze-player10-left.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player10-up {
+    background: #000000 url("../images/maze-player10-up.png") no-repeat;
+    background-size: 100%;
+}
+
+
+.x-maze .x-player10-down {
+    background: #000000 url("../images/maze-player10-down.png") no-repeat;
+    background-size: 100%;
+}
+
+/**********************************************************************************************************************/
+
+.x-maze .x-player11-right {
+    background: #000000 url("../images/maze-player11-right.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player11-left {
+    background: #000000 url("../images/maze-player11-left.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player11-up {
+    background: #000000 url("../images/maze-player11-up.png") no-repeat;
+    background-size: 100%;
+}
+
+
+.x-maze .x-player11-down {
+    background: #000000 url("../images/maze-player11-down.png") no-repeat;
+    background-size: 100%;
+}
+
+/**********************************************************************************************************************/
+
+.x-maze .x-player12-right {
+    background: #000000 url("../images/maze-player12-right.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player12-left {
+    background: #000000 url("../images/maze-player12-left.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player12-up {
+    background: #000000 url("../images/maze-player12-up.png") no-repeat;
+    background-size: 100%;
+}
+
+
+.x-maze .x-player12-down {
+    background: #000000 url("../images/maze-player12-down.png") no-repeat;
+    background-size: 100%;
+}
+
+/**********************************************************************************************************************/
+
+.x-maze .x-player13-right {
+    background: #000000 url("../images/maze-player13-right.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player13-left {
+    background: #000000 url("../images/maze-player13-left.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player13-up {
+    background: #000000 url("../images/maze-player13-up.png") no-repeat;
+    background-size: 100%;
+}
+
+
+.x-maze .x-player13-down {
+    background: #000000 url("../images/maze-player13-down.png") no-repeat;
+    background-size: 100%;
+}
+
+/**********************************************************************************************************************/
+
+.x-maze .x-player14-right {
+    background: #000000 url("../images/maze-player14-right.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player14-left {
+    background: #000000 url("../images/maze-player14-left.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player14-up {
+    background: #000000 url("../images/maze-player14-up.png") no-repeat;
+    background-size: 100%;
+}
+
+
+.x-maze .x-player14-down {
+    background: #000000 url("../images/maze-player14-down.png") no-repeat;
+    background-size: 100%;
+}
+
+/**********************************************************************************************************************/
+
+.x-maze .x-player15-right {
+    background: #000000 url("../images/maze-player15-right.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player15-left {
+    background: #000000 url("../images/maze-player15-left.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player15-up {
+    background: #000000 url("../images/maze-player15-up.png") no-repeat;
+    background-size: 100%;
+}
+
+
+.x-maze .x-player15-down {
+    background: #000000 url("../images/maze-player15-down.png") no-repeat;
+    background-size: 100%;
+}
+
+/**********************************************************************************************************************/
+
+.x-maze .x-player16-right {
+    background: #000000 url("../images/maze-player16-right.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player16-left {
+    background: #000000 url("../images/maze-player16-left.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player16-up {
+    background: #000000 url("../images/maze-player16-up.png") no-repeat;
+    background-size: 100%;
+}
+
+
+.x-maze .x-player16-down {
+    background: #000000 url("../images/maze-player16-down.png") no-repeat;
+    background-size: 100%;
+}
+
+/**********************************************************************************************************************/
+
+.x-maze .x-player17-right {
+    background: #000000 url("../images/maze-player17-right.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player17-left {
+    background: #000000 url("../images/maze-player17-left.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player17-up {
+    background: #000000 url("../images/maze-player17-up.png") no-repeat;
+    background-size: 100%;
+}
+
+
+.x-maze .x-player17-down {
+    background: #000000 url("../images/maze-player17-down.png") no-repeat;
+    background-size: 100%;
+}
+
+/**********************************************************************************************************************/
+
+.x-maze .x-player18-right {
+    background: #000000 url("../images/maze-player18-right.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player18-left {
+    background: #000000 url("../images/maze-player18-left.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player18-up {
+    background: #000000 url("../images/maze-player18-up.png") no-repeat;
+    background-size: 100%;
+}
+
+
+.x-maze .x-player18-down {
+    background: #000000 url("../images/maze-player18-down.png") no-repeat;
+    background-size: 100%;
+}
+
+/**********************************************************************************************************************/
+
+.x-maze .x-player19-right {
+    background: #000000 url("../images/maze-player19-right.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player19-left {
+    background: #000000 url("../images/maze-player19-left.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player19-up {
+    background: #000000 url("../images/maze-player19-up.png") no-repeat;
+    background-size: 100%;
+}
+
+
+.x-maze .x-player19-down {
+    background: #000000 url("../images/maze-player19-down.png") no-repeat;
+    background-size: 100%;
+}
+
+/**********************************************************************************************************************/
+
+.x-maze .x-player20-right {
+    background: #000000 url("../images/maze-player20-right.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player20-left {
+    background: #000000 url("../images/maze-player20-left.png") no-repeat;
+    background-size: 100%;
+}
+
+.x-maze .x-player20-up {
+    background: #000000 url("../images/maze-player20-up.png") no-repeat;
+    background-size: 100%;
+}
+
+
+.x-maze .x-player20-down {
+    background: #000000 url("../images/maze-player20-down.png") no-repeat;
+    background-size: 100%;
+}
+
+/**********************************************************************************************************************/

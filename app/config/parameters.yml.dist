@@ -19,8 +19,11 @@ parameters:
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
 
-    # Default mail address & timr limit
-    default_email:          "david.amigo@privalia.com"
-    default_time_limit:     "2017-06-09 00:00:00"
-    default_time_format:    "Y-m-d H:i:s"
-    default_timeout:        3
+    # Defaults: mail address, time limit, timeout
+    default_email:       "david.amigo@privalia.com"
+    default_time_limit:  "2017-06-09 00:00:00"
+    default_time_format: "Y-m-d H:i:s"
+    default_timeout:     3
+
+    # Password for admin. Use: php bin/console security:encode-password
+    admin_password: ~

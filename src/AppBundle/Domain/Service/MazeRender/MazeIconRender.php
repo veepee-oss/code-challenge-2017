@@ -22,7 +22,8 @@ class MazeIconRender implements MazeRenderInterface
     public function render(Game $game)
     {
         $maze = $game->maze();
-        $html = '<table class="x-maze">';
+        $class = $this->getMazeGlobalCss();
+        $html = '<table class="' . $class .'">';
 
         $rows = $maze->height();
         $cols = $maze->width();
@@ -33,26 +34,27 @@ class MazeIconRender implements MazeRenderInterface
 
             // For each column...
             for ($col = 0; $col < $cols; ++$col) {
-                $class = 'x-empty';
+                $class = $this->getEmptyCellCss();
 
                 $cell = $maze[$row][$col]->getContent();
                 if ($cell == MazeCell::CELL_WALL) {
-                    $class = 'x-wall';
+                    $class = $this->getMazeWallCss();
                 } elseif ($cell == MazeCell::CELL_START) {
-                    $class = 'x-start';
+                    $class = $this->getMazeStartCss();
                 }
 
                 foreach ($game->players() as $index => $player) {
                     if ($player->position()->x() == $col
                         && $player->position()->y() == $row) {
+                        $direction = $player->direction();
+                        if (!$direction) {
+                            $direction = Direction::RIGHT;
+                        }
+
                         if ($player->dead()) {
-                            $class = 'x-killed' . (1 + $index);
+                            $class = $this->getPlayedKilledCss(1 + $index, $direction);
                         } else {
-                            $direction = $player->direction();
-                            if (!$direction) {
-                                $direction = Direction::RIGHT;
-                            }
-                            $class = 'x-player' . (1 + $index) . '-' . $direction;
+                            $class = $this->getPlayerCss(1 + $index, $direction);
                         }
                     }
                 }
@@ -60,23 +62,32 @@ class MazeIconRender implements MazeRenderInterface
                 foreach ($game->ghosts() as $index => $ghost) {
                     if ($ghost->position()->x() == $col
                         && $ghost->position()->y() == $row) {
+                        $direction = $ghost->direction();
+                        if (!$direction) {
+                            $direction = Direction::RIGHT;
+                        }
+
                         if ($ghost->isNeutralTime()) {
-                            $class = 'x-ghost-neutral';
+                            $class = $this->getGhostNeutralCss($index, $direction);
                         } elseif ($game->isKillingTime()) {
-                            $class = 'x-ghost-bad';
+                            $class = $this->getGhostAngryCss($index, $direction);
                         } else {
-                            $class = 'x-ghost';
+                            $class = $this->getGhostCss($index, $direction);
                         }
                     }
                 }
 
                 if ($cell == MazeCell::CELL_GOAL) {
-                    $class = 'x-goal';
-                    foreach ($game->players() as $player) {
+                    $class = $this->getMazeGoalCss();
+                    foreach ($game->players() as $index => $player) {
                         if ($player->winner()
                             && $player->position()->x() == $col
                             && $player->position()->y() == $row) {
-                            $class = 'x-winner';
+                            $direction = $player->direction();
+                            if (!$direction) {
+                                $direction = Direction::RIGHT;
+                            }
+                            $class = $this->getPlayerWinnerCss($index, $direction);
                             break;
                         }
                     }
@@ -88,5 +99,60 @@ class MazeIconRender implements MazeRenderInterface
         }
         $html .= '</table>';
         return $html;
+    }
+
+    protected function getMazeGlobalCss()
+    {
+        return 'x-maze';
+    }
+
+    protected function getEmptyCellCss()
+    {
+        return 'x-empty';
+    }
+
+    protected function getMazeWallCss()
+    {
+        return 'x-wall';
+    }
+
+    protected function getMazeStartCss()
+    {
+        return 'x-start';
+    }
+
+    protected function getMazeGoalCss()
+    {
+        return 'x-goal';
+    }
+
+    protected function getPlayerCss($index, $direction)
+    {
+        return 'x-player' . $index . '-' . $direction;
+    }
+
+    protected function getPlayedKilledCss($index, $direction)
+    {
+        return 'x-killed' . $index;
+    }
+
+    protected function getPlayerWinnerCss($index, $direction)
+    {
+        return 'x-winner';
+    }
+
+    protected function getGhostCss($index, $direction)
+    {
+        return 'x-ghost';
+    }
+
+    protected function getGhostNeutralCss($index, $direction)
+    {
+        return 'x-ghost-neutral';
+    }
+
+    protected function getGhostAngryCss($index, $direction)
+    {
+        return 'x-ghost-bad';
     }
 }

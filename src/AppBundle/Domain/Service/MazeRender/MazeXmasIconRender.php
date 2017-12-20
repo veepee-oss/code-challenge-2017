@@ -36,7 +36,7 @@ class MazeXmasIconRender extends MazeIconRender
 
     protected function getPlayerCss($index, $direction)
     {
-        return 'x-player' . $index . '-' . $direction;
+        return 'x-player' . $index;
     }
 
     protected function getPlayedKilledCss($index, $direction)

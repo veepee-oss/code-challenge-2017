@@ -1,7 +1,7 @@
 #!/bin/bash
 
-user="david"
 service="docker_code_challenge_server";
+user="david"
 
 enabled=$( docker ps --format "{{.Names}}" | grep -i "$service" )
 if [ "$enabled" == "" ]
@@ -13,4 +13,14 @@ fi;
 dir=$(dirname $0)
 cd $dir
 
-docker exec -it -u $user $service bash
+args=""
+while [[ $# -ge 1 ]]; do
+    args="$args $1"
+    shift
+done
+
+if [ "$args" == "" ]; then
+    docker exec -it -u $user $service bash
+else
+    docker exec -it -u $user $service $args
+fi

@@ -1,6 +1,9 @@
 #!/bin/bash
 
+dockerfile="docker-compose.yml"
 dir=$(dirname $0)
 cd $dir
 
-docker-compose down
+echo -e "Stopping $dockerfile..."
+
+docker-compose -f $dockerfile budown

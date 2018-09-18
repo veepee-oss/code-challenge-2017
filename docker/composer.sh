@@ -1,7 +1,8 @@
 #!/bin/bash
 
-user="david"
 service="docker_code_challenge_server";
+user="david"
+composer="/usr/local/bin/composer"
 
 enabled=$( docker ps --format "{{.Names}}" | grep -i "$service" )
 if [ "$enabled" == "" ]
@@ -14,10 +15,9 @@ dir=$(dirname $0)
 cd $dir
 
 args=""
-while [[ $# -ge 1 ]]
-do
+while [[ $# -ge 1 ]]; do
     args="$args $1"
     shift
 done
 
-docker exec -it -u $user $service /usr/local/bin/composer $args
+docker exec -it -u $user $service $composer $args

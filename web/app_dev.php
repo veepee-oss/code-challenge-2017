@@ -13,11 +13,11 @@ use Symfony\Component\Debug\Debug;
 if (isset($_SERVER['HTTP_CLIENT_IP'])
     || isset($_SERVER['HTTP_X_FORWARDED_FOR'])
     || !(php_sapi_name() === 'cli-server'
-        || in_array(@$_SERVER['REMOTE_ADDR'], ['127.0.0.1', '172.17.0.1', '::1'])
-        || preg_match('/^172\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.0\.1$/', @$_SERVER['REMOTE_ADDR']))
+        || in_array(@$_SERVER['REMOTE_ADDR'], ['127.0.0.1', 'fe80::1', '::1'])
+        || in_array(@$_SERVER['HTTP_HOST'], ['localhost:8080', '127.0.0.1:8080']))
 ) {
     header('HTTP/1.0 403 Forbidden');
-    exit('You are not allowed to access this file. Check '.basename(__FILE__).' for more information.');
+    exit('You are not allowed to access this file. Check '.basename(__FILE__).' for more information: ');
 }
 
 /** @var \Composer\Autoload\ClassLoader $loader */

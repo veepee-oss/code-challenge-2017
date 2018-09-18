@@ -1,17 +1,17 @@
-version: '2'
+version: '2.1'
 services:
 
     # See: docker/Dockerfile
     code_challenge_server:
         build: .
 
-        restart: always
+        restart: "always"
 
-        container_name: docker_code_challenge_server
+        container_name: "docker_code_challenge_server"
 
         environment:
-            APACHE_RUN_USER: david
-            APACHE_RUN_GROUP: david
+            APACHE_RUN_USER: "david"
+            APACHE_RUN_GROUP: "david"
 
         ports:
             - "8080:80"
@@ -19,25 +19,28 @@ services:
         volumes:
             - "../.:/var/www/html"
 
-        networks:
-            - code_challenge_network
+        depends_on:
+            - "code_challenge_mysql"
 
-        links:
-            - code_challenge_mysql
+        external_links:
+            - "code_challenge_api:testapi.com"
+
+        networks:
+            - "code_challenge_network"
 
     # See: https://hub.docker.com/_/mysql
     code_challenge_mysql:
-        image: mysql:5.7
+        image: "mysql:5.7"
 
-        restart: always
+        restart: "always"
 
-        container_name: docker_code_challenge_mysql
+        container_name: "docker_code_challenge_mysql"
 
         environment:
-            MYSQL_ROOT_PASSWORD: root
-            MYSQL_DATABASE: code_challenge_db
-            MYSQL_USER: code_challenge_user
-            MYSQL_PASSWORD: code_challenge_pass
+            MYSQL_ROOT_PASSWORD: "root"
+            MYSQL_DATABASE: "code_challenge_db"
+            MYSQL_USER: "code_challenge_user"
+            MYSQL_PASSWORD: "code_challenge_pass"
 
         ports:
             - "3307:3306"
@@ -46,8 +49,9 @@ services:
             - "../var/docker/mysql:/var/lib/mysql"
 
         networks:
-            - code_challenge_network
+            - "code_challenge_network"
 
 networks:
     code_challenge_network:
-        driver: bridge
+        driver: "bridge"
+        name: "code_challenge_network"

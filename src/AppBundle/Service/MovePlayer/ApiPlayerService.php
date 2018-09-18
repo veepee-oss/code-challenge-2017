@@ -65,6 +65,7 @@ class ApiPlayerService implements AskNextMovementInterface, AskPlayerNameInterfa
      * @param Game $game
      * @return array['name', 'email'] The player name and email
      * @throws MovePlayerException
+     * @throws HttpException
      */
     public function askPlayerName(Player $player, Game $game = null)
     {
@@ -122,6 +123,7 @@ class ApiPlayerService implements AskNextMovementInterface, AskPlayerNameInterfa
      * @param Game $game
      * @return string The next movement
      * @throws MovePlayerException
+     * @throws HttpException
      */
     public function askNextMovement(Player $player, Game $game = null)
     {
@@ -152,12 +154,13 @@ class ApiPlayerService implements AskNextMovementInterface, AskPlayerNameInterfa
      * @param string $requestBody
      * @return array The read data
      * @throws MovePlayerException
+     * @throws HttpException
      */
     private function callToApi(ApiPlayer $player, Game $game = null, $function = null, $requestBody = null)
     {
         $requestUrl = $player->url();
         if ($function) {
-            $requestUrl .= '/' . $function;;
+            $requestUrl .= '/' . $function;
         }
 
         $requestHeaders = array(
@@ -186,10 +189,13 @@ class ApiPlayerService implements AskNextMovementInterface, AskPlayerNameInterfa
 
         $responseBody = $response->getBody(true);
 
-
         $responseData = json_decode($responseBody, true);
         if (null === $responseData || !is_array($responseData)) {
             $message = 'Invalid API response! Player: ' . $player->name();
+            if (JSON_ERROR_NONE != json_last_error()) {
+                $message .= ' - ' . json_last_error_msg();
+            }
+
             $this->logger->log(
                 $game ? $game->uuid() : 'temp',
                 $player->uuid(),
@@ -203,6 +209,7 @@ class ApiPlayerService implements AskNextMovementInterface, AskPlayerNameInterfa
                     'errorMessage' => $message
                 )
             );
+
             throw new MovePlayerException($message);
         }
 

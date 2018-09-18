@@ -6,4 +6,4 @@ cd $dir
 
 echo -e "Stopping $dockerfile..."
 
-docker-compose -f $dockerfile budown
+docker-compose -f $dockerfile down

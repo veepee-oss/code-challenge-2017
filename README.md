@@ -37,11 +37,12 @@ $ docker/console.sh doctrine:schema:create
 
 ## Documentation
 
-### Maze generation
+### Maze generation & escape
 
 - [Wikipedia: Maze generation algorithm](https://en.wikipedia.org/wiki/Maze_generation_algorithm)
-- [Maze Generation: Recursive Division](http://weblog.jamisbuck.org/2011/1/12/maze-generation-recursive-division-algorithm)
 - [Stack Overflow: What's a good algorithm to generate a maze?](http://stackoverflow.com/questions/38502/whats-a-good-algorithm-to-generate-a-maze)
+- [Maze Generation: Recursive Division](http://weblog.jamisbuck.org/2011/1/12/maze-generation-recursive-division-algorithm) by [Jamis Buck](https://github.com/jamis)
+- [Graphs & paths: getting out of a maze](https://towardsdatascience.com/graphs-paths-a-getting-out-of-a-maze-a3d7c079a5c6) by [David Pynes](https://towardsdatascience.com/@dave_p)
 
 ## Credits
 
